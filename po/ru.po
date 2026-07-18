@@ -1,0 +1,323 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: valapad 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-18 17:15+0200\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/MainWindow.vala:47
+msgid "Untitled - ValaPad"
+msgstr "Безымянный — ValaPad"
+
+#. ------------------------------
+#. Ln 1 Col 1 | 100% | LF | UTF-8
+#: src/MainWindow.vala:137
+msgid "Ln 1"
+msgstr "Стр. 1"
+
+#: src/MainWindow.vala:143
+msgid "Col 1"
+msgstr "Стлб. 1"
+
+#. File
+#: src/MainWindow.vala:184
+msgid "New"
+msgstr "Создать"
+
+#: src/MainWindow.vala:185
+msgid "New Window"
+msgstr "Новое окно"
+
+#: src/MainWindow.vala:186
+msgid "Open…"
+msgstr "Открыть…"
+
+#: src/MainWindow.vala:188 src/MainWindow.vala:765
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/MainWindow.vala:189
+msgid "Save As…"
+msgstr "Сохранить как…"
+
+#: src/MainWindow.vala:192
+msgid "Print…"
+msgstr "Печать…"
+
+#: src/MainWindow.vala:194
+msgid "Exit"
+msgstr "Выход"
+
+#: src/MainWindow.vala:195
+msgid "File"
+msgstr "Файл"
+
+#. Edit
+#: src/MainWindow.vala:199
+msgid "Undo"
+msgstr "Отменить"
+
+#: src/MainWindow.vala:200
+msgid "Redo"
+msgstr "Повторить"
+
+#: src/MainWindow.vala:202
+msgid "Cut"
+msgstr "Вырезать"
+
+#: src/MainWindow.vala:203
+msgid "Copy"
+msgstr "Копировать"
+
+#: src/MainWindow.vala:204
+msgid "Paste"
+msgstr "Вставить"
+
+#: src/MainWindow.vala:205
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/MainWindow.vala:208
+msgid "Find…"
+msgstr "Найти…"
+
+#: src/MainWindow.vala:209
+msgid "Find Next"
+msgstr "Найти далее"
+
+#: src/MainWindow.vala:210
+msgid "Find Previous"
+msgstr "Найти ранее"
+
+#: src/MainWindow.vala:211
+msgid "Replace…"
+msgstr "Заменить…"
+
+#: src/MainWindow.vala:213
+msgid "Go To…"
+msgstr "Перейти…"
+
+#: src/MainWindow.vala:214
+msgid "Select All"
+msgstr "Выделить всё"
+
+#: src/MainWindow.vala:215
+msgid "Time/Date"
+msgstr "Время/дата"
+
+#: src/MainWindow.vala:216
+msgid "Edit"
+msgstr "Правка"
+
+#. Format
+#: src/MainWindow.vala:220
+msgid "Word Wrap"
+msgstr "Перенос по словам"
+
+#: src/MainWindow.vala:221
+msgid "Font…"
+msgstr "Шрифт…"
+
+#: src/MainWindow.vala:222
+msgid "Format"
+msgstr "Формат"
+
+#. View
+#: src/MainWindow.vala:226
+msgid "Zoom In"
+msgstr "Увеличить"
+
+#: src/MainWindow.vala:227
+msgid "Zoom Out"
+msgstr "Уменьшить"
+
+#: src/MainWindow.vala:228
+msgid "Restore Default Zoom"
+msgstr "Восстановить масштаб"
+
+#: src/MainWindow.vala:230
+msgid "Status Bar"
+msgstr "Строка состояния"
+
+#: src/MainWindow.vala:232
+msgid "View"
+msgstr "Вид"
+
+#. Help
+#: src/MainWindow.vala:236
+msgid "About ValaPad"
+msgstr "О приложении"
+
+#: src/MainWindow.vala:237
+msgid "Help"
+msgstr "Справка"
+
+#: src/MainWindow.vala:357 src/MainWindow.vala:760
+msgid "Untitled"
+msgstr "Безымянный"
+
+#: src/MainWindow.vala:359 src/MainWindow.vala:743
+msgid "ValaPad"
+msgstr "ValaPad"
+
+#: src/MainWindow.vala:365
+#, c-format
+msgid "Ln %d"
+msgstr "Стр. %d"
+
+#: src/MainWindow.vala:366
+#, c-format
+msgid "Col %d"
+msgstr "Стлб. %d"
+
+#: src/MainWindow.vala:482
+msgid "Open"
+msgstr "Открыть"
+
+#: src/MainWindow.vala:490 src/MainWindow.vala:527
+msgid "Open failed"
+msgstr "Не удалось открыть"
+
+#: src/MainWindow.vala:545
+msgid "Save As"
+msgstr "Сохранить как"
+
+#: src/MainWindow.vala:546
+msgid "Untitled.txt"
+msgstr "Безымянный.txt"
+
+#: src/MainWindow.vala:554 src/MainWindow.vala:588
+msgid "Save failed"
+msgstr "Не удалось сохранить"
+
+#: src/MainWindow.vala:630
+msgid "Print failed"
+msgstr "Не удалось напечатать"
+
+#: src/MainWindow.vala:745
+msgid "A lightweight plain-text editor."
+msgstr ""
+
+#: src/MainWindow.vala:762
+#, c-format
+msgid "Do you want to save changes to %s?"
+msgstr "Сохранить изменения в %s?"
+
+#: src/MainWindow.vala:765
+msgid "Don't Save"
+msgstr "Не сохранять"
+
+#: src/MainWindow.vala:765 src/Dialogs/GoToDialog.vala:36
+#: src/Dialogs/FontDialog.vala:178
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/Dialogs/GoToDialog.vala:15 src/Dialogs/GoToDialog.vala:39
+msgid "Go To"
+msgstr "Перейти"
+
+#: src/Dialogs/GoToDialog.vala:25
+msgid "Line number:"
+msgstr "Номер строки:"
+
+#: src/Dialogs/FontDialog.vala:26
+msgid "Choose Font"
+msgstr "Выбрать шрифт"
+
+#: src/Dialogs/FontDialog.vala:84
+msgid "Search fonts"
+msgstr "Поиск шрифтов"
+
+#: src/Dialogs/FontDialog.vala:92
+msgid "All Fonts"
+msgstr "Все шрифты"
+
+#: src/Dialogs/FontDialog.vala:93
+msgid "Monospace"
+msgstr "Моноширинные"
+
+#: src/Dialogs/FontDialog.vala:94
+msgid "Sans Serif"
+msgstr "Без засечек"
+
+#: src/Dialogs/FontDialog.vala:127
+msgid "Regular"
+msgstr "Обычный"
+
+#: src/Dialogs/FontDialog.vala:147
+msgid "Style"
+msgstr "Начертание"
+
+#: src/Dialogs/FontDialog.vala:149
+msgid "Size"
+msgstr "Размер"
+
+#: src/Dialogs/FontDialog.vala:163
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#: src/Dialogs/FontDialog.vala:170
+msgid "Select"
+msgstr "Выбрать"
+
+#. Search row
+#: src/Widgets/FindBar.vala:34
+msgid "Find"
+msgstr "Найти"
+
+#: src/Widgets/FindBar.vala:41
+msgid "Find Next (F3)"
+msgstr "Найти далее (F3)"
+
+#: src/Widgets/FindBar.vala:46
+msgid "Find Previous (Shift+F3)"
+msgstr "Найти ранее (Shift+F3)"
+
+#: src/Widgets/FindBar.vala:50
+msgid "Aa"
+msgstr "Аа"
+
+#: src/Widgets/FindBar.vala:51
+msgid "Match Case"
+msgstr "Учитывать регистр"
+
+#: src/Widgets/FindBar.vala:53
+msgid "↩"
+msgstr "↩"
+
+#: src/Widgets/FindBar.vala:54
+msgid "Wrap Around"
+msgstr "Искать по кругу"
+
+#: src/Widgets/FindBar.vala:59
+msgid "Close"
+msgstr "Закрыть"
+
+#. Replace row
+#: src/Widgets/FindBar.vala:79
+msgid "Replace with"
+msgstr "Заменить на"
+
+#: src/Widgets/FindBar.vala:84
+msgid "Replace"
+msgstr "Заменить"
+
+#: src/Widgets/FindBar.vala:85
+msgid "Replace next match"
+msgstr "Заменить следующее совпадение"
+
+#: src/Widgets/FindBar.vala:89
+msgid "Replace All"
+msgstr "Заменить всё"
+
+#: src/Widgets/FindBar.vala:90
+msgid "Replace all matches"
+msgstr "Заменить все совпадения"
+
+#~ msgid "Font selection failed"
+#~ msgstr "Не удалось выбрать шрифт"

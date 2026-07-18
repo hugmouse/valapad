@@ -1,0 +1,17 @@
+id: dev.mysh.valapad
+runtime: io.elementary.Platform
+runtime-version: '8'
+sdk: io.elementary.Sdk
+command: dev.mysh.valapad
+
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+
+modules:
+  - name: dev.mysh.valapad
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .

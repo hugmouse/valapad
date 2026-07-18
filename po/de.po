@@ -1,0 +1,322 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: valapad 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-18 17:15+0200\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/MainWindow.vala:47
+msgid "Untitled - ValaPad"
+msgstr "Unbenannt – ValaPad"
+
+#. ------------------------------
+#. Ln 1 Col 1 | 100% | LF | UTF-8
+#: src/MainWindow.vala:137
+msgid "Ln 1"
+msgstr "Zeile 1"
+
+#: src/MainWindow.vala:143
+msgid "Col 1"
+msgstr "Spalte 1"
+
+#. File
+#: src/MainWindow.vala:184
+msgid "New"
+msgstr "Neu"
+
+#: src/MainWindow.vala:185
+msgid "New Window"
+msgstr "Neues Fenster"
+
+#: src/MainWindow.vala:186
+msgid "Open…"
+msgstr "Öffnen …"
+
+#: src/MainWindow.vala:188 src/MainWindow.vala:765
+msgid "Save"
+msgstr "Speichern"
+
+#: src/MainWindow.vala:189
+msgid "Save As…"
+msgstr "Speichern unter …"
+
+#: src/MainWindow.vala:192
+msgid "Print…"
+msgstr "Drucken …"
+
+#: src/MainWindow.vala:194
+msgid "Exit"
+msgstr "Beenden"
+
+#: src/MainWindow.vala:195
+msgid "File"
+msgstr "Datei"
+
+#. Edit
+#: src/MainWindow.vala:199
+msgid "Undo"
+msgstr "Rückgängig"
+
+#: src/MainWindow.vala:200
+msgid "Redo"
+msgstr "Wiederholen"
+
+#: src/MainWindow.vala:202
+msgid "Cut"
+msgstr "Ausschneiden"
+
+#: src/MainWindow.vala:203
+msgid "Copy"
+msgstr "Kopieren"
+
+#: src/MainWindow.vala:204
+msgid "Paste"
+msgstr "Einfügen"
+
+#: src/MainWindow.vala:205
+msgid "Delete"
+msgstr "Löschen"
+
+#: src/MainWindow.vala:208
+msgid "Find…"
+msgstr "Suchen …"
+
+#: src/MainWindow.vala:209
+msgid "Find Next"
+msgstr "Weitersuchen"
+
+#: src/MainWindow.vala:210
+msgid "Find Previous"
+msgstr "Vorherigen suchen"
+
+#: src/MainWindow.vala:211
+msgid "Replace…"
+msgstr "Ersetzen …"
+
+#: src/MainWindow.vala:213
+msgid "Go To…"
+msgstr "Gehe zu …"
+
+#: src/MainWindow.vala:214
+msgid "Select All"
+msgstr "Alles auswählen"
+
+#: src/MainWindow.vala:215
+msgid "Time/Date"
+msgstr "Uhrzeit/Datum"
+
+#: src/MainWindow.vala:216
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#. Format
+#: src/MainWindow.vala:220
+msgid "Word Wrap"
+msgstr "Zeilenumbruch"
+
+#: src/MainWindow.vala:221
+msgid "Font…"
+msgstr "Schriftart …"
+
+#: src/MainWindow.vala:222
+msgid "Format"
+msgstr "Format"
+
+#. View
+#: src/MainWindow.vala:226
+msgid "Zoom In"
+msgstr "Vergrößern"
+
+#: src/MainWindow.vala:227
+msgid "Zoom Out"
+msgstr "Verkleinern"
+
+#: src/MainWindow.vala:228
+msgid "Restore Default Zoom"
+msgstr "Standardvergrößerung wiederherstellen"
+
+#: src/MainWindow.vala:230
+msgid "Status Bar"
+msgstr "Statusleiste"
+
+#: src/MainWindow.vala:232
+msgid "View"
+msgstr "Ansicht"
+
+#. Help
+#: src/MainWindow.vala:236
+msgid "About ValaPad"
+msgstr "Info zu ValaPad"
+
+#: src/MainWindow.vala:237
+msgid "Help"
+msgstr "Hilfe"
+
+#: src/MainWindow.vala:357 src/MainWindow.vala:760
+msgid "Untitled"
+msgstr "Unbenannt"
+
+#: src/MainWindow.vala:359 src/MainWindow.vala:743
+msgid "ValaPad"
+msgstr "ValaPad"
+
+#: src/MainWindow.vala:365
+#, c-format
+msgid "Ln %d"
+msgstr "Zeile %d"
+
+#: src/MainWindow.vala:366
+#, c-format
+msgid "Col %d"
+msgstr "Spalte %d"
+
+#: src/MainWindow.vala:482
+msgid "Open"
+msgstr "Öffnen"
+
+#: src/MainWindow.vala:490 src/MainWindow.vala:527
+msgid "Open failed"
+msgstr "Öffnen fehlgeschlagen"
+
+#: src/MainWindow.vala:545
+msgid "Save As"
+msgstr "Speichern unter"
+
+#: src/MainWindow.vala:546
+msgid "Untitled.txt"
+msgstr "Unbenannt.txt"
+
+#: src/MainWindow.vala:554 src/MainWindow.vala:588
+msgid "Save failed"
+msgstr "Speichern fehlgeschlagen"
+
+#: src/MainWindow.vala:630
+msgid "Print failed"
+msgstr "Drucken fehlgeschlagen"
+
+#: src/MainWindow.vala:745
+msgid "A lightweight plain-text editor."
+msgstr ""
+
+#: src/MainWindow.vala:762
+#, c-format
+msgid "Do you want to save changes to %s?"
+msgstr "Möchten Sie die Änderungen an %s speichern?"
+
+#: src/MainWindow.vala:765
+msgid "Don't Save"
+msgstr "Nicht speichern"
+
+#: src/MainWindow.vala:765 src/Dialogs/GoToDialog.vala:36
+#: src/Dialogs/FontDialog.vala:178
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/Dialogs/GoToDialog.vala:15 src/Dialogs/GoToDialog.vala:39
+msgid "Go To"
+msgstr "Gehe zu"
+
+#: src/Dialogs/GoToDialog.vala:25
+msgid "Line number:"
+msgstr "Zeilennummer:"
+
+#: src/Dialogs/FontDialog.vala:26
+msgid "Choose Font"
+msgstr "Schriftart auswählen"
+
+#: src/Dialogs/FontDialog.vala:84
+msgid "Search fonts"
+msgstr "Schriftarten durchsuchen"
+
+#: src/Dialogs/FontDialog.vala:92
+msgid "All Fonts"
+msgstr "Alle Schriftarten"
+
+#: src/Dialogs/FontDialog.vala:93
+msgid "Monospace"
+msgstr "Dicktengleich"
+
+#: src/Dialogs/FontDialog.vala:94
+msgid "Sans Serif"
+msgstr "Serifenlos"
+
+#: src/Dialogs/FontDialog.vala:127
+msgid "Regular"
+msgstr "Normal"
+
+#: src/Dialogs/FontDialog.vala:147
+msgid "Style"
+msgstr "Stil"
+
+#: src/Dialogs/FontDialog.vala:149
+msgid "Size"
+msgstr "Größe"
+
+#: src/Dialogs/FontDialog.vala:163
+msgid "Preview"
+msgstr "Vorschau"
+
+#: src/Dialogs/FontDialog.vala:170
+msgid "Select"
+msgstr "Auswählen"
+
+#. Search row
+#: src/Widgets/FindBar.vala:34
+msgid "Find"
+msgstr "Suchen"
+
+#: src/Widgets/FindBar.vala:41
+msgid "Find Next (F3)"
+msgstr "Weitersuchen (F3)"
+
+#: src/Widgets/FindBar.vala:46
+msgid "Find Previous (Shift+F3)"
+msgstr "Vorherigen suchen (Umschalt+F3)"
+
+#: src/Widgets/FindBar.vala:50
+msgid "Aa"
+msgstr "Aa"
+
+#: src/Widgets/FindBar.vala:51
+msgid "Match Case"
+msgstr "Groß-/Kleinschreibung beachten"
+
+#: src/Widgets/FindBar.vala:53
+msgid "↩"
+msgstr "↩"
+
+#: src/Widgets/FindBar.vala:54
+msgid "Wrap Around"
+msgstr "Am Ende weitersuchen"
+
+#: src/Widgets/FindBar.vala:59
+msgid "Close"
+msgstr "Schließen"
+
+#. Replace row
+#: src/Widgets/FindBar.vala:79
+msgid "Replace with"
+msgstr "Ersetzen durch"
+
+#: src/Widgets/FindBar.vala:84
+msgid "Replace"
+msgstr "Ersetzen"
+
+#: src/Widgets/FindBar.vala:85
+msgid "Replace next match"
+msgstr "Nächsten Treffer ersetzen"
+
+#: src/Widgets/FindBar.vala:89
+msgid "Replace All"
+msgstr "Alle ersetzen"
+
+#: src/Widgets/FindBar.vala:90
+msgid "Replace all matches"
+msgstr "Alle Treffer ersetzen"
+
+#~ msgid "Font selection failed"
+#~ msgstr "Auswahl der Schriftart fehlgeschlagen"

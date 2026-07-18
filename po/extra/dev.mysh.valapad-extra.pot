@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the dev.mysh.valapad-extra package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: dev.mysh.valapad-extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-18 14:53+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/dev.mysh.valapad.desktop.in:6 data/dev.mysh.valapad.metainfo.xml.in:7
+msgid "ValaPad"
+msgstr ""
+
+#: data/dev.mysh.valapad.desktop.in:7
+msgid "Edit plain-text files"
+msgstr ""
+
+#: data/dev.mysh.valapad.desktop.in:9
+msgid "valapad;text;editor;plain;"
+msgstr ""
+
+#: data/dev.mysh.valapad.desktop.in:20
+msgid "New Window"
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in:8
+msgid "Edit plain-text files with a familiar set of tools"
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in:10
+msgid "Iaroslav Angliuster"
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in:13
+msgid ""
+"ValaPad is a lightweight plain-text editor with a familiar menu bar and a "
+"live status bar showing line and column, zoom level, line-ending style, and "
+"encoding."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in:18
+msgid ""
+"Find and replace text, jump to a line, choose line wrapping, and work with "
+"UTF-8 files using either LF or CRLF line endings."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in:31
+msgid "Initial release."
+msgstr ""

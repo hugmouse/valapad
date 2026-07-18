@@ -1,0 +1,20 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=ValaPad
+Comment=Edit plain-text files
+Categories=Utility;TextEditor;
+Keywords=valapad;text;editor;plain;
+
+Icon=dev.mysh.valapad
+Exec=dev.mysh.valapad %F
+Terminal=false
+StartupNotify=true
+StartupWMClass=dev.mysh.valapad
+MimeType=text/plain;
+Actions=NewWindow;
+
+[Desktop Action NewWindow]
+Name=New Window
+Exec=dev.mysh.valapad

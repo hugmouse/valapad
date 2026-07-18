@@ -1,0 +1,37 @@
+# Meson build output
+/build/
+/build-*/
+/builddir/
+
+# Flatpak build output and local repositories
+/.flatpak-builder/
+/flatpak-build*/
+/flatpak-*-build/
+/appcenter-repo/
+/*.flatpak
+
+# Test, coverage, and profiling output
+/coverage/
+/coverage-*/
+*.gcda
+*.gcno
+*.gcov
+*.lcov
+*.prof
+
+# Language and tool caches
+__pycache__/
+*.py[cod]
+/.cache/
+
+# Editors, operating systems, and backup files
+/.idea/
+/.vscode/
+.DS_Store
+*~
+*.swp
+*.swo
+*.orig
+*.rej
+
+TODO_LIST.md

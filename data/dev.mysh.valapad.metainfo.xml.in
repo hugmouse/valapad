@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<component type="desktop-application">
+  <id>dev.mysh.valapad</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>ValaPad</name>
+  <summary>Edit plain-text files with a familiar set of tools</summary>
+  <developer id="dev.mysh">
+    <name>Iaroslav Angliuster</name>
+  </developer>
+  <description>
+    <p>
+      ValaPad is a lightweight plain-text editor with a familiar menu
+      bar and a live status bar showing line and column, zoom level,
+      line-ending style, and encoding. Exciting!
+    </p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/hugmouse/valacode/1.0.0/data/screenshots/main.webp</image>
+    </screenshot>
+  </screenshots>
+  <launchable type="desktop-id">dev.mysh.valapad.desktop</launchable>
+  <url type="homepage">https://github.com/hugmouse/valanote</url>
+  <branding>
+    <color type="primary">#3689e6</color>
+  </branding>
+  <releases>
+    <release version="1.0.0" date="2026-07-16">
+      <description>
+        <p>Initial release.</p>
+      </description>
+    </release>
+  </releases>
+  <content_rating type="oars-1.1" />
+  <recommends>
+    <control>keyboard</control>
+    <control>touch</control>
+  </recommends>
+</component>

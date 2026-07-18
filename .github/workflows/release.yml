@@ -1,0 +1,39 @@
+name: GitHub Release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/elementary/flatpak-platform/runtime:8
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate tag and release metadata
+        run: python3 scripts/validate-release.py --tag "${GITHUB_REF_NAME}"
+
+      - name: Build and test Flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: dev.mysh.valapad.flatpak
+          manifest-path: dev.mysh.valapad.yml
+          run-tests: true
+          repository-name: appcenter
+          repository-url: https://flatpak.elementary.io/repo.flatpakrepo
+          cache-key: flatpak-builder-${{ runner.os }}-${{ github.ref_name }}
+          upload-artifact: false
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dev.mysh.valapad.flatpak
+          generate_release_notes: true
+          name: ValaPad ${{ github.ref_name }}

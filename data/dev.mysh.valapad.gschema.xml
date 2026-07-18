@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<schemalist>
+  <schema id="dev.mysh.valapad" path="/dev/mysh/valapad/">
+    <key name="window-width" type="i">
+      <default>800</default>
+      <summary>Window width</summary>
+      <description>Width of the last closed window.</description>
+    </key>
+    <key name="window-height" type="i">
+      <default>600</default>
+      <summary>Window height</summary>
+      <description>Height of the last closed window.</description>
+    </key>
+    <key name="window-maximized" type="b">
+      <default>false</default>
+      <summary>Window maximized</summary>
+      <description>Whether the window was maximized.</description>
+    </key>
+    <key name="word-wrap" type="b">
+      <default>true</default>
+      <summary>Word wrap</summary>
+      <description>Whether long lines wrap to the next line.</description>
+    </key>
+    <key name="status-bar-visible" type="b">
+      <default>true</default>
+      <summary>Status bar visible</summary>
+      <description>Whether the bottom status bar is shown.</description>
+    </key>
+    <key name="zoom-percentage" type="i">
+      <default>100</default>
+      <summary>Zoom percentage</summary>
+      <description>Text zoom level as a percentage.</description>
+    </key>
+    <key name="font" type="s">
+      <default>''</default>
+      <summary>Font</summary>
+      <description>Pango font description string.</description>
+    </key>
+  </schema>
+</schemalist>
