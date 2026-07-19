@@ -1,4 +1,4 @@
-![Screenshot of ValaPad](   https://github.com/hugmouse/valanote/blob/master/data/screenshots/main.webp?raw=true)
+![Screenshot of ValaPad](https://github.com/hugmouse/valanote/blob/master/data/screenshots/main.webp?raw=true)
 
 # ValaPad
 
@@ -48,8 +48,7 @@ flatpak-builder flatpak-build dev.mysh.valapad.yml \
 flatpak run dev.mysh.valapad
 ```
 
-GitHub Actions builds a downloadable Flatpak for each pull request and publishes
-version tags to GitHub Releases.
+GitHub Actions builds a downloadable Flatpak and publishes version tags to [GitHub Releases](https://github.com/hugmouse/valanote/releases).
 
 ## License
 
