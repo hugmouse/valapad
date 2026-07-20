@@ -18,15 +18,20 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/hugmouse/valacode/0.9.0/data/screenshots/main.webp</image>
+      <image>https://raw.githubusercontent.com/hugmouse/valacode/1.0.0/data/screenshots/main.webp</image>
     </screenshot>
   </screenshots>
   <launchable type="desktop-id">dev.mysh.valapad.desktop</launchable>
-  <url type="homepage">https://github.com/hugmouse/valanote</url>
+  <url type="homepage">https://github.com/hugmouse/valapad</url>
   <branding>
     <color type="primary">#3689e6</color>
   </branding>
   <releases>
+    <release version="1.0.0" date="2026-07-20">
+      <description>
+        <p>Added the icon.</p>
+      </description>
+    </release>
     <release version="0.9.0" date="2026-07-16">
       <description>
         <p>Initial release.</p>
