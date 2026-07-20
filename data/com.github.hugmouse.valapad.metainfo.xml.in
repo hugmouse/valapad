@@ -18,7 +18,7 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/hugmouse/valacode/1.0.0/data/screenshots/main.webp</image>
+      <image>https://raw.githubusercontent.com/hugmouse/valacode/1.0.1/data/screenshots/main.webp</image>
     </screenshot>
   </screenshots>
   <launchable type="desktop-id">com.github.hugmouse.valapad.desktop</launchable>
@@ -27,6 +27,13 @@
     <color type="primary">#3689e6</color>
   </branding>
   <releases>
+    <release version="1.0.1" date="2026-07-20">
+      <description>
+        <p>Changed RDNN string due to publishing requirements.</p>
+        <p>Previous: dev.mysh.valapad</p>
+        <p>New: com.github.hugmouse.valapad</p>
+      </description>
+    </release>
     <release version="1.0.0" date="2026-07-20">
       <description>
         <p>Added the icon.</p>
