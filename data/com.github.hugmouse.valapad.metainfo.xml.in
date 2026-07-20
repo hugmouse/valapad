@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <component type="desktop-application">
-  <id>dev.mysh.valapad</id>
+  <id>com.github.hugmouse.valapad</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>ValaPad</name>
   <summary>Edit plain-text files with a familiar set of tools</summary>
-  <developer id="dev.mysh">
+  <developer id="com.github.hugmouse">
     <name>Iaroslav Angliuster</name>
   </developer>
   <description>
@@ -21,7 +21,7 @@
       <image>https://raw.githubusercontent.com/hugmouse/valacode/1.0.0/data/screenshots/main.webp</image>
     </screenshot>
   </screenshots>
-  <launchable type="desktop-id">dev.mysh.valapad.desktop</launchable>
+  <launchable type="desktop-id">com.github.hugmouse.valapad.desktop</launchable>
   <url type="homepage">https://github.com/hugmouse/valapad</url>
   <branding>
     <color type="primary">#3689e6</color>

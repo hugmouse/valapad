@@ -2,7 +2,7 @@
 
 # ValaPad
 
-Edit plain-text files with a familiar set of tools. 
+Edit plain-text files with a familiar set of tools.
 
 Written in Vala and uses GTK4. Tested on elementary OS.
 
@@ -18,8 +18,8 @@ to Russian and German.
 To update them do:
 
 ```sh
-ninja -C build dev.mysh.valapad-pot dev.mysh.valapad-update-po
-ninja -C build dev.mysh.valapad-extra-pot dev.mysh.valapad-extra-update-po
+ninja -C build com.github.hugmouse.valapad-pot com.github.hugmouse.valapad-update-po
+ninja -C build com.github.hugmouse.valapad-extra-pot com.github.hugmouse.valapad-extra-update-po
 ```
 
 ## Building
@@ -29,7 +29,7 @@ Requires `vala`, `meson`, `ninja`, `gettext`, `gtk4` (4.12), `granite-7`, `pango
 ```sh
 meson setup build
 ninja -C build
-./build/src/dev.mysh.valapad
+./build/src/com.github.hugmouse.valapad
 ```
 
 To install system-wide:
@@ -43,9 +43,9 @@ sudo ninja -C build install
 Install the elementary SDK and build the AppCenter package locally:
 
 ```sh
-flatpak-builder flatpak-build dev.mysh.valapad.yml \
+flatpak-builder flatpak-build com.github.hugmouse.valapad.yml \
   --user --install --force-clean
-flatpak run dev.mysh.valapad
+flatpak run com.github.hugmouse.valapad
 ```
 
 GitHub Actions builds a downloadable Flatpak and publishes version tags to [GitHub Releases](https://github.com/hugmouse/valanote/releases).

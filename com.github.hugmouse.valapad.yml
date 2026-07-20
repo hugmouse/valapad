@@ -1,8 +1,8 @@
-id: dev.mysh.valapad
+id: com.github.hugmouse.valapad
 runtime: io.elementary.Platform
 runtime-version: '8'
 sdk: io.elementary.Sdk
-command: dev.mysh.valapad
+command: com.github.hugmouse.valapad
 
 finish-args:
   - --share=ipc
@@ -10,7 +10,7 @@ finish-args:
   - --socket=wayland
 
 modules:
-  - name: dev.mysh.valapad
+  - name: com.github.hugmouse.valapad
     buildsystem: meson
     sources:
       - type: dir

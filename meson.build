@@ -1,5 +1,5 @@
 project(
-  'dev.mysh.valapad',
+  'com.github.hugmouse.valapad',
   'vala', 'c',
   version: '1.0.0',
   meson_version: '>= 0.64.0',
@@ -9,7 +9,7 @@ gettext_name = meson.project_name()
 gnome = import('gnome')
 i18n = import('i18n')
 
-app_id = 'dev.mysh.valapad'
+app_id = 'com.github.hugmouse.valapad'
 
 add_project_arguments(
   [

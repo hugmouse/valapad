@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-APP_ID = "dev.mysh.valapad"
+APP_ID = "com.github.hugmouse.valapad"
 METAINFO = ROOT / "data" / f"{APP_ID}.metainfo.xml.in"
 MANIFEST = ROOT / f"{APP_ID}.yml"
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")

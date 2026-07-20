@@ -24,8 +24,8 @@ jobs:
       - name: Build and test Flatpak bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: dev.mysh.valapad.flatpak
-          manifest-path: dev.mysh.valapad.yml
+          bundle: com.github.hugmouse.valapad.flatpak
+          manifest-path: com.github.hugmouse.valapad.yml
           run-tests: true
           repository-name: appcenter
           repository-url: https://flatpak.elementary.io/repo.flatpakrepo
@@ -35,6 +35,6 @@ jobs:
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          files: dev.mysh.valapad.flatpak
+          files: com.github.hugmouse.valapad.flatpak
           generate_release_notes: true
           name: ValaPad ${{ github.ref_name }}

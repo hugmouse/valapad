@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <schemalist>
-  <schema id="dev.mysh.valapad" path="/dev/mysh/valapad/">
+  <schema id="com.github.hugmouse.valapad" path="/com/github/hugmouse/valapad/">
     <key name="window-width" type="i">
       <default>800</default>
       <summary>Window width</summary>
