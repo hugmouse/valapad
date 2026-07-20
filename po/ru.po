@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: valapad 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-18 17:15+0200\n"
+"POT-Creation-Date: 2026-07-20 17:27+0200\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgstr "Новое окно"
 msgid "Open…"
 msgstr "Открыть…"
 
-#: src/MainWindow.vala:188 src/MainWindow.vala:765
+#: src/MainWindow.vala:188 src/MainWindow.vala:745
 msgid "Save"
 msgstr "Сохранить"
 
@@ -140,80 +140,80 @@ msgstr "Уменьшить"
 msgid "Restore Default Zoom"
 msgstr "Восстановить масштаб"
 
-#: src/MainWindow.vala:230
-msgid "Status Bar"
-msgstr "Строка состояния"
-
-#: src/MainWindow.vala:232
+#: src/MainWindow.vala:229
 msgid "View"
 msgstr "Вид"
 
 #. Help
-#: src/MainWindow.vala:236
+#: src/MainWindow.vala:233
 msgid "About ValaPad"
 msgstr "О приложении"
 
-#: src/MainWindow.vala:237
+#: src/MainWindow.vala:234
 msgid "Help"
 msgstr "Справка"
 
-#: src/MainWindow.vala:357 src/MainWindow.vala:760
+#: src/MainWindow.vala:337 src/MainWindow.vala:740
 msgid "Untitled"
 msgstr "Безымянный"
 
-#: src/MainWindow.vala:359 src/MainWindow.vala:743
+#: src/MainWindow.vala:339 src/MainWindow.vala:723
 msgid "ValaPad"
 msgstr "ValaPad"
 
-#: src/MainWindow.vala:365
+#: src/MainWindow.vala:345
 #, c-format
 msgid "Ln %d"
 msgstr "Стр. %d"
 
-#: src/MainWindow.vala:366
+#: src/MainWindow.vala:346
 #, c-format
 msgid "Col %d"
 msgstr "Стлб. %d"
 
-#: src/MainWindow.vala:482
+#: src/MainWindow.vala:462
 msgid "Open"
 msgstr "Открыть"
 
-#: src/MainWindow.vala:490 src/MainWindow.vala:527
+#: src/MainWindow.vala:470 src/MainWindow.vala:506
 msgid "Open failed"
 msgstr "Не удалось открыть"
 
-#: src/MainWindow.vala:545
+#: src/MainWindow.vala:495
+msgid "UTF-8 (invalid bytes replaced)"
+msgstr ""
+
+#: src/MainWindow.vala:524
 msgid "Save As"
 msgstr "Сохранить как"
 
-#: src/MainWindow.vala:546
+#: src/MainWindow.vala:525
 msgid "Untitled.txt"
 msgstr "Безымянный.txt"
 
-#: src/MainWindow.vala:554 src/MainWindow.vala:588
+#: src/MainWindow.vala:533 src/MainWindow.vala:567
 msgid "Save failed"
 msgstr "Не удалось сохранить"
 
-#: src/MainWindow.vala:630
+#: src/MainWindow.vala:609
 msgid "Print failed"
 msgstr "Не удалось напечатать"
 
-#: src/MainWindow.vala:745
+#: src/MainWindow.vala:725
 msgid "A lightweight plain-text editor."
 msgstr ""
 
-#: src/MainWindow.vala:762
+#: src/MainWindow.vala:742
 #, c-format
 msgid "Do you want to save changes to %s?"
 msgstr "Сохранить изменения в %s?"
 
-#: src/MainWindow.vala:765
+#: src/MainWindow.vala:745
 msgid "Don't Save"
 msgstr "Не сохранять"
 
-#: src/MainWindow.vala:765 src/Dialogs/GoToDialog.vala:36
-#: src/Dialogs/FontDialog.vala:178
+#: src/MainWindow.vala:745 src/Dialogs/GoToDialog.vala:36
+#: src/Dialogs/FontDialog.vala:191
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -229,39 +229,39 @@ msgstr "Номер строки:"
 msgid "Choose Font"
 msgstr "Выбрать шрифт"
 
-#: src/Dialogs/FontDialog.vala:84
+#: src/Dialogs/FontDialog.vala:86
 msgid "Search fonts"
 msgstr "Поиск шрифтов"
 
-#: src/Dialogs/FontDialog.vala:92
+#: src/Dialogs/FontDialog.vala:94
 msgid "All Fonts"
 msgstr "Все шрифты"
 
-#: src/Dialogs/FontDialog.vala:93
+#: src/Dialogs/FontDialog.vala:95
 msgid "Monospace"
 msgstr "Моноширинные"
 
-#: src/Dialogs/FontDialog.vala:94
+#: src/Dialogs/FontDialog.vala:96
 msgid "Sans Serif"
 msgstr "Без засечек"
 
-#: src/Dialogs/FontDialog.vala:127
+#: src/Dialogs/FontDialog.vala:139
 msgid "Regular"
 msgstr "Обычный"
 
-#: src/Dialogs/FontDialog.vala:147
+#: src/Dialogs/FontDialog.vala:160
 msgid "Style"
 msgstr "Начертание"
 
-#: src/Dialogs/FontDialog.vala:149
+#: src/Dialogs/FontDialog.vala:162
 msgid "Size"
 msgstr "Размер"
 
-#: src/Dialogs/FontDialog.vala:163
+#: src/Dialogs/FontDialog.vala:176
 msgid "Preview"
 msgstr "Предпросмотр"
 
-#: src/Dialogs/FontDialog.vala:170
+#: src/Dialogs/FontDialog.vala:183
 msgid "Select"
 msgstr "Выбрать"
 

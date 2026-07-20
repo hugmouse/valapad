@@ -22,7 +22,6 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     private Gtk.Label zoom_label;
     private Gtk.Label line_ending_label;
     private Gtk.Label encoding_label;
-    private Gtk.Revealer status_bar_revealer;
 
     private Gtk.CssProvider font_provider;
     private Pango.FontDescription font_description;
@@ -84,17 +83,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         find_bar = new FindBar (text_view);
         find_bar.visible = false;
 
-        status_bar_revealer = new Gtk.Revealer () {
-            transition_type = Gtk.RevealerTransitionType.SLIDE_UP,
-            reveal_child = true
-        };
-        status_bar_revealer.child = build_status_bar ();
-
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         main_box.append (menu_bar);
         main_box.append (scrolled);
         main_box.append (find_bar);
-        main_box.append (status_bar_revealer);
+        main_box.append (build_status_bar ());
 
         child = main_box;
 
@@ -233,9 +226,6 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         view_menu.append (_("Zoom In"), "win." + Application.ACTION_ZOOM_IN);
         view_menu.append (_("Zoom Out"), "win." + Application.ACTION_ZOOM_OUT);
         view_menu.append (_("Restore Default Zoom"), "win." + Application.ACTION_ZOOM_DEFAULT);
-        var status_section = new Menu ();
-        status_section.append (_("Status Bar"), "win." + Application.ACTION_STATUS_BAR);
-        view_menu.append_section (null, status_section);
         menu.append_submenu (_("View"), view_menu);
 
         // Help
@@ -281,16 +271,6 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         add_action_with_callback (Application.ACTION_ZOOM_IN, action_zoom_in);
         add_action_with_callback (Application.ACTION_ZOOM_OUT, action_zoom_out);
         add_action_with_callback (Application.ACTION_ZOOM_DEFAULT, action_zoom_default);
-
-        var status_bar_action = new SimpleAction.stateful (
-            Application.ACTION_STATUS_BAR, VariantType.BOOLEAN, true
-        );
-        status_bar_action.activate.connect (() => {
-            bool visible = !status_bar_revealer.reveal_child;
-            status_bar_revealer.reveal_child = visible;
-            status_bar_action.set_state (visible);
-        });
-        add_action (status_bar_action);
 
         // Help actions
         add_action_with_callback (Application.ACTION_ABOUT, action_about);

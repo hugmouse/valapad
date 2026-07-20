@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dev.mysh.valapad\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-18 17:15+0200\n"
+"POT-Creation-Date: 2026-07-20 17:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Open…"
 msgstr ""
 
-#: src/MainWindow.vala:188 src/MainWindow.vala:765
+#: src/MainWindow.vala:188 src/MainWindow.vala:745
 msgid "Save"
 msgstr ""
 
@@ -147,80 +147,80 @@ msgstr ""
 msgid "Restore Default Zoom"
 msgstr ""
 
-#: src/MainWindow.vala:230
-msgid "Status Bar"
-msgstr ""
-
-#: src/MainWindow.vala:232
+#: src/MainWindow.vala:229
 msgid "View"
 msgstr ""
 
 #. Help
-#: src/MainWindow.vala:236
+#: src/MainWindow.vala:233
 msgid "About ValaPad"
 msgstr ""
 
-#: src/MainWindow.vala:237
+#: src/MainWindow.vala:234
 msgid "Help"
 msgstr ""
 
-#: src/MainWindow.vala:357 src/MainWindow.vala:760
+#: src/MainWindow.vala:337 src/MainWindow.vala:740
 msgid "Untitled"
 msgstr ""
 
-#: src/MainWindow.vala:359 src/MainWindow.vala:743
+#: src/MainWindow.vala:339 src/MainWindow.vala:723
 msgid "ValaPad"
 msgstr ""
 
-#: src/MainWindow.vala:365
+#: src/MainWindow.vala:345
 #, c-format
 msgid "Ln %d"
 msgstr ""
 
-#: src/MainWindow.vala:366
+#: src/MainWindow.vala:346
 #, c-format
 msgid "Col %d"
 msgstr ""
 
-#: src/MainWindow.vala:482
+#: src/MainWindow.vala:462
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:490 src/MainWindow.vala:527
+#: src/MainWindow.vala:470 src/MainWindow.vala:506
 msgid "Open failed"
 msgstr ""
 
-#: src/MainWindow.vala:545
+#: src/MainWindow.vala:495
+msgid "UTF-8 (invalid bytes replaced)"
+msgstr ""
+
+#: src/MainWindow.vala:524
 msgid "Save As"
 msgstr ""
 
-#: src/MainWindow.vala:546
+#: src/MainWindow.vala:525
 msgid "Untitled.txt"
 msgstr ""
 
-#: src/MainWindow.vala:554 src/MainWindow.vala:588
+#: src/MainWindow.vala:533 src/MainWindow.vala:567
 msgid "Save failed"
 msgstr ""
 
-#: src/MainWindow.vala:630
+#: src/MainWindow.vala:609
 msgid "Print failed"
 msgstr ""
 
-#: src/MainWindow.vala:745
+#: src/MainWindow.vala:725
 msgid "A lightweight plain-text editor."
 msgstr ""
 
-#: src/MainWindow.vala:762
+#: src/MainWindow.vala:742
 #, c-format
 msgid "Do you want to save changes to %s?"
 msgstr ""
 
-#: src/MainWindow.vala:765
+#: src/MainWindow.vala:745
 msgid "Don't Save"
 msgstr ""
 
-#: src/MainWindow.vala:765 src/Dialogs/GoToDialog.vala:36
-#: src/Dialogs/FontDialog.vala:178
+#: src/MainWindow.vala:745 src/Dialogs/GoToDialog.vala:36
+#: src/Dialogs/FontDialog.vala:191
 msgid "Cancel"
 msgstr ""
 
@@ -236,39 +236,39 @@ msgstr ""
 msgid "Choose Font"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:84
+#: src/Dialogs/FontDialog.vala:86
 msgid "Search fonts"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:92
+#: src/Dialogs/FontDialog.vala:94
 msgid "All Fonts"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:93
+#: src/Dialogs/FontDialog.vala:95
 msgid "Monospace"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:94
+#: src/Dialogs/FontDialog.vala:96
 msgid "Sans Serif"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:127
+#: src/Dialogs/FontDialog.vala:139
 msgid "Regular"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:147
+#: src/Dialogs/FontDialog.vala:160
 msgid "Style"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:149
+#: src/Dialogs/FontDialog.vala:162
 msgid "Size"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:163
+#: src/Dialogs/FontDialog.vala:176
 msgid "Preview"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:170
+#: src/Dialogs/FontDialog.vala:183
 msgid "Select"
 msgstr ""
 

@@ -33,7 +33,6 @@ public class ValaPad.Application : Gtk.Application {
     public const string ACTION_ZOOM_IN = "zoom-in";
     public const string ACTION_ZOOM_OUT = "zoom-out";
     public const string ACTION_ZOOM_DEFAULT = "zoom-default";
-    public const string ACTION_STATUS_BAR = "status-bar";
 
     public const string ACTION_ABOUT = "about";
 

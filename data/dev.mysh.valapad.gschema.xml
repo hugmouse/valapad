@@ -22,11 +22,6 @@
       <summary>Word wrap</summary>
       <description>Whether long lines wrap to the next line.</description>
     </key>
-    <key name="status-bar-visible" type="b">
-      <default>true</default>
-      <summary>Status bar visible</summary>
-      <description>Whether the bottom status bar is shown.</description>
-    </key>
     <key name="zoom-percentage" type="i">
       <default>100</default>
       <summary>Zoom percentage</summary>
