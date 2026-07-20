@@ -39,7 +39,6 @@ install_data(
   install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas')
 )
 
-# TODO: Create 6 slightly different SVGs
 icon_sizes = ['16', '24', '32', '48', '64', '128']
 
 foreach size : icon_sizes
@@ -61,8 +60,9 @@ install_data(
   rename: app_id + '.svg'
 )
 
-install_data(
-  'icons/symbolic.svg',
-  install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'symbolic' / 'apps',
-  rename: app_id + '-symbolic.svg'
-)
+# Do I actually need to add this one? Where is it even used?
+#install_data(
+#  'icons/symbolic.svg',
+#  install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'symbolic' / 'apps',
+#  rename: app_id + '-symbolic.svg'
+#)
