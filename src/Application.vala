@@ -9,7 +9,6 @@ public class ValaPad.Application : Gtk.Application {
     public const string ACTION_OPEN = "open";
     public const string ACTION_SAVE = "save";
     public const string ACTION_SAVE_AS = "save-as";
-    public const string ACTION_PAGE_SETUP = "page-setup";
     public const string ACTION_PRINT = "print";
     public const string ACTION_QUIT = "quit";
 

@@ -692,26 +692,27 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     // --- View actions ---------------------------------------------------------------------------------
 
-    private void action_zoom_in () {
-        if (zoom_percentage < MAX_ZOOM) {
-            zoom_percentage = (zoom_percentage + 10).clamp (MIN_ZOOM, MAX_ZOOM);
-            update_zoom_css ();
-            update_status ();
+    // helper
+    private void set_zoom (int value) {
+        var new_zoom = value.clamp (MIN_ZOOM, MAX_ZOOM);
+        if (new_zoom == zoom_percentage) {
+            return;
         }
+        zoom_percentage = new_zoom;
+        update_zoom_css ();
+        update_status ();
+    }
+
+    private void action_zoom_in () {
+        set_zoom (zoom_percentage + 10);
     }
 
     private void action_zoom_out () {
-        if (zoom_percentage > MIN_ZOOM) {
-            zoom_percentage = (zoom_percentage - 10).clamp (MIN_ZOOM, MAX_ZOOM);
-            update_zoom_css ();
-            update_status ();
-        }
+        set_zoom (zoom_percentage - 10);
     }
 
     private void action_zoom_default () {
-        zoom_percentage = 100;
-        update_zoom_css ();
-        update_status ();
+        set_zoom(100);
     }
 
     // --- Help actions ---------------------------------------------------------------------------------
