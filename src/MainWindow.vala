@@ -685,6 +685,8 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 settings.set_string ("font", font_description.to_string ());
                 update_zoom_css ();
             });
+        } else {
+            font_dialog.set_initial_font (font_description);
         }
 
         font_dialog.present ();

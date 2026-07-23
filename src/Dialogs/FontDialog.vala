@@ -4,7 +4,14 @@
  */
 
 public class ValaPad.FontDialog : Gtk.Window {
-    private const string PREVIEW_TEXT = "The quick brown fox jumps over the lazy dog.";
+    [CCode (cname = "gtk_style_context_add_provider_for_display")]
+    private static extern void add_provider_for_display (
+        Gdk.Display display,
+        Gtk.StyleProvider provider,
+        uint priority
+    );
+
+    private const string PREVIEW_TEXT = _("The quick brown fox jumps over the lazy dog.");
 
     private Gtk.SingleSelection family_selection;
     private Gtk.CustomFilter family_filter;
@@ -14,8 +21,10 @@ public class ValaPad.FontDialog : Gtk.Window {
     private Gtk.DropDown category_dropdown;
     private Gtk.DropDown face_dropdown;
     private Gtk.SpinButton size_spin;
+    private Gtk.Label current_font_label;
     private Gtk.Label preview;
     private Gtk.Button select_button;
+    private Pango.FontDescription applied_font;
     private Pango.FontDescription selected_font;
     private Pango.FontDescription[] face_descriptions = {};
 
@@ -31,9 +40,25 @@ public class ValaPad.FontDialog : Gtk.Window {
             hide_on_close: true
         );
 
+        applied_font = initial_font.copy ();
         selected_font = initial_font.copy ();
+        var style_provider = new Gtk.CssProvider ();
+        add_provider_for_display (
+            get_display (),
+            style_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        );
         build_ui ();
-        update_faces ();
+        set_initial_font (initial_font);
+    }
+
+    public void set_initial_font (Pango.FontDescription initial_font) {
+        search_entry.text = "";
+        category_dropdown.selected = FontCategory.ALL;
+        applied_font = initial_font.copy ();
+        selected_font = initial_font.copy ();
+        current_font_label.label = applied_font.to_string ();
+        family_filter.changed (Gtk.FilterChange.DIFFERENT);
         select_initial_family ();
     }
 
@@ -42,7 +67,7 @@ public class ValaPad.FontDialog : Gtk.Window {
         factory.setup.connect ((object) => {
             var list_item = object as Gtk.ListItem;
             if (list_item != null) {
-                list_item.child = new Gtk.Label (null) {
+                var label = new Gtk.Label (null) {
                     ellipsize = Pango.EllipsizeMode.END,
                     hexpand = true,
                     xalign = 0,
@@ -51,14 +76,30 @@ public class ValaPad.FontDialog : Gtk.Window {
                     margin_top = 4,
                     margin_bottom = 4
                 };
+                var container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
+                    margin_start = 4,
+                    margin_end = 4,
+                    margin_top = 2,
+                    margin_bottom = 2
+                };
+                container.append (label);
+                list_item.child = container;
             }
         });
         factory.bind.connect ((object) => {
             var list_item = object as Gtk.ListItem;
             var family = list_item != null ? list_item.item as Pango.FontFamily : null;
-            var label = list_item != null ? list_item.child as Gtk.Label : null;
-            if (family != null && label != null) {
+            var container = list_item != null ? list_item.child as Gtk.Box : null;
+            var label = container != null ? container.get_first_child () as Gtk.Label : null;
+            if (family != null && container != null && label != null) {
                 label.label = family.get_name ();
+                if (family.get_name () == applied_font.get_family ()) {
+                    label.add_css_class ("accent");
+                    container.add_css_class ("applied-font");
+                } else {
+                    label.remove_css_class ("accent");
+                    container.remove_css_class ("applied-font");
+                }
             }
         });
 
@@ -157,10 +198,17 @@ public class ValaPad.FontDialog : Gtk.Window {
             margin_top = 18,
             margin_bottom = 18
         };
-        controls.attach (new Gtk.Label (_("Style")) { xalign = 0 }, 0, 0);
-        controls.attach (face_dropdown, 1, 0);
-        controls.attach (new Gtk.Label (_("Size")) { xalign = 0 }, 0, 1);
-        controls.attach (size_spin, 1, 1);
+        current_font_label = new Gtk.Label (null) {
+            ellipsize = Pango.EllipsizeMode.END,
+            xalign = 0,
+            hexpand = true
+        };
+        controls.attach (new Gtk.Label (_("Current font")) { xalign = 0 }, 0, 0);
+        controls.attach (current_font_label, 1, 0);
+        controls.attach (new Gtk.Label (_("Style")) { xalign = 0 }, 0, 1);
+        controls.attach (face_dropdown, 1, 1);
+        controls.attach (new Gtk.Label (_("Size")) { xalign = 0 }, 0, 2);
+        controls.attach (size_spin, 1, 2);
 
         preview = new Gtk.Label (PREVIEW_TEXT) {
             wrap = true,
@@ -257,7 +305,17 @@ public class ValaPad.FontDialog : Gtk.Window {
         names[faces.length] = null;
 
         face_dropdown.model = new Gtk.StringList (names);
-        face_dropdown.selected = 0;
+        size_spin.value = get_initial_size ();
+        for (uint i = 0; i < face_descriptions.length; i++) {
+            var face = face_descriptions[i];
+            if (face.get_style () == selected_font.get_style () &&
+                face.get_weight () == selected_font.get_weight () &&
+                face.get_stretch () == selected_font.get_stretch () &&
+                face.get_variant () == selected_font.get_variant ()) {
+                face_dropdown.selected = i;
+                break;
+            }
+        }
         select_button.sensitive = faces.length > 0;
         update_preview ();
     }
