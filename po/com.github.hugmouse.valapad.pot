@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.hugmouse.valapad\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 17:27+0200\n"
+"POT-Creation-Date: 2026-07-24 10:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Open…"
 msgstr ""
 
-#: src/MainWindow.vala:188 src/MainWindow.vala:745
+#: src/MainWindow.vala:188 src/MainWindow.vala:748
 msgid "Save"
 msgstr ""
 
@@ -160,11 +160,11 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/MainWindow.vala:337 src/MainWindow.vala:740
+#: src/MainWindow.vala:337 src/MainWindow.vala:743
 msgid "Untitled"
 msgstr ""
 
-#: src/MainWindow.vala:339 src/MainWindow.vala:723
+#: src/MainWindow.vala:339 src/MainWindow.vala:726
 msgid "ValaPad"
 msgstr ""
 
@@ -206,21 +206,21 @@ msgstr ""
 msgid "Print failed"
 msgstr ""
 
-#: src/MainWindow.vala:725
+#: src/MainWindow.vala:728
 msgid "A lightweight plain-text editor."
 msgstr ""
 
-#: src/MainWindow.vala:742
+#: src/MainWindow.vala:745
 #, c-format
 msgid "Do you want to save changes to %s?"
 msgstr ""
 
-#: src/MainWindow.vala:745
+#: src/MainWindow.vala:748
 msgid "Don't Save"
 msgstr ""
 
-#: src/MainWindow.vala:745 src/Dialogs/GoToDialog.vala:36
-#: src/Dialogs/FontDialog.vala:191
+#: src/MainWindow.vala:748 src/Dialogs/GoToDialog.vala:36
+#: src/Dialogs/FontDialog.vala:239
 msgid "Cancel"
 msgstr ""
 
@@ -232,43 +232,51 @@ msgstr ""
 msgid "Line number:"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:26
+#: src/Dialogs/FontDialog.vala:14
+msgid "The quick brown fox jumps over the lazy dog."
+msgstr ""
+
+#: src/Dialogs/FontDialog.vala:35
 msgid "Choose Font"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:86
+#: src/Dialogs/FontDialog.vala:127
 msgid "Search fonts"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:94
+#: src/Dialogs/FontDialog.vala:135
 msgid "All Fonts"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:95
+#: src/Dialogs/FontDialog.vala:136
 msgid "Monospace"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:96
+#: src/Dialogs/FontDialog.vala:137
 msgid "Sans Serif"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:139
+#: src/Dialogs/FontDialog.vala:180
 msgid "Regular"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:160
+#: src/Dialogs/FontDialog.vala:206
+msgid "Current font"
+msgstr ""
+
+#: src/Dialogs/FontDialog.vala:208
 msgid "Style"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:162
+#: src/Dialogs/FontDialog.vala:210
 msgid "Size"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:176
+#: src/Dialogs/FontDialog.vala:224
 msgid "Preview"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:183
+#: src/Dialogs/FontDialog.vala:231
 msgid "Select"
 msgstr ""
 

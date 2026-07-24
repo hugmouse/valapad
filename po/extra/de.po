@@ -2,14 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: valapad-extra 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-18 14:53+0200\n"
+"POT-Creation-Date: 2026-07-24 10:47+0200\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: data/com.github.hugmouse.valapad.desktop.in:6 data/com.github.hugmouse.valapad.metainfo.xml.in:7
+#: data/com.github.hugmouse.valapad.desktop.in:6
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:7
 msgid "ValaPad"
 msgstr "ValaPad"
 
@@ -31,26 +32,49 @@ msgstr "Nur-Text-Dateien mit vertrauten Werkzeugen bearbeiten"
 
 #: data/com.github.hugmouse.valapad.metainfo.xml.in:10
 msgid "Iaroslav Angliuster"
-msgstr ""
+msgstr "Iaroslav Angliuster"
 
 #: data/com.github.hugmouse.valapad.metainfo.xml.in:13
+#, fuzzy
 msgid ""
 "ValaPad is a lightweight plain-text editor with a familiar menu bar and a "
 "live status bar showing line and column, zoom level, line-ending style, and "
-"encoding."
+"encoding. Exciting!"
 msgstr ""
-"ValaPad ist ein schlanker Nur-Text-Editor mit einer vertrauten Menüleiste und "
-"einer Live-Statusleiste, die Zeile und Spalte, Zoomstufe, Zeilenendestil und "
+"ValaPad ist ein Editor für Nur-Text-Dateien. Die vertraute Menüleiste hält "
+"gängige Bearbeitungswerkzeuge griffbereit, während die Statusleiste die "
+"aktuelle Zeile und Spalte, die Zoomstufe, den Zeilenendestil und die "
 "Zeichenkodierung anzeigt."
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:18
-msgid ""
-"Find and replace text, jump to a line, choose line wrapping, and work with "
-"UTF-8 files using either LF or CRLF line endings."
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:32
+#, fuzzy
+msgid "Changed RDNN string due to publishing requirements."
 msgstr ""
-"Text suchen und ersetzen, zu einer Zeile springen, den Zeilenumbruch wählen "
-"und mit UTF-8-Dateien mit LF- oder CRLF-Zeilenenden arbeiten."
+"Die Anwendungs-ID wurde an die Veröffentlichungsanforderungen angepasst."
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:31
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:33
+msgid "Previous: dev.mysh.valapad"
+msgstr "Bevor: dev.mysh.valapad"
+
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:34
+msgid "New: com.github.hugmouse.valapad"
+msgstr "Danach: com.github.hugmouse.valapad"
+
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:39
+#, fuzzy
+msgid "Added the icon."
+msgstr "Das Icon wurde hinzugefügt."
+
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:44
 msgid "Initial release."
 msgstr "Erstveröffentlichung."
+
+#~ msgid "Edit text with familiar menus and a live status bar"
+#~ msgstr "Text mit vertrauten Menüs und einer Live-Statusleiste bearbeiten"
+
+#~ msgid ""
+#~ "Find and replace text, jump to a line, choose line wrapping, and work "
+#~ "with UTF-8 files using either LF or CRLF line endings."
+#~ msgstr ""
+#~ "Text suchen und ersetzen, zu einer Zeile springen, den Zeilenumbruch "
+#~ "wählen und mit UTF-8-Dateien mit LF- oder CRLF-Zeilenenden arbeiten."

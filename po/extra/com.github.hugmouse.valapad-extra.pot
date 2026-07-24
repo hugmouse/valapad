@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.hugmouse.valapad-extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-18 14:53+0200\n"
+"POT-Creation-Date: 2026-07-24 10:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/com.github.hugmouse.valapad.desktop.in:6 data/com.github.hugmouse.valapad.metainfo.xml.in:7
+#: data/com.github.hugmouse.valapad.desktop.in:6
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:7
 msgid "ValaPad"
 msgstr ""
 
@@ -45,15 +46,25 @@ msgstr ""
 msgid ""
 "ValaPad is a lightweight plain-text editor with a familiar menu bar and a "
 "live status bar showing line and column, zoom level, line-ending style, and "
-"encoding."
+"encoding. Exciting!"
 msgstr ""
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:18
-msgid ""
-"Find and replace text, jump to a line, choose line wrapping, and work with "
-"UTF-8 files using either LF or CRLF line endings."
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:32
+msgid "Changed RDNN string due to publishing requirements."
 msgstr ""
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:31
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:33
+msgid "Previous: dev.mysh.valapad"
+msgstr ""
+
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:34
+msgid "New: com.github.hugmouse.valapad"
+msgstr ""
+
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:39
+msgid "Added the icon."
+msgstr ""
+
+#: data/com.github.hugmouse.valapad.metainfo.xml.in:44
 msgid "Initial release."
 msgstr ""
