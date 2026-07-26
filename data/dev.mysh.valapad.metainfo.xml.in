@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <component type="desktop-application">
-  <id>com.github.hugmouse.valapad</id>
+  <id>dev.mysh.valapad</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>ValaPad</name>
@@ -18,20 +18,27 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/hugmouse/valacode/1.0.1/data/screenshots/main.webp</image>
+      <image>https://raw.githubusercontent.com/hugmouse/valanote/1.0.2/data/screenshots/main.webp</image>
     </screenshot>
   </screenshots>
-  <launchable type="desktop-id">com.github.hugmouse.valapad.desktop</launchable>
+  <launchable type="desktop-id">dev.mysh.valapad.desktop</launchable>
   <url type="homepage">https://github.com/hugmouse/valapad</url>
   <branding>
     <color type="primary">#3689e6</color>
   </branding>
   <releases>
+    <release version="1.0.2" date="2026-07-26">
+      <description>
+        <p>Changed RDNN string to previous one.</p>
+        <p>Fixed Russian and German translations.</p>
+        <p>Currently used font is now highlighted in fonts menu.</p>
+      </description>
+    </release>
     <release version="1.0.1" date="2026-07-20">
       <description>
         <p>Changed RDNN string due to publishing requirements.</p>
         <p>Previous: dev.mysh.valapad</p>
-        <p>New: com.github.hugmouse.valapad</p>
+        <p>New: dev.mysh.valapad</p>
       </description>
     </release>
     <release version="1.0.0" date="2026-07-20">

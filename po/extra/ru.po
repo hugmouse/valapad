@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: valapad-extra 1.0.0\n"
-"Report-Msgid-Bugs-To: me@mysh.dev\n"
-"POT-Creation-Date: 2026-07-24 10:47+0200\n"
-"PO-Revision-Date: 2026-07-24 15:06+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-26 16:07+0200\n"
+"PO-Revision-Date: 2026-07-26 15:46+0200\n"
 "Last-Translator: Iaroslav Angliuster <me@mysh.dev>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -13,62 +13,69 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: data/com.github.hugmouse.valapad.desktop.in:6
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:7
+#: data/dev.mysh.valapad.desktop.in:6 data/dev.mysh.valapad.metainfo.xml.in:7
 msgid "ValaPad"
 msgstr "ValaPad"
 
-#: data/com.github.hugmouse.valapad.desktop.in:7
+#: data/dev.mysh.valapad.desktop.in:7
 msgid "Edit plain-text files"
 msgstr "Редактируйте текстовые файлы"
 
-#: data/com.github.hugmouse.valapad.desktop.in:9
+#: data/dev.mysh.valapad.desktop.in:9
 msgid "valapad;text;editor;plain;"
 msgstr "valapad;текст;редактор;обычный текст;"
 
-#: data/com.github.hugmouse.valapad.desktop.in:20
+#: data/dev.mysh.valapad.desktop.in:20
 msgid "New Window"
 msgstr "Новое окно"
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:8
+#: data/dev.mysh.valapad.metainfo.xml.in:8
 msgid "Edit plain-text files with a familiar set of tools"
 msgstr "Редактируйте текстовые файлы с помощью знакомых инструментов"
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:10
+#: data/dev.mysh.valapad.metainfo.xml.in:10
 msgid "Iaroslav Angliuster"
 msgstr "Ярослав Англюстер"
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:13
-#, fuzzy
+#: data/dev.mysh.valapad.metainfo.xml.in:13
 msgid ""
 "ValaPad is a lightweight plain-text editor with a familiar menu bar and a "
 "live status bar showing line and column, zoom level, line-ending style, and "
 "encoding. Exciting!"
 msgstr ""
-"ValaPad — лёгкий редактор текста. В привычной строке меню всегда под рукой "
-"находятся основные инструменты редактирования, а строка состояния показывает "
-"текущую строку и столбец, масштаб, тип окончания строк и кодировку."
+"ValaPad — лёгкий редактор текста с привычной строкой меню и динамической "
+"строкой состояния, которая показывает строку и столбец, масштаб, тип "
+"окончания строк и кодировку."
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:32
-#, fuzzy
+#: data/dev.mysh.valapad.metainfo.xml.in:32
+msgid "Changed RDNN string to previous one."
+msgstr "Прежний идентификатор RDNN восстановлен."
+
+#: data/dev.mysh.valapad.metainfo.xml.in:33
+msgid "Fixed Russian and German translations."
+msgstr "Исправлены переводы на русский и немецкий языки."
+
+#: data/dev.mysh.valapad.metainfo.xml.in:34
+msgid "Currently used font is now highlighted in fonts menu."
+msgstr "Используемый шрифт теперь выделен в меню шрифтов."
+
+#: data/dev.mysh.valapad.metainfo.xml.in:39
 msgid "Changed RDNN string due to publishing requirements."
-msgstr ""
-"Идентификатор приложения обновлён в соответствии с требованиями публикации."
+msgstr "Идентификатор RDNN изменён в соответствии с требованиями публикации."
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:33
+#: data/dev.mysh.valapad.metainfo.xml.in:40
 msgid "Previous: dev.mysh.valapad"
-msgstr "Прошлое: dev.mysh.valapad"
+msgstr "Прежний: dev.mysh.valapad"
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:34
-msgid "New: com.github.hugmouse.valapad"
-msgstr "Новое: com.github.hugmouse.valapad"
+#: data/dev.mysh.valapad.metainfo.xml.in:41
+msgid "New: dev.mysh.valapad"
+msgstr "Новый: dev.mysh.valapad"
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:39
-#, fuzzy
+#: data/dev.mysh.valapad.metainfo.xml.in:46
 msgid "Added the icon."
-msgstr "Добавлена иконка приложения."
+msgstr "Добавлен значок приложения."
 
-#: data/com.github.hugmouse.valapad.metainfo.xml.in:44
+#: data/dev.mysh.valapad.metainfo.xml.in:51
 msgid "Initial release."
 msgstr "Первый релиз."
 

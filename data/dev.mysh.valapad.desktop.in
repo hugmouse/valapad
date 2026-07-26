@@ -7,14 +7,14 @@ Comment=Edit plain-text files
 Categories=Utility;TextEditor;
 Keywords=valapad;text;editor;plain;
 
-Icon=com.github.hugmouse.valapad
-Exec=com.github.hugmouse.valapad %F
+Icon=dev.mysh.valapad
+Exec=dev.mysh.valapad %F
 Terminal=false
 StartupNotify=true
-StartupWMClass=com.github.hugmouse.valapad
+StartupWMClass=dev.mysh.valapad
 MimeType=text/plain;
 Actions=NewWindow;
 
 [Desktop Action NewWindow]
 Name=New Window
-Exec=com.github.hugmouse.valapad
+Exec=dev.mysh.valapad
