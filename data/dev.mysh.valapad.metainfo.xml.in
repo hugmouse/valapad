@@ -18,7 +18,7 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/hugmouse/valanote/raw/1.0.3/data/screenshots/main.webp?raw=true</image>
+      <image>https://github.com/hugmouse/valapad/raw/1.0.3/data/screenshots/main.webp?raw=true</image>
     </screenshot>
   </screenshots>
   <launchable type="desktop-id">dev.mysh.valapad.desktop</launchable>
@@ -27,6 +27,11 @@
     <color type="primary">#3689e6</color>
   </branding>
   <releases>
+    <release version="1.0.4" date="2026-07-27">
+      <description>
+        <p>Changed strings related to RDNN change, no visual changes.</p>
+      </description>
+    </release>
     <release version="1.0.3" date="2026-07-26">
       <description>
         <p>Fixed link to the screenshot of the app.</p>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dev.mysh.valapad-extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 16:07+0200\n"
+"POT-Creation-Date: 2026-07-27 08:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,33 +49,37 @@ msgid ""
 msgstr ""
 
 #: data/dev.mysh.valapad.metainfo.xml.in:32
+msgid "Fixed link to the screenshot of the app."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in:37
 msgid "Changed RDNN string to previous one."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:33
+#: data/dev.mysh.valapad.metainfo.xml.in:38
 msgid "Fixed Russian and German translations."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:34
+#: data/dev.mysh.valapad.metainfo.xml.in:39
 msgid "Currently used font is now highlighted in fonts menu."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:39
+#: data/dev.mysh.valapad.metainfo.xml.in:44
 msgid "Changed RDNN string due to publishing requirements."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:40
+#: data/dev.mysh.valapad.metainfo.xml.in:45
 msgid "Previous: dev.mysh.valapad"
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:41
+#: data/dev.mysh.valapad.metainfo.xml.in:46
 msgid "New: dev.mysh.valapad"
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:46
+#: data/dev.mysh.valapad.metainfo.xml.in:51
 msgid "Added the icon."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:51
+#: data/dev.mysh.valapad.metainfo.xml.in:56
 msgid "Initial release."
 msgstr ""
