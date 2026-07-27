@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: valapad-extra 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 16:07+0200\n"
+"POT-Creation-Date: 2026-07-27 12:53+0200\n"
 "PO-Revision-Date: 2026-07-26 15:46+0200\n"
 "Last-Translator: Iaroslav Angliuster <me@mysh.dev>\n"
 "Language-Team: German\n"
@@ -47,36 +47,44 @@ msgstr ""
 "und Zeichenkodierung anzeigt."
 
 #: data/dev.mysh.valapad.metainfo.xml.in:32
+msgid "Changed strings related to RDNN change, no visual changes."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in:37
+msgid "Fixed link to the screenshot of the app."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in:42
 msgid "Changed RDNN string to previous one."
 msgstr "Die RDNN wurde auf die vorherige zurückgesetzt."
 
-#: data/dev.mysh.valapad.metainfo.xml.in:33
+#: data/dev.mysh.valapad.metainfo.xml.in:43
 msgid "Fixed Russian and German translations."
 msgstr "Die russischen und deutschen Übersetzungen wurden korrigiert."
 
-#: data/dev.mysh.valapad.metainfo.xml.in:34
+#: data/dev.mysh.valapad.metainfo.xml.in:44
 msgid "Currently used font is now highlighted in fonts menu."
 msgstr ""
 "Die aktuell verwendete Schriftart wird jetzt im Schriftartenmenü "
 "hervorgehoben."
 
-#: data/dev.mysh.valapad.metainfo.xml.in:39
+#: data/dev.mysh.valapad.metainfo.xml.in:49
 msgid "Changed RDNN string due to publishing requirements."
 msgstr "Die RDNN wurde aufgrund der Veröffentlichungsanforderungen geändert."
 
-#: data/dev.mysh.valapad.metainfo.xml.in:40
+#: data/dev.mysh.valapad.metainfo.xml.in:50
 msgid "Previous: dev.mysh.valapad"
 msgstr "Vorher: dev.mysh.valapad"
 
-#: data/dev.mysh.valapad.metainfo.xml.in:41
+#: data/dev.mysh.valapad.metainfo.xml.in:51
 msgid "New: dev.mysh.valapad"
 msgstr "Neu: dev.mysh.valapad"
 
-#: data/dev.mysh.valapad.metainfo.xml.in:46
+#: data/dev.mysh.valapad.metainfo.xml.in:56
 msgid "Added the icon."
 msgstr "Das Icon wurde hinzugefügt."
 
-#: data/dev.mysh.valapad.metainfo.xml.in:51
+#: data/dev.mysh.valapad.metainfo.xml.in:61
 msgid "Initial release."
 msgstr "Erstveröffentlichung."
 
