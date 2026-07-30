@@ -10,19 +10,29 @@ Written in Vala and uses GTK4. Tested on elementary OS.
 
 - You can edit files.
 
-## Languages
+## Installation
+### From AppCenter (Recommended)
+Click the button to get ValaPad on AppCenter if you're on elementary OS:
 
-ValaPad uses English as its source and fallback language. And also translated
-to Russian and German.
+[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/dev.mysh.valapad)
 
-To update them do:
+### From Source Code (Flatpak)
+You'll need `flatpak` and `flatpak-builder` commands installed on your system.
 
-```sh
-ninja -C build dev.mysh.valapad-pot dev.mysh.valapad-update-po
-ninja -C build dev.mysh.valapad-extra-pot dev.mysh.valapad-extra-update-po
+Run `flatpak remote-add` to add AppCenter remote for dependencies:
+
+```
+flatpak remote-add --user --if-not-exists appcenter https://flatpak.elementary.io/repo.flatpakrepo
 ```
 
-## Building
+To build and install, use `flatpak-builder`, then execute with `flatpak run`:
+
+```
+flatpak-builder builddir --user --install --force-clean --install-deps-from=appcenter dev.mysh.valapad.yml
+flatpak run dev.mysh.valapad
+```
+
+### Building from source (without Flatpak)
 
 Requires `vala`, `meson`, `ninja`, `gettext`, `gtk4` (4.12), `granite-7`, `pango`, and `pangocairo`.
 
@@ -38,17 +48,25 @@ To install system-wide:
 sudo ninja -C build install
 ```
 
-## Flatpak
+## Enabling debug logs
 
-Install the elementary SDK and build the AppCenter package locally:
+Run the app with the following environment variable:
 
-```sh
-flatpak-builder flatpak-build dev.mysh.valapad.yml \
-  --user --install --force-clean
-flatpak run dev.mysh.valapad
+```bash
+G_MESSAGES_DEBUG=all dev.mysh.valapad
 ```
 
-GitHub Actions builds a downloadable Flatpak and publishes version tags to [GitHub Releases](https://github.com/hugmouse/valanote/releases).
+## Languages
+
+ValaPad uses English as its source and fallback language. And also translated
+to Russian and German.
+
+To update them do:
+
+```sh
+ninja -C build dev.mysh.valapad-pot dev.mysh.valapad-update-po
+ninja -C build dev.mysh.valapad-extra-pot dev.mysh.valapad-extra-update-po
+```
 
 ## License
 

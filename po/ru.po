@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: valapad 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 12:53+0200\n"
+"POT-Creation-Date: 2026-07-30 17:10+0200\n"
 "PO-Revision-Date: 2026-07-24 15:06+0200\n"
 "Last-Translator: Iaroslav Angliuster <me@mysh.dev>\n"
 "Language-Team: Russian\n"
@@ -13,212 +13,250 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/MainWindow.vala:47
+#: src/MainWindow.vala:52
 msgid "Untitled - ValaPad"
 msgstr "Безымянный — ValaPad"
 
+#: src/MainWindow.vala:101
+msgid "Dismiss"
+msgstr ""
+
 #. ------------------------------
 #. Ln 1 Col 1 | 100% | LF | UTF-8
-#: src/MainWindow.vala:137
+#: src/MainWindow.vala:171
 msgid "Ln 1"
 msgstr "Стр. 1"
 
-#: src/MainWindow.vala:143
+#: src/MainWindow.vala:177
 msgid "Col 1"
 msgstr "Столб. 1"
 
 #. File
-#: src/MainWindow.vala:184
+#: src/MainWindow.vala:218
 msgid "New"
 msgstr "Создать"
 
-#: src/MainWindow.vala:185
+#: src/MainWindow.vala:219
 msgid "New Window"
 msgstr "Новое окно"
 
-#: src/MainWindow.vala:186
+#: src/MainWindow.vala:220
 msgid "Open…"
 msgstr "Открыть…"
 
-#: src/MainWindow.vala:188 src/MainWindow.vala:748
+#: src/MainWindow.vala:222 src/MainWindow.vala:885
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/MainWindow.vala:189
+#: src/MainWindow.vala:223
 msgid "Save As…"
 msgstr "Сохранить как…"
 
-#: src/MainWindow.vala:192
+#: src/MainWindow.vala:226
 msgid "Print…"
 msgstr "Печать…"
 
-#: src/MainWindow.vala:194
+#: src/MainWindow.vala:228
 msgid "Exit"
 msgstr "Выйти"
 
-#: src/MainWindow.vala:195
+#: src/MainWindow.vala:229
 msgid "File"
 msgstr "Файл"
 
 #. Edit
-#: src/MainWindow.vala:199
+#: src/MainWindow.vala:233
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:200
+#: src/MainWindow.vala:234
 msgid "Redo"
 msgstr "Повторить"
 
-#: src/MainWindow.vala:202
+#: src/MainWindow.vala:236
 msgid "Cut"
 msgstr "Вырезать"
 
-#: src/MainWindow.vala:203
+#: src/MainWindow.vala:237
 msgid "Copy"
 msgstr "Копировать"
 
-#: src/MainWindow.vala:204
+#: src/MainWindow.vala:238
 msgid "Paste"
 msgstr "Вставить"
 
-#: src/MainWindow.vala:205
+#: src/MainWindow.vala:239
 msgid "Delete"
 msgstr "Удалить"
 
-#: src/MainWindow.vala:208
+#: src/MainWindow.vala:242
 msgid "Find…"
 msgstr "Найти…"
 
-#: src/MainWindow.vala:209
+#: src/MainWindow.vala:243
 msgid "Find Next"
 msgstr "Найти далее"
 
-#: src/MainWindow.vala:210
+#: src/MainWindow.vala:244
 msgid "Find Previous"
 msgstr "Найти предыдущее"
 
-#: src/MainWindow.vala:211
+#: src/MainWindow.vala:245
 msgid "Replace…"
 msgstr "Заменить…"
 
-#: src/MainWindow.vala:213
+#: src/MainWindow.vala:247
 msgid "Go To…"
 msgstr "Перейти…"
 
-#: src/MainWindow.vala:214
+#: src/MainWindow.vala:248
 msgid "Select All"
 msgstr "Выделить всё"
 
-#: src/MainWindow.vala:215
+#: src/MainWindow.vala:249
 msgid "Time/Date"
 msgstr "Время/дата"
 
-#: src/MainWindow.vala:216
+#: src/MainWindow.vala:250
 msgid "Edit"
 msgstr "Правка"
 
 #. Format
-#: src/MainWindow.vala:220
+#: src/MainWindow.vala:254
 msgid "Word Wrap"
 msgstr "Перенос по словам"
 
-#: src/MainWindow.vala:221
+#: src/MainWindow.vala:255
 msgid "Font…"
 msgstr "Шрифт…"
 
-#: src/MainWindow.vala:222
+#: src/MainWindow.vala:256
 msgid "Format"
 msgstr "Формат"
 
 #. View
-#: src/MainWindow.vala:226
+#: src/MainWindow.vala:260
 msgid "Zoom In"
 msgstr "Увеличить"
 
-#: src/MainWindow.vala:227
+#: src/MainWindow.vala:261
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
-#: src/MainWindow.vala:228
+#: src/MainWindow.vala:262
 msgid "Restore Default Zoom"
 msgstr "Восстановить исходный масштаб"
 
-#: src/MainWindow.vala:229
+#: src/MainWindow.vala:263
 msgid "View"
 msgstr "Вид"
 
 #. Help
-#: src/MainWindow.vala:233
+#: src/MainWindow.vala:267
 msgid "About ValaPad"
 msgstr "О ValaPad"
 
-#: src/MainWindow.vala:234
+#: src/MainWindow.vala:268
 msgid "Help"
 msgstr "Справка"
 
-#: src/MainWindow.vala:337 src/MainWindow.vala:743
+#: src/MainWindow.vala:374 src/MainWindow.vala:880 src/MainWindow.vala:913
 msgid "Untitled"
 msgstr "Безымянный"
 
-#: src/MainWindow.vala:339 src/MainWindow.vala:726
+#: src/MainWindow.vala:376 src/MainWindow.vala:863
 msgid "ValaPad"
 msgstr "ValaPad"
 
-#: src/MainWindow.vala:345
+#: src/MainWindow.vala:382
 #, c-format
 msgid "Ln %d"
 msgstr "Стр. %d"
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:383
 #, c-format
 msgid "Col %d"
 msgstr "Столб. %d"
 
-#: src/MainWindow.vala:462
+#: src/MainWindow.vala:504
 msgid "Open"
 msgstr "Открыть"
 
-#: src/MainWindow.vala:470 src/MainWindow.vala:506
+#: src/MainWindow.vala:512 src/MainWindow.vala:534 src/MainWindow.vala:582
 msgid "Open failed"
 msgstr "Не удалось открыть"
 
-#: src/MainWindow.vala:495
+#: src/MainWindow.vala:535
+#, c-format
+msgid "“%s” is not a regular file."
+msgstr ""
+
+#: src/MainWindow.vala:567
 msgid "UTF-8 (invalid bytes replaced)"
 msgstr "UTF-8 (некорректные байты заменены)"
 
-#: src/MainWindow.vala:524
+#: src/MainWindow.vala:602
+#, c-format
+msgid ""
+"“%s” does not appear to be a supported text file. Opening it may display "
+"corrupted text, and saving it could damage the file."
+msgstr ""
+
+#: src/MainWindow.vala:607 src/MainWindow.vala:629 src/MainWindow.vala:885
+#: src/Dialogs/GoToDialog.vala:36 src/Dialogs/FontDialog.vala:239
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/MainWindow.vala:607 src/MainWindow.vala:629
+msgid "Open Anyway"
+msgstr ""
+
+#: src/MainWindow.vala:623
+#, c-format
+msgid ""
+"“%s” is %s. Opening it may make ValaPad unresponsive and requires "
+"substantially more memory than the file size."
+msgstr ""
+
+#: src/MainWindow.vala:656
 msgid "Save As"
 msgstr "Сохранить как"
 
-#: src/MainWindow.vala:525
+#: src/MainWindow.vala:657
 msgid "Untitled.txt"
 msgstr "Безымянный.txt"
 
-#: src/MainWindow.vala:533 src/MainWindow.vala:567
+#: src/MainWindow.vala:665 src/MainWindow.vala:704
 msgid "Save failed"
 msgstr "Не удалось сохранить"
 
-#: src/MainWindow.vala:609
+#: src/MainWindow.vala:746
 msgid "Print failed"
 msgstr "Не удалось напечатать"
 
-#: src/MainWindow.vala:728
+#: src/MainWindow.vala:865
 msgid "A lightweight plain-text editor."
 msgstr "Лёгкий редактор обычного текста."
 
-#: src/MainWindow.vala:745
+#: src/MainWindow.vala:882
 #, c-format
 msgid "Do you want to save changes to %s?"
 msgstr "Сохранить изменения в %s?"
 
-#: src/MainWindow.vala:748
+#: src/MainWindow.vala:885
 msgid "Don't Save"
 msgstr "Не сохранять"
 
-#: src/MainWindow.vala:748 src/Dialogs/GoToDialog.vala:36
-#: src/Dialogs/FontDialog.vala:239
-msgid "Cancel"
-msgstr "Отмена"
+#: src/MainWindow.vala:924
+#, c-format
+msgid "Changes could not be backed up: %s"
+msgstr ""
+
+#: src/MainWindow.vala:960
+msgid ""
+"The original file changed after this backup was created. Use Save As to "
+"avoid replacing newer changes."
+msgstr ""
 
 #: src/Dialogs/GoToDialog.vala:15 src/Dialogs/GoToDialog.vala:39
 msgid "Go To"
@@ -275,6 +313,31 @@ msgstr "Предпросмотр"
 #: src/Dialogs/FontDialog.vala:231
 msgid "Select"
 msgstr "Выбрать"
+
+#: src/Dialogs/RecoveryDialog.vala:20
+msgid "Recover Documents"
+msgstr ""
+
+#: src/Dialogs/RecoveryDialog.vala:35
+msgid "ValaPad found unsaved changes."
+msgstr ""
+
+#: src/Dialogs/RecoveryDialog.vala:36
+msgid "Select the documents you want to recover."
+msgstr ""
+
+#: src/Dialogs/RecoveryDialog.vala:59
+#, c-format
+msgid "%s — original file changed"
+msgstr ""
+
+#: src/Dialogs/RecoveryDialog.vala:80
+msgid "Discard Selected"
+msgstr ""
+
+#: src/Dialogs/RecoveryDialog.vala:82
+msgid "Recover Selected"
+msgstr ""
 
 #. Search row
 #: src/Widgets/FindBar.vala:34

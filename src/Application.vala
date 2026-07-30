@@ -35,6 +35,9 @@ public class ValaPad.Application : Gtk.Application {
 
     public const string ACTION_ABOUT = "about";
 
+    private bool recovery_checked;
+    private bool recovery_checking;
+
     public Application () {
         Object (
             application_id: Build.PROJECT_NAME,
@@ -83,10 +86,70 @@ public class ValaPad.Application : Gtk.Application {
     }
 
     protected override void activate () {
+        if (!recovery_checked) {
+            // Keep the application alive while the asynchronous startup scan
+            // decides whether to show an editor or the recovery window.
+            if (!recovery_checking) {
+                recovery_checking = true;
+                hold ();
+                check_recovery.begin ();
+            }
+            return;
+        }
         if (active_window == null) {
             new_window ();
         } else {
             active_window.present ();
+        }
+    }
+
+    private async void check_recovery () {
+        RecoverySnapshot[] snapshots = {};
+        debug ("Starting recovery scan");
+        try {
+            snapshots = yield new RecoveryStore ().load_all ();
+        } catch (Error error) {
+            warning ("Unable to inspect recovery data: %s", error.message);
+        }
+        recovery_checked = true;
+        recovery_checking = false;
+        debug ("Recovery scan ready: count=%d", snapshots.length);
+
+        if (snapshots.length == 0) {
+            new_window ();
+            release ();
+            return;
+        }
+
+        var dialog = new RecoveryDialog (this, snapshots);
+        dialog.recover_requested.connect ((selected) => {
+            debug ("User selected recovery: count=%d", selected.length);
+            foreach (RecoverySnapshot snapshot in selected) {
+                var window = new_window ();
+                window.restore_snapshot (snapshot);
+            }
+            if (selected.length == 0) {
+                new_window ();
+            }
+        });
+        dialog.discard_requested.connect ((selected) => {
+            debug ("User selected recovery discard: count=%d", selected.length);
+            discard_recoveries.begin (selected);
+            new_window ();
+        });
+        dialog.dismissed.connect (() => new_window ());
+        dialog.present ();
+        release ();
+    }
+
+    private async void discard_recoveries (RecoverySnapshot[] snapshots) {
+        var store = new RecoveryStore ();
+        foreach (RecoverySnapshot snapshot in snapshots) {
+            try {
+                yield store.delete (snapshot.id);
+            } catch (Error error) {
+                warning ("Unable to discard recovery data: %s", error.message);
+            }
         }
     }
 
@@ -97,9 +160,13 @@ public class ValaPad.Application : Gtk.Application {
     }
 
     protected override void open (File[] files, string hint) {
+        open_files.begin (files);
+    }
+
+    private async void open_files (File[] files) {
         foreach (var file in files) {
             var window = new_window ();
-            window.open_file (file);
+            yield window.open_file (file);
         }
     }
 

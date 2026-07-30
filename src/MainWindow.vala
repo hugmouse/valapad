@@ -22,14 +22,19 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     private Gtk.Label zoom_label;
     private Gtk.Label line_ending_label;
     private Gtk.Label encoding_label;
+    private Gtk.Revealer recovery_warning;
+    private Gtk.Label recovery_warning_label;
 
     private Gtk.CssProvider font_provider;
     private Pango.FontDescription font_description;
     private FontDialog? font_dialog;
     private WordWrapController? word_wrap_controller;
     private Settings settings;
+    private RecoveryStore recovery_store;
+    private AutosaveController autosave_controller;
 
     private File? current_file = null;
+    private string? current_etag = null;
     private bool use_crlf = false;
     private string encoding_name = "UTF-8";
     private int zoom_percentage = 100;
@@ -47,7 +52,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             title: _("Untitled - ValaPad")
         );
 
+        recovery_store = new RecoveryStore ();
         build_ui ();
+        autosave_controller = new AutosaveController (buffer, recovery_store);
+        autosave_controller.save_failed.connect (show_recovery_warning);
+        update_autosave_document ();
         add_window_actions ();
         connect_signals ();
         update_status ();
@@ -83,8 +92,33 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         find_bar = new FindBar (text_view);
         find_bar.visible = false;
 
+        recovery_warning_label = new Gtk.Label (null) {
+            hexpand = true,
+            wrap = true,
+            xalign = 0
+        };
+        var dismiss_warning = new Gtk.Button.from_icon_name ("window-close-symbolic") {
+            tooltip_text = _("Dismiss")
+        };
+        dismiss_warning.add_css_class ("flat");
+        dismiss_warning.clicked.connect (() => recovery_warning.reveal_child = false);
+        var warning_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12) {
+            margin_top = 6,
+            margin_bottom = 6,
+            margin_start = 12,
+            margin_end = 6
+        };
+        warning_box.append (recovery_warning_label);
+        warning_box.append (dismiss_warning);
+        recovery_warning = new Gtk.Revealer () {
+            child = warning_box,
+            reveal_child = false
+        };
+        recovery_warning.add_css_class ("warning");
+
         var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         main_box.append (menu_bar);
+        main_box.append (recovery_warning);
         main_box.append (scrolled);
         main_box.append (find_bar);
         main_box.append (build_status_bar ());
@@ -312,7 +346,10 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     private void connect_signals () {
         buffer.modified_changed.connect (update_title);
-        buffer.notify["cursor-position"].connect (update_status);
+        buffer.notify["cursor-position"].connect (() => {
+            update_status ();
+            autosave_controller.schedule_cursor_update ();
+        });
 
         // Ctrl+scroll to zoom
         var scroll_controller = new Gtk.EventControllerScroll (Gtk.EventControllerScrollFlags.VERTICAL);
@@ -444,11 +481,16 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             return;
         }
 
+        yield autosave_controller.reset ();
+        autosave_controller.suspend ();
         buffer.text = "";
         current_file = null;
+        current_etag = null;
         use_crlf = false;
         encoding_name = "UTF-8";
         buffer.set_modified (false);
+        autosave_controller.resume ();
+        update_autosave_document ();
         update_title ();
         update_status ();
     }
@@ -473,14 +515,44 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
 
         if (file != null) {
-            open_file (file);
+            yield open_file (file);
         }
     }
 
-    public void open_file (File file) {
+    public async void open_file (File file) {
         try {
+            // Reject unsafe inputs from metadata and a small sample before the
+            // complete file is allocated and decoded.
+            FileInfo info = yield file.query_info_async (
+                FileAttribute.STANDARD_TYPE + "," + FileAttribute.STANDARD_SIZE,
+                FileQueryInfoFlags.NONE,
+                Priority.DEFAULT,
+                null
+            );
+            if (!FileOpenPolicy.is_regular_file (info.get_file_type ())) {
+                show_error (
+                    _("Open failed"),
+                    _("“%s” is not a regular file.").printf (file.get_parse_name ())
+                );
+                return;
+            }
+            bool looks_like_text = yield file_looks_like_text (file);
+            if (!looks_like_text) {
+                bool open_unsupported = yield confirm_open_unsupported_file (file);
+                if (!open_unsupported) {
+                    return;
+                }
+            }
+            if (FileOpenPolicy.requires_confirmation (info.get_size ())) {
+                bool open_large = yield confirm_open_large_file (file, info.get_size ());
+                if (!open_large) {
+                    return;
+                }
+            }
+
             uint8[] contents;
-            file.load_contents (null, out contents, null);
+            string? etag;
+            yield file.load_contents_async (null, out contents, out etag);
 
             bool has_bom;
             bool repaired;
@@ -497,13 +569,73 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 encoding_name = has_bom ? "UTF-8-BOM" : "UTF-8";
             }
 
+            autosave_controller.suspend ();
             buffer.text = text;
             current_file = file;
+            current_etag = etag;
             buffer.set_modified (false);
+            autosave_controller.resume ();
+            update_autosave_document ();
             update_title ();
             update_status ();
         } catch (Error e) {
             show_error (_("Open failed"), e.message);
+        }
+    }
+
+    private async bool file_looks_like_text (File file) throws Error {
+        var stream = yield file.read_async (Priority.DEFAULT, null);
+        uint8[] sample = new uint8[TextFileProbe.SAMPLE_BYTES];
+        try {
+            ssize_t bytes_read = yield stream.read_async (sample, Priority.DEFAULT, null);
+            return TextFileProbe.is_probably_text (sample[0:(int) bytes_read]);
+        } finally {
+            try {
+                stream.close (null);
+            } catch (Error error) {
+            }
+        }
+    }
+
+    private async bool confirm_open_unsupported_file (File file) {
+        var alert = new Gtk.AlertDialog (
+            _("“%s” does not appear to be a supported text file. Opening it may display corrupted text, and saving it could damage the file.").printf (
+                file.get_basename ()
+            )
+        ) {
+            modal = true,
+            buttons = { _("Cancel"), _("Open Anyway") },
+            cancel_button = 0,
+            default_button = 0
+        };
+
+        try {
+            int response = yield alert.choose (this, null);
+            return response == 1;
+        } catch (Error error) {
+            return false;
+        }
+    }
+
+    private async bool confirm_open_large_file (File file, int64 size) {
+        string size_text = GLib.format_size ((uint64) size);
+        var alert = new Gtk.AlertDialog (
+            _("“%s” is %s. Opening it may make ValaPad unresponsive and requires substantially more memory than the file size.").printf (
+                file.get_basename (),
+                size_text
+            )
+        ) {
+            modal = true,
+            buttons = { _("Cancel"), _("Open Anyway") },
+            cancel_button = 0,
+            default_button = 0
+        };
+
+        try {
+            int response = yield alert.choose (this, null);
+            return response == 1;
+        } catch (Error error) {
+            return false;
         }
     }
 
@@ -551,16 +683,21 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             }
 
             uint8[] contents = text.data;
+            string? new_etag;
             file.replace_contents (
                 contents,
                 null,
                 false,
                 FileCreateFlags.REPLACE_DESTINATION,
-                null
+                out new_etag
             );
 
             current_file = file;
+            current_etag = new_etag;
             buffer.set_modified (false);
+            update_autosave_document ();
+            autosave_controller.clear.begin ();
+            recovery_warning.reveal_child = false;
             update_title ();
             update_status ();
         } catch (Error e) {
@@ -728,7 +865,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             comments = _("A lightweight plain-text editor."),
             license_type = Gtk.License.GPL_3_0,
             logo_icon_name = application.application_id,
-            copyright = "© 2026 Iaroslav Angliuster and Contributers"
+            copyright = "© 2026 Iaroslav Angliuster and Contributors"
         };
         about.present ();
     }
@@ -765,10 +902,63 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             return yield save_as_async ();
         } else if (response == 1) {
             // Don't Save
+            yield autosave_controller.clear ();
             return true;
         }
 
         return false; // Cancel
+    }
+
+    private void update_autosave_document () {
+        string name = current_file != null ? current_file.get_basename () : _("Untitled");
+        autosave_controller.update_document (
+            name,
+            current_file,
+            current_etag,
+            use_crlf,
+            encoding_name
+        );
+    }
+
+    private void show_recovery_warning (string message) {
+        show_warning (_("Changes could not be backed up: %s").printf (message));
+    }
+
+    private void show_warning (string message) {
+        recovery_warning_label.label = message;
+        recovery_warning.reveal_child = true;
+    }
+
+    public void restore_snapshot (RecoverySnapshot snapshot) {
+        debug (
+            "Restoring recovery snapshot: id=%s chars=%d cursor=%d original-changed=%s",
+            snapshot.id,
+            snapshot.text.char_count (),
+            snapshot.cursor_offset,
+            snapshot.original_changed.to_string ()
+        );
+        autosave_controller.adopt_recovery (snapshot.id);
+        autosave_controller.suspend ();
+        buffer.text = snapshot.text;
+        current_file = snapshot.original_uri != null
+            ? File.new_for_uri (snapshot.original_uri)
+            : null;
+        current_etag = snapshot.original_etag;
+        use_crlf = snapshot.use_crlf;
+        encoding_name = snapshot.encoding_name;
+        buffer.set_modified (true);
+        Gtk.TextIter cursor;
+        buffer.get_iter_at_offset (out cursor, snapshot.cursor_offset.clamp (0, buffer.get_char_count ()));
+        buffer.place_cursor (cursor);
+        text_view.scroll_to_iter (cursor, 0.0, false, 0.0, 0.0);
+        autosave_controller.resume ();
+        update_autosave_document ();
+        autosave_controller.schedule_now ();
+        update_title ();
+        update_status ();
+        if (snapshot.original_changed) {
+            show_warning (_("The original file changed after this backup was created. Use Save As to avoid replacing newer changes."));
+        }
     }
 
     private void show_error (string title, string message) {
