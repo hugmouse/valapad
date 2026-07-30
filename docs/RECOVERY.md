@@ -84,7 +84,7 @@ objects from their content and metadata.
 If recoveries exist, ValaPad presents a recover documents window, in there user
 can see all recovered documents.
 
-![Recover documents window screenshot](/src/docs/screenshots/recover-documents.webp)
+![Recover documents window screenshot](screenshots/recover-documents.webp)
 
 ## Basic conflict resolution
 
@@ -101,7 +101,7 @@ The recovered editor also displays a non-modal warning:
 
 A missing or inaccessible original file is also treated as changed.
 
-![Conflict resolution window screenshot](/src/docs/screenshots/recover-documents.webp)
+![Conflict resolution window screenshot](screenshots/original-file-changed.webp)
 
 ## Cleanup rules
 
