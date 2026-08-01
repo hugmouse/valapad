@@ -10,7 +10,6 @@ public enum ValaPad.FontCategory {
 }
 
 public class ValaPad.FontFilter : Object {
-    // TODO: probably theres better way lmao
     private static string[] sans_markers = {
         "sans", "arial", "cantarell", "gothic", "grotesk", "helvetica",
         "inter", "roboto", "segoe", "tahoma", "ubuntu", "verdana"

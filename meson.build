@@ -1,8 +1,9 @@
 project(
-  'dev.mysh.valapad',
-  'vala', 'c',
-  version: '1.0.4',
-  meson_version: '>= 0.64.0',
+    'dev.mysh.valapad',
+    'vala',
+    'c',
+    version: '1.0.4',
+    meson_version: '>= 0.64.0',
 )
 
 gettext_name = meson.project_name()
@@ -12,19 +13,19 @@ i18n = import('i18n')
 app_id = 'dev.mysh.valapad'
 
 add_project_arguments(
-  [
-    '--target-glib=2.72',
-    '--enable-experimental',
-    '--define=GETTEXT_PACKAGE="@0@"'.format(gettext_name),
-  ],
-  language: 'vala'
+    [
+        '--target-glib=2.72',
+        '--enable-experimental',
+        '--define=GETTEXT_PACKAGE="@0@"'.format(gettext_name),
+    ],
+    language: 'vala',
 )
 
 add_project_arguments(
-  '-Wall',
-  '-Wextra',
-  '-DGETTEXT_PACKAGE="@0@"'.format(gettext_name),
-  language: 'c'
+    '-Wall',
+    '-Wextra',
+    '-DGETTEXT_PACKAGE="@0@"'.format(gettext_name),
+    language: 'c',
 )
 
 conf_data = configuration_data()
@@ -35,11 +36,11 @@ conf_data.set('PROJECT_NAME', app_id)
 conf_data.set('VERSION', meson.project_version())
 
 dependencies = [
-  dependency('gtk4', version: '>= 4.12'),
-  dependency('granite-7', version: '>= 7.0.0'),
-  dependency('glib-2.0'),
-  dependency('pango'),
-  dependency('pangocairo'),
+    dependency('gtk4', version: '>= 4.12'),
+    dependency('granite-7', version: '>= 7.0.0'),
+    dependency('glib-2.0'),
+    dependency('pango'),
+    dependency('pangocairo'),
 ]
 
 subdir('data')
@@ -48,7 +49,7 @@ subdir('tests')
 subdir('po')
 
 gnome.post_install(
-  glib_compile_schemas: true,
-  gtk_update_icon_cache: true,
-  update_desktop_database: true,
+    glib_compile_schemas: true,
+    gtk_update_icon_cache: true,
+    update_desktop_database: true,
 )

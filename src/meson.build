@@ -10,11 +10,11 @@ autosave_controller_source = files('AutosaveController.vala')
 recovery_workflow_source = files('RecoveryWorkflow.vala')
 
 valapad_files = files(
-    'Application.vala',
-    'MainWindow.vala',
     'Dialogs' / 'RecoveryDialog.vala',
     'Dialogs' / 'GoToDialog.vala',
     'Widgets' / 'FindBar.vala',
+    'Application.vala',
+    'MainWindow.vala',
 )
 
 config_file = configure_file(

@@ -142,7 +142,12 @@ public class ValaPad.FindBar : Gtk.Box {
         hide ();
     }
 
-    private bool find_match (Gtk.TextIter start, bool forward, out Gtk.TextIter match_start, out Gtk.TextIter match_end) {
+    private bool find_match (
+        Gtk.TextIter start,
+        bool forward,
+        out Gtk.TextIter match_start,
+        out Gtk.TextIter match_end
+    ) {
         string needle = search_entry.text;
         if (needle == "") {
             match_start = start;

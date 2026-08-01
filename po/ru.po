@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: valapad 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:10+0200\n"
+"POT-Creation-Date: 2026-08-01 10:49+0200\n"
 "PO-Revision-Date: 2026-07-24 15:06+0200\n"
 "Last-Translator: Iaroslav Angliuster <me@mysh.dev>\n"
 "Language-Team: Russian\n"
@@ -44,7 +44,7 @@ msgstr "Новое окно"
 msgid "Open…"
 msgstr "Открыть…"
 
-#: src/MainWindow.vala:222 src/MainWindow.vala:885
+#: src/MainWindow.vala:222 src/MainWindow.vala:898
 msgid "Save"
 msgstr "Сохранить"
 
@@ -160,11 +160,11 @@ msgstr "О ValaPad"
 msgid "Help"
 msgstr "Справка"
 
-#: src/MainWindow.vala:374 src/MainWindow.vala:880 src/MainWindow.vala:913
+#: src/MainWindow.vala:374 src/MainWindow.vala:893 src/MainWindow.vala:927
 msgid "Untitled"
 msgstr "Безымянный"
 
-#: src/MainWindow.vala:376 src/MainWindow.vala:863
+#: src/MainWindow.vala:376 src/MainWindow.vala:876
 msgid "ValaPad"
 msgstr "ValaPad"
 
@@ -202,12 +202,12 @@ msgid ""
 "corrupted text, and saving it could damage the file."
 msgstr ""
 
-#: src/MainWindow.vala:607 src/MainWindow.vala:629 src/MainWindow.vala:885
+#: src/MainWindow.vala:607 src/MainWindow.vala:628 src/MainWindow.vala:898
 #: src/Dialogs/GoToDialog.vala:36 src/Dialogs/FontDialog.vala:239
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/MainWindow.vala:607 src/MainWindow.vala:629
+#: src/MainWindow.vala:607 src/MainWindow.vala:628
 msgid "Open Anyway"
 msgstr ""
 
@@ -218,41 +218,41 @@ msgid ""
 "substantially more memory than the file size."
 msgstr ""
 
-#: src/MainWindow.vala:656
+#: src/MainWindow.vala:655
 msgid "Save As"
 msgstr "Сохранить как"
 
-#: src/MainWindow.vala:657
+#: src/MainWindow.vala:656
 msgid "Untitled.txt"
 msgstr "Безымянный.txt"
 
-#: src/MainWindow.vala:665 src/MainWindow.vala:704
+#: src/MainWindow.vala:670 src/MainWindow.vala:711
 msgid "Save failed"
 msgstr "Не удалось сохранить"
 
-#: src/MainWindow.vala:746
+#: src/MainWindow.vala:759
 msgid "Print failed"
 msgstr "Не удалось напечатать"
 
-#: src/MainWindow.vala:865
+#: src/MainWindow.vala:878
 msgid "A lightweight plain-text editor."
 msgstr "Лёгкий редактор обычного текста."
 
-#: src/MainWindow.vala:882
+#: src/MainWindow.vala:895
 #, c-format
 msgid "Do you want to save changes to %s?"
 msgstr "Сохранить изменения в %s?"
 
-#: src/MainWindow.vala:885
+#: src/MainWindow.vala:898
 msgid "Don't Save"
 msgstr "Не сохранять"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:938
 #, c-format
 msgid "Changes could not be backed up: %s"
 msgstr ""
 
-#: src/MainWindow.vala:960
+#: src/MainWindow.vala:975
 msgid ""
 "The original file changed after this backup was created. Use Save As to "
 "avoid replacing newer changes."
@@ -326,16 +326,16 @@ msgstr ""
 msgid "Select the documents you want to recover."
 msgstr ""
 
-#: src/Dialogs/RecoveryDialog.vala:59
+#: src/Dialogs/RecoveryDialog.vala:61
 #, c-format
 msgid "%s — original file changed"
 msgstr ""
 
-#: src/Dialogs/RecoveryDialog.vala:80
+#: src/Dialogs/RecoveryDialog.vala:82
 msgid "Discard Selected"
 msgstr ""
 
-#: src/Dialogs/RecoveryDialog.vala:82
+#: src/Dialogs/RecoveryDialog.vala:84
 msgid "Recover Selected"
 msgstr ""
 

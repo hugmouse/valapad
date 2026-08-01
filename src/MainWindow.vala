@@ -588,7 +588,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         uint8[] sample = new uint8[TextFileProbe.SAMPLE_BYTES];
         try {
             ssize_t bytes_read = yield stream.read_async (sample, Priority.DEFAULT, null);
-            return TextFileProbe.is_probably_text (sample[0:(int) bytes_read]);
+            return TextFileProbe.is_probably_text (sample[0: (int) bytes_read]);
         } finally {
             try {
                 stream.close (null);
@@ -598,11 +598,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     private async bool confirm_open_unsupported_file (File file) {
-        var alert = new Gtk.AlertDialog (
-            _("“%s” does not appear to be a supported text file. Opening it may display corrupted text, and saving it could damage the file.").printf (
-                file.get_basename ()
-            )
-        ) {
+        string message = _(
+            "“%s” does not appear to be a supported text file. Opening it may display corrupted text, " +
+            "and saving it could damage the file."
+        ).printf (file.get_basename ());
+        var alert = new Gtk.AlertDialog (message) {
             modal = true,
             buttons = { _("Cancel"), _("Open Anyway") },
             cancel_button = 0,
@@ -619,12 +619,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     private async bool confirm_open_large_file (File file, int64 size) {
         string size_text = GLib.format_size ((uint64) size);
-        var alert = new Gtk.AlertDialog (
-            _("“%s” is %s. Opening it may make ValaPad unresponsive and requires substantially more memory than the file size.").printf (
-                file.get_basename (),
-                size_text
-            )
-        ) {
+        string message = _(
+            "“%s” is %s. Opening it may make ValaPad unresponsive and requires substantially more memory " +
+            "than the file size."
+        ).printf (file.get_basename (), size_text);
+        var alert = new Gtk.AlertDialog (message) {
             modal = true,
             buttons = { _("Cancel"), _("Open Anyway") },
             cancel_button = 0,
@@ -865,7 +864,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     private void action_zoom_default () {
-        set_zoom(100);
+        set_zoom (100);
     }
 
     // --- Help actions ---------------------------------------------------------------------------------
