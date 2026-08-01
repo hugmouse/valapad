@@ -6,11 +6,12 @@ file_open_policy_source = files('FileOpenPolicy.vala')
 text_file_probe_source = files('TextFileProbe.vala')
 recovery_snapshot_source = files('RecoverySnapshot.vala')
 recovery_store_source = files('RecoveryStore.vala')
+autosave_controller_source = files('AutosaveController.vala')
+recovery_workflow_source = files('RecoveryWorkflow.vala')
 
 valapad_files = files(
     'Application.vala',
     'MainWindow.vala',
-    'AutosaveController.vala',
     'Dialogs' / 'RecoveryDialog.vala',
     'Dialogs' / 'GoToDialog.vala',
     'Widgets' / 'FindBar.vala',
@@ -33,6 +34,8 @@ executable(
     text_file_probe_source,
     recovery_snapshot_source,
     recovery_store_source,
+    autosave_controller_source,
+    recovery_workflow_source,
     config_file,
     dependencies: dependencies,
     install: true,

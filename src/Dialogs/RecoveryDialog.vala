@@ -55,9 +55,11 @@ public class ValaPad.RecoveryDialog : Gtk.Window {
                 xalign = 0
             };
             name.add_css_class ("heading");
-            var details = new Gtk.Label (snapshot.original_changed
-                ? _("%s — original file changed").printf (date)
-                : date) {
+            var details = new Gtk.Label (RecoveryWorkflow.dialog_details (
+                snapshot,
+                date,
+                _("%s — original file changed")
+            )) {
                 xalign = 0
             };
             details.add_css_class ("dim-label");
@@ -102,17 +104,19 @@ public class ValaPad.RecoveryDialog : Gtk.Window {
     }
 
     private void finish (bool recover) {
-        var selected = new GenericArray<RecoverySnapshot> ();
-        for (int i = 0; i < snapshots.length; i++) {
-            if (checks[i].active) {
-                selected.add (snapshots[i]);
-            }
+        bool[] selected_rows = new bool[checks.length];
+        for (int i = 0; i < checks.length; i++) {
+            selected_rows[i] = checks[i].active;
         }
+        RecoverySnapshot[] selected = RecoveryWorkflow.selected_snapshots (
+            snapshots,
+            selected_rows
+        );
         completed = true;
         if (recover) {
-            recover_requested (selected.data);
+            recover_requested (selected);
         } else {
-            discard_requested (selected.data);
+            discard_requested (selected);
         }
         destroy ();
     }

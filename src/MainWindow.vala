@@ -661,9 +661,16 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         try {
             file = yield dialog.save (this, null);
         } catch (Error e) {
-            if (!(e is Gtk.DialogError.CANCELLED) && !(e is Gtk.DialogError.DISMISSED)) {
+            RecoveryDocumentOutcome outcome;
+            if (e is Gtk.DialogError.CANCELLED || e is Gtk.DialogError.DISMISSED) {
+                outcome = RecoveryDocumentOutcome.SAVE_AS_CANCELLED;
+            } else {
+                outcome = RecoveryDocumentOutcome.SAVE_FAILED;
+            }
+            if (outcome == RecoveryDocumentOutcome.SAVE_FAILED) {
                 show_error (_("Save failed"), e.message);
             }
+            yield apply_recovery_outcome (outcome);
             return false;
         }
 
@@ -696,12 +703,19 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             current_etag = new_etag;
             buffer.set_modified (false);
             update_autosave_document ();
-            autosave_controller.clear.begin ();
+            apply_recovery_outcome.begin (RecoveryDocumentOutcome.SAVE_SUCCEEDED);
             recovery_warning.reveal_child = false;
             update_title ();
             update_status ();
         } catch (Error e) {
+            apply_recovery_outcome.begin (RecoveryDocumentOutcome.SAVE_FAILED);
             show_error (_("Save failed"), e.message);
+        }
+    }
+
+    private async void apply_recovery_outcome (RecoveryDocumentOutcome outcome) {
+        if (RecoveryWorkflow.should_delete_snapshot (outcome)) {
+            yield autosave_controller.clear ();
         }
     }
 
@@ -902,10 +916,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             return yield save_as_async ();
         } else if (response == 1) {
             // Don't Save
-            yield autosave_controller.clear ();
+            yield apply_recovery_outcome (RecoveryDocumentOutcome.DONT_SAVE);
             return true;
         }
 
+        yield apply_recovery_outcome (RecoveryDocumentOutcome.CLOSE_CANCELLED);
         return false; // Cancel
     }
 
@@ -956,8 +971,12 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         autosave_controller.schedule_now ();
         update_title ();
         update_status ();
-        if (snapshot.original_changed) {
-            show_warning (_("The original file changed after this backup was created. Use Save As to avoid replacing newer changes."));
+        string? conflict = RecoveryWorkflow.conflict_warning (
+            snapshot,
+            _("The original file changed after this backup was created. Use Save As to avoid replacing newer changes.")
+        );
+        if (conflict != null) {
+            show_warning (conflict);
         }
     }
 

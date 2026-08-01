@@ -9,9 +9,6 @@ public class ValaPad.AutosaveController : Object {
     // e.g. if user types continuously for 15 seconds, we just save anyway.
     // and if user didn't type anything for the last 2 seconds, we save too.
 
-    private const uint DEBOUNCE_SECONDS = 2;
-    private const uint DEADLINE_SECONDS = 15;
-
     public signal void save_failed (string message);
 
     private Gtk.TextBuffer buffer;
@@ -24,15 +21,22 @@ public class ValaPad.AutosaveController : Object {
     private string encoding_name = "UTF-8";
     private uint debounce_source;
     private uint deadline_source;
+    private uint debounce_milliseconds;
+    private uint deadline_milliseconds;
     private bool suspended;
     private bool dirty;
     private bool saving;
     private uint generation;
     private Cancellable? save_cancellable;
 
-    public AutosaveController (Gtk.TextBuffer buffer, RecoveryStore store) {
+    public AutosaveController (Gtk.TextBuffer buffer,
+                               RecoveryStore store,
+                               uint debounce_milliseconds = 2 * 1000,
+                               uint deadline_milliseconds = 15 * 1000) {
         this.buffer = buffer;
         this.store = store;
+        this.debounce_milliseconds = debounce_milliseconds;
+        this.deadline_milliseconds = deadline_milliseconds;
         recovery_id = Uuid.string_random ();
         debug ("Recovery controller created: id=%s", recovery_id);
         buffer.changed.connect (on_buffer_changed);
@@ -114,7 +118,7 @@ public class ValaPad.AutosaveController : Object {
         }
         dirty = true;
         if (debounce_source == 0) {
-            debounce_source = Timeout.add_seconds (DEBOUNCE_SECONDS, () => {
+            debounce_source = Timeout.add (debounce_milliseconds, () => {
                 debounce_source = 0;
                 start_save ();
                 return Source.REMOVE;
@@ -131,14 +135,14 @@ public class ValaPad.AutosaveController : Object {
         if (debounce_source != 0) {
             Source.remove (debounce_source);
         }
-        debounce_source = Timeout.add_seconds (DEBOUNCE_SECONDS, () => {
+        debounce_source = Timeout.add (debounce_milliseconds, () => {
             debounce_source = 0;
             start_save ();
             return Source.REMOVE;
         });
 
         if (deadline_source == 0) {
-            deadline_source = Timeout.add_seconds (DEADLINE_SECONDS, () => {
+            deadline_source = Timeout.add (deadline_milliseconds, () => {
                 deadline_source = 0;
                 start_save ();
                 return Source.REMOVE;
