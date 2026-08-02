@@ -23,7 +23,7 @@ config_file = configure_file(
     configuration: conf_data,
 )
 
-executable(
+valapad_executable = executable(
     meson.project_name(),
     valapad_files,
     font_filter_source,
