@@ -13,9 +13,9 @@ i18n.merge_file(
 appstream_conf = configuration_data()
 appstream_conf.set('VERSION', meson.project_version())
 appstream_file_in = configure_file(
-  input: 'dev.mysh.valapad.metainfo.xml.in.in',
-  output: meson.project_name() + '.metainfo.xml.in',
-  configuration: appstream_conf,
+    input: 'dev.mysh.valapad.metainfo.xml.in.in',
+    output: meson.project_name() + '.metainfo.xml.in',
+    configuration: appstream_conf,
 )
 
 # Metainfo
