@@ -2,7 +2,7 @@ project(
     'dev.mysh.valapad',
     'vala',
     'c',
-    version: '1.0.4',
+    version: '1.1.1',
     meson_version: '>= 0.64.0',
 )
 
