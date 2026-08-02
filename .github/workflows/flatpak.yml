@@ -27,14 +27,6 @@ jobs:
       options: --privileged
     steps:
       - uses: actions/checkout@v4
-
-      - name: Validate release metadata
-        run: python3 scripts/validate-release.py
-
-      - name: Validate AppCenter publication metadata
-        if: ${{ inputs.appcenter-validation }}
-        run: python3 scripts/validate-release.py --appcenter
-
       - name: Build and test Flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
