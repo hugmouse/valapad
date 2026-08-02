@@ -508,7 +508,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         try {
             file = yield dialog.open (this, null);
         } catch (Error e) {
-            if (!(e is Gtk.DialogError.CANCELLED) && !(e is Gtk.DialogError.DISMISSED)) {
+            if (!(e is Gtk.DialogError.CANCELLED || e is Gtk.DialogError.DISMISSED)) {
                 show_error (_("Open failed"), e.message);
             }
             return;
@@ -987,10 +987,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     public override bool close_request () {
-        if (confirmed_close) {
-            return false; // allow close
-        }
-        if (!buffer.get_modified ()) {
+        if (confirmed_close || !buffer.get_modified ()) {
             return false; // allow close
         }
         confirm_discard_and_close.begin ();
