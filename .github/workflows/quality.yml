@@ -45,17 +45,21 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes \
+            desktop-file-utils \
+            gettext \
+            libglib2.0-bin \
             libgranite-7-dev \
             libgtk-4-dev \
             libpango1.0-dev \
             meson \
             ninja-build \
             python3-dogtail \
+            shared-mime-info \
             valac \
             weston
       - name: Build ValaPad
         run: |
           meson setup build
           meson compile -C build
-      - name: Exercise recovery through the accessible UI
+      - name: Run GUI tests
         run: meson compile -C build dogtail-tests
