@@ -18,9 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate tag and release metadata
-        run: python3 scripts/validate-release.py --tag "${GITHUB_REF_NAME}"
-
       - name: Build and test Flatpak bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:

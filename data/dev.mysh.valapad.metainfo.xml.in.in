@@ -27,6 +27,16 @@
     <color type="primary">#3689e6</color>
   </branding>
   <releases>
+    <release version="1.1.1" date="2026-08-02">
+      <description>
+        <p>Fixes related to the release on GitHub, no visual changes.</p>
+      </description>
+    </release>
+    <release version="1.1.0" date="2026-08-02">
+      <description>
+        <p>The autosave feature has been added. ValaPad regularly saves your changes, so if app crashes, you can still restore the document.</p>
+      </description>
+    </release>
     <release version="1.0.4" date="2026-07-27">
       <description>
         <p>Changed strings related to RDNN change, no visual changes.</p>
