@@ -1,0 +1,61 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  vala-lint:
+    name: Vala lint
+    runs-on: ubuntu-latest
+    container: valalang/lint:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint Vala sources
+        run: io.elementary.vala-lint --config vala-lint.conf src tests
+
+  meson-format:
+    name: Meson format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install Meson formatter
+        run: python -m pip install meson==1.9.1
+      - name: Check Meson formatting
+        run: meson format --check-only --recursive .
+
+  dogtail:
+    name: Dogtail recovery tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build and GUI test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            libgranite-7-dev \
+            libgtk-4-dev \
+            libpango1.0-dev \
+            meson \
+            ninja-build \
+            python3-dogtail \
+            valac \
+            weston
+      - name: Build ValaPad
+        run: |
+          meson setup build
+          meson compile -C build
+      - name: Exercise recovery through the accessible UI
+        run: meson compile -C build dogtail-tests
