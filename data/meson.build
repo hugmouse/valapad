@@ -9,7 +9,7 @@ i18n.merge_file(
     install_dir: get_option('datadir') / 'applications',
 )
 
-# Copied from Ryonako: https://github.com/ryonakano/louper/commit/2ed087fab3b8b345b953a27916cf8b4f5a42c8f8
+# Copied from Ryo Nakano: https://github.com/ryonakano/louper/commit/2ed087fab3b8b345b953a27916cf8b4f5a42c8f8
 appstream_conf = configuration_data()
 appstream_conf.set('VERSION', meson.project_version())
 appstream_file_in = configure_file(
