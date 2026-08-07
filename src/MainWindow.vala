@@ -738,7 +738,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             cr.set_source_rgb (0, 0, 0);
 
             var layout = ctx.create_pango_layout ();
-            layout.set_font_description (Pango.FontDescription.from_string ("Sans 12"));
+            layout.set_font_description (font_description);
 
             int start = page_nr * lines_per_page;
             int end = int.min (start + lines_per_page, lines.length);
