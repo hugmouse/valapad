@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2026 Iaroslav Angliuster
 
-"""End-to-end recovery tests driven through ValaPad's accessible UI."""
+"""End-to-end tests driven through ValaPad's accessible UI."""
 
 from __future__ import annotations
 
@@ -29,12 +29,14 @@ from dogtail.tree import root
 
 
 APP_ID = "dev.mysh.valapad"
-RECOVERY_WINDOW = "Recover Documents"
+BINARY_IMAGE = Path(__file__).resolve().parents[2] / "data" / "screenshots" / "main.webp"
+WARNING_FRAGMENT = "does not appear to be a supported text file"
+REPLACED_ENCODING = "UTF-8 (invalid bytes replaced)"
 RECOVERED_TEXT = "The recovered first line\nThe recovered second line"
 SNAPSHOT_ID = "dogtail-recovery-snapshot"
 
 
-class RecoveryTest(unittest.TestCase):
+class ValaPadDogtailTest(unittest.TestCase):
     def setUp(self) -> None:
         binary = os.environ.get("VALAPAD_BINARY")
         if not binary:
@@ -42,12 +44,6 @@ class RecoveryTest(unittest.TestCase):
 
         self.binary = str(Path(binary).resolve())
         self.home = Path(tempfile.mkdtemp(prefix="valapad-dogtail-"))
-        self.state_home = self.home / "state"
-        self.snapshot_dir = (
-            self.state_home / APP_ID / "recovery" / SNAPSHOT_ID
-        )
-        self._seed_snapshot()
-
         self.environment = os.environ.copy()
         self.environment.update(
             {
@@ -57,7 +53,7 @@ class RecoveryTest(unittest.TestCase):
                 "XDG_CACHE_HOME": str(self.home / "cache"),
                 "XDG_CONFIG_HOME": str(self.home / "config"),
                 "XDG_DATA_HOME": str(self.home / "data"),
-                "XDG_STATE_HOME": str(self.state_home),
+                "XDG_STATE_HOME": str(self.home / "state"),
             }
         )
         self.process: subprocess.Popen[str] | None = None
@@ -69,52 +65,22 @@ class RecoveryTest(unittest.TestCase):
             self.process.communicate(timeout=5)
         shutil.rmtree(self.home, ignore_errors=True)
 
-    def _seed_snapshot(self) -> None:
-        self.snapshot_dir.mkdir(parents=True)
-        (self.snapshot_dir / "content.txt").write_text(
-            RECOVERED_TEXT,
-            encoding="utf-8",
-        )
-        metadata = configparser.ConfigParser()
-        metadata.optionxform = str
-        metadata["Recovery"] = {
-            "version": "1",
-            "display-name": "Dogtail Recovery.txt",
-            "saved-at": str(int(time.time())),
-            "cursor-offset": "12",
-            "use-crlf": "false",
-            "encoding": "UTF-8",
-        }
-        with (self.snapshot_dir / "metadata.ini").open(
-            "w",
-            encoding="utf-8",
-        ) as metadata_file:
-            metadata.write(metadata_file, space_around_delimiters=False)
-
-    def _launch(self):
+    def _launch(self, arguments, finder, description: str):
         self.process = subprocess.Popen(
-            [self.binary],
+            [self.binary, *arguments],
             env=self.environment,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
         )
-        return self._wait_for_node(
-            self._find_recovery_window,
-            "recovery window",
-        )
+        return self._wait_for_node(finder, description)
 
     @staticmethod
-    def _find_recovery_window():
+    def _app():
         try:
-            application = root.application(APP_ID, retry=False)
+            return root.application(APP_ID, retry=False)
         except Exception:
             return None
-
-        for window in application.children:
-            if window.isChild("Recover Selected", retry=False):
-                return window
-        return None
 
     def _wait_for_node(self, finder, description: str, timeout: float = 10):
         deadline = time.monotonic() + timeout
@@ -129,6 +95,7 @@ class RecoveryTest(unittest.TestCase):
                     f"stdout:\n{stdout}\nstderr:\n{stderr}"
                 )
             time.sleep(0.1)
+
         process_output = ""
         if self.process is not None:
             self.process.terminate()
@@ -139,6 +106,21 @@ class RecoveryTest(unittest.TestCase):
                 stdout, stderr = self.process.communicate(timeout=2)
             process_output = f"\nstdout:\n{stdout}\nstderr:\n{stderr}"
         self.fail(f"Timed out waiting for {description}{process_output}")
+
+    def _frame_with_title(self, title: str):
+        application = self._app()
+        if application is None:
+            return None
+        for child in application.children:
+            if child.roleName == "frame" and child.name == title and child.showing:
+                return child
+        return None
+
+    def _editor_with_title(self, title: str):
+        return self._wait_for_node(
+            lambda: self._frame_with_title(title),
+            f'editor window titled "{title}"',
+        )
 
     def _editor_window(self):
         def find_editor():
@@ -171,8 +153,117 @@ class RecoveryTest(unittest.TestCase):
                 return candidate
         raise AssertionError("The editor did not expose its text view through AT-SPI")
 
+    @staticmethod
+    def _label_texts(node):
+        return [
+            label.text or ""
+            for label in node.findChildren(lambda child: child.roleName == "label")
+        ]
+
+
+class BinaryFileTest(ValaPadDogtailTest):
+    def setUp(self) -> None:
+        super().setUp()
+        if not BINARY_IMAGE.is_file():
+            self.fail(f"Binary fixture is missing: {BINARY_IMAGE}")
+
+    def _launch_binary(self):
+        return self._launch(
+            [str(BINARY_IMAGE)],
+            self._find_warning_dialog,
+            "binary file warning dialog",
+        )
+
+    def _find_warning_dialog(self):
+        application = self._app()
+        if application is None:
+            return None
+        for child in application.children:
+            if (
+                child.roleName == "dialog"
+                and child.showing
+                and child.isChild("Open Anyway", retry=False)
+            ):
+                return child
+        return None
+
+    def test_binary_file_open_shows_warning_dialog(self) -> None:
+        dialog = self._launch_binary()
+
+        labels = self._label_texts(dialog)
+        self.assertTrue(
+            any(WARNING_FRAGMENT in label for label in labels),
+            "The dialog must explain why the file cannot be opened safely",
+        )
+        self.assertTrue(
+            dialog.isChild("Cancel", retry=False),
+            "The dialog must offer cancelling the open",
+        )
+        self.assertTrue(
+            dialog.isChild("Open Anyway", retry=False),
+            "The dialog must offer opening the file anyway",
+        )
+
+    def test_open_anyway_loads_binary_document(self) -> None:
+        dialog = self._launch_binary()
+
+        self._activate(dialog.button("Open Anyway"))
+        editor = self._editor_with_title("main.webp - ValaPad")
+
+        self.assertGreater(len(self._text_view(editor).text), 0)
+        self._wait_for_node(
+            lambda: (
+                any(label == REPLACED_ENCODING for label in self._label_texts(editor))
+                or None
+            ),
+            "repaired-encoding status label",
+        )
+
+
+class RecoveryTest(ValaPadDogtailTest):
+    def setUp(self) -> None:
+        super().setUp()
+        self.snapshot_dir = (
+            self.home / "state" / APP_ID / "recovery" / SNAPSHOT_ID
+        )
+        self._seed_snapshot()
+
+    def _seed_snapshot(self) -> None:
+        self.snapshot_dir.mkdir(parents=True)
+        (self.snapshot_dir / "content.txt").write_text(
+            RECOVERED_TEXT,
+            encoding="utf-8",
+        )
+        metadata = configparser.ConfigParser()
+        metadata.optionxform = str
+        metadata["Recovery"] = {
+            "version": "1",
+            "display-name": "Dogtail Recovery.txt",
+            "saved-at": str(int(time.time())),
+            "cursor-offset": "12",
+            "use-crlf": "false",
+            "encoding": "UTF-8",
+        }
+        with (self.snapshot_dir / "metadata.ini").open(
+            "w",
+            encoding="utf-8",
+        ) as metadata_file:
+            metadata.write(metadata_file, space_around_delimiters=False)
+
+    def _launch_recovery(self):
+        return self._launch([], self._find_recovery_window, "recovery window")
+
+    def _find_recovery_window(self):
+        application = self._app()
+        if application is None:
+            return None
+        for window in application.children:
+            if window.isChild("Recover Selected", retry=False):
+                return window
+        return None
+
     def test_recover_selected_restores_unsaved_text(self) -> None:
-        dialog = self._launch()
+        dialog = self._launch_recovery()
         self.assertTrue(dialog.isChild("Dogtail Recovery.txt", roleName="label"))
 
         self._activate(dialog.button("Recover Selected"))
@@ -185,7 +276,7 @@ class RecoveryTest(unittest.TestCase):
         )
 
     def test_discard_selected_deletes_snapshot_and_opens_blank_editor(self) -> None:
-        dialog = self._launch()
+        dialog = self._launch_recovery()
         self._activate(dialog.button("Discard Selected"))
         editor = self._editor_window()
 
@@ -194,6 +285,7 @@ class RecoveryTest(unittest.TestCase):
             "discarded snapshot deletion",
         )
         self.assertEqual(self._text_view(editor).text, "")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

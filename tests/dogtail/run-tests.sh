@@ -80,4 +80,4 @@ env \
     GTK_A11Y=atspi \
     GTK_USE_PORTAL=0 \
     VALAPAD_BINARY="$binary" \
-    python3 "$script_dir/test_recovery.py"
+    python3 "$script_dir/test_valapad.py"
