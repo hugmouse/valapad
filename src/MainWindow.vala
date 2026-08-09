@@ -14,6 +14,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     private const int BASE_FONT_PX = 14;
     private const int MIN_ZOOM = 10;
     private const int MAX_ZOOM = 500;
+    private const int64 LARGE_FILE_BYTES = 3 * 1024 * 1024;
 
     private Gtk.TextView text_view;
     private Gtk.TextBuffer buffer;
@@ -277,7 +278,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         add_action_with_callback (Application.ACTION_NEW, () => action_new.begin ());
         add_action_with_callback (Application.ACTION_OPEN, () => action_open.begin ());
         add_action_with_callback (Application.ACTION_SAVE, () => action_save.begin ());
-        add_action_with_callback (Application.ACTION_SAVE_AS, () => action_save_as.begin ());
+        add_action_with_callback (Application.ACTION_SAVE_AS, () => save_as_async.begin ());
         add_action_with_callback (Application.ACTION_PRINT, action_print);
 
         // Edit actions
@@ -529,7 +530,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 Priority.DEFAULT,
                 null
             );
-            if (!FileOpenPolicy.is_regular_file (info.get_file_type ())) {
+            if (info.get_file_type () != FileType.REGULAR) {
                 show_error (
                     _("Open failed"),
                     _("“%s” is not a regular file.").printf (file.get_parse_name ())
@@ -543,7 +544,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                     return;
                 }
             }
-            if (FileOpenPolicy.requires_confirmation (info.get_size ())) {
+            if (info.get_size () >= LARGE_FILE_BYTES) {
                 bool open_large = yield confirm_open_large_file (file, info.get_size ());
                 if (!open_large) {
                     return;
@@ -646,10 +647,6 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
     }
 
-    private async void action_save_as () {
-        yield save_as_async ();
-    }
-
     private async bool save_as_async () {
         var dialog = new Gtk.FileDialog () {
             title = _("Save As"),
@@ -660,16 +657,9 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         try {
             file = yield dialog.save (this, null);
         } catch (Error e) {
-            RecoveryDocumentOutcome outcome;
-            if (e is Gtk.DialogError.CANCELLED || e is Gtk.DialogError.DISMISSED) {
-                outcome = RecoveryDocumentOutcome.SAVE_AS_CANCELLED;
-            } else {
-                outcome = RecoveryDocumentOutcome.SAVE_FAILED;
-            }
-            if (outcome == RecoveryDocumentOutcome.SAVE_FAILED) {
+            if (!(e is Gtk.DialogError.CANCELLED || e is Gtk.DialogError.DISMISSED)) {
                 show_error (_("Save failed"), e.message);
             }
-            yield apply_recovery_outcome (outcome);
             return false;
         }
 
