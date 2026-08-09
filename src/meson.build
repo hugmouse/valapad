@@ -2,7 +2,6 @@ font_filter_source = files('Dialogs' / 'FontFilter.vala')
 font_dialog_source = files('Dialogs' / 'FontDialog.vala')
 word_wrap_controller_source = files('Widgets' / 'WordWrapController.vala')
 text_file_decoder_source = files('TextFileDecoder.vala')
-file_open_policy_source = files('FileOpenPolicy.vala')
 text_file_probe_source = files('TextFileProbe.vala')
 recovery_snapshot_source = files('RecoverySnapshot.vala')
 recovery_store_source = files('RecoveryStore.vala')
@@ -30,7 +29,6 @@ valapad_executable = executable(
     font_dialog_source,
     word_wrap_controller_source,
     text_file_decoder_source,
-    file_open_policy_source,
     text_file_probe_source,
     recovery_snapshot_source,
     recovery_store_source,
