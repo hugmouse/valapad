@@ -6,7 +6,6 @@
 public enum ValaPad.RecoveryDocumentOutcome {
     SAVE_SUCCEEDED,
     SAVE_FAILED,
-    SAVE_AS_CANCELLED,
     CLOSE_CANCELLED,
     DONT_SAVE
 }
