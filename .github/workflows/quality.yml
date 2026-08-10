@@ -56,7 +56,8 @@ jobs:
             python3-dogtail \
             shared-mime-info \
             valac \
-            weston
+            weston \
+            accountsservice
       - name: Build ValaPad
         run: |
           meson setup build
