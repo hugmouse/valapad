@@ -82,6 +82,15 @@ public class ValaPad.FontDialog : Gtk.Window {
                     margin_top = 2,
                     margin_bottom = 2
                 };
+                var motion_controller = new Gtk.EventControllerMotion ();
+                motion_controller.enter.connect ((x, y) => {
+                    var family = list_item.item as Pango.FontFamily;
+                    if (family != null) {
+                        preview_family (family);
+                    }
+                });
+                motion_controller.leave.connect (() => set_preview_font (selected_font));
+                container.add_controller (motion_controller);
                 container.append (label);
                 list_item.child = container;
             }
@@ -153,7 +162,6 @@ public class ValaPad.FontDialog : Gtk.Window {
         filter_box.append (category_dropdown);
 
         var family_list = new Gtk.ListView (family_selection, factory) {
-            single_click_activate = true,
             vexpand = true
         };
         family_list.activate.connect ((position) => {
@@ -328,9 +336,24 @@ public class ValaPad.FontDialog : Gtk.Window {
 
         selected_font = face_descriptions[selected].copy ();
         selected_font.set_size ((int) (size_spin.value * Pango.SCALE));
+        set_preview_font (selected_font);
+    }
 
+    private void preview_family (Pango.FontFamily family) {
+        (unowned Pango.FontFace)[] faces;
+        family.list_faces (out faces);
+        if (faces.length == 0) {
+            return;
+        }
+
+        var preview_font = faces[0].describe ();
+        preview_font.set_size ((int) (size_spin.value * Pango.SCALE));
+        set_preview_font (preview_font);
+    }
+
+    private void set_preview_font (Pango.FontDescription description) {
         var attributes = new Pango.AttrList ();
-        attributes.insert (new Pango.AttrFontDesc (selected_font));
+        attributes.insert (new Pango.AttrFontDesc (description));
         attributes.insert (Pango.attr_fallback_new (true));
         preview.attributes = attributes;
     }
