@@ -108,15 +108,8 @@ public class ValaPad.RecoveryStore : Object {
             }
         }
 
-        for (int i = 0; i < snapshots.length; i++) {
-            for (int j = i + 1; j < snapshots.length; j++) {
-                if (snapshots[j].saved_at > snapshots[i].saved_at) {
-                    RecoverySnapshot temporary = snapshots[i];
-                    snapshots[i] = snapshots[j];
-                    snapshots[j] = temporary;
-                }
-            }
-        }
+        CompareDataFunc<RecoverySnapshot> by_newest_first = (a, b) => (int) (b.saved_at - a.saved_at);
+        GLib.qsort_with_data (snapshots, sizeof (RecoverySnapshot), by_newest_first);
         debug ("Recovery scan completed: count=%d", snapshots.length);
         return snapshots;
     }
