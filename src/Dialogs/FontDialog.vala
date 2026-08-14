@@ -4,13 +4,6 @@
  */
 
 public class ValaPad.FontDialog : Gtk.Window {
-    [CCode (cname = "gtk_style_context_add_provider_for_display")]
-    private static extern void add_provider_for_display (
-        Gdk.Display display,
-        Gtk.StyleProvider provider,
-        uint priority
-    );
-
     private const string PREVIEW_TEXT = _("The quick brown fox jumps over the lazy dog.");
 
     private Gtk.SingleSelection family_selection;
@@ -42,12 +35,6 @@ public class ValaPad.FontDialog : Gtk.Window {
 
         applied_font = initial_font.copy ();
         selected_font = initial_font.copy ();
-        var style_provider = new Gtk.CssProvider ();
-        add_provider_for_display (
-            get_display (),
-            style_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        );
         build_ui ();
         set_initial_font (initial_font);
     }
@@ -104,10 +91,8 @@ public class ValaPad.FontDialog : Gtk.Window {
                 label.label = family.get_name ();
                 if (family.get_name () == applied_font.get_family ()) {
                     label.add_css_class ("accent");
-                    container.add_css_class ("applied-font");
                 } else {
                     label.remove_css_class ("accent");
-                    container.remove_css_class ("applied-font");
                 }
             }
         });

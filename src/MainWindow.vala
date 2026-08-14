@@ -4,13 +4,6 @@
  */
 
 public class ValaPad.MainWindow : Gtk.ApplicationWindow {
-    [CCode (cname = "gtk_style_context_add_provider_for_display")]
-    private static extern void add_provider_for_display (
-        Gdk.Display display,
-        Gtk.StyleProvider provider,
-        uint priority
-    );
-
     private const int BASE_FONT_PX = 14;
     private const int MIN_ZOOM = 10;
     private const int MAX_ZOOM = 500;
@@ -136,16 +129,16 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             font_description = Pango.FontDescription.from_string ("system-ui");
             font_description.set_absolute_size (BASE_FONT_PX * Pango.SCALE);
         }
-        add_provider_for_display (
-            get_display (),
+        Css.add_provider (
+            this,
             font_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_USER
         );
 
         var style_provider = new Gtk.CssProvider ();
         style_provider.load_from_string (STATUSBAR_CSS);
-        add_provider_for_display (
-            get_display (),
+        Css.add_provider (
+            this,
             style_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         );

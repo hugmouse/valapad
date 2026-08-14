@@ -7,6 +7,7 @@ recovery_snapshot_source = files('RecoverySnapshot.vala')
 recovery_store_source = files('RecoveryStore.vala')
 autosave_controller_source = files('AutosaveController.vala')
 recovery_workflow_source = files('RecoveryWorkflow.vala')
+css_source = files('CSS.vala')
 
 valapad_files = files(
     'Dialogs' / 'RecoveryDialog.vala',
@@ -25,6 +26,7 @@ config_file = configure_file(
 valapad_executable = executable(
     meson.project_name(),
     valapad_files,
+    css_source,
     font_filter_source,
     font_dialog_source,
     word_wrap_controller_source,
