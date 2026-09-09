@@ -16,7 +16,7 @@ public class ValaPad.TextFileProbe : Object {
             return true;
         }
 
-        int sus = 0;
+        uint sus = 0;
         foreach (uint8 byte in sample) {
             if (byte == 0) {
                 return false;
@@ -31,6 +31,6 @@ public class ValaPad.TextFileProbe : Object {
             return false;
         }
 
-        return sus * 100 <= sample.length;
+        return (int64) sus * 100 <= (int64) sample.length;
     }
 }

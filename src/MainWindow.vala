@@ -706,33 +706,92 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         print.print_settings = new Gtk.PrintSettings ();
 
         string[] lines = buffer.text.split ("\n");
-        int lines_per_page = 50;
+        var page_starts = new GenericArray<int> ();
 
         print.begin_print.connect ((op, ctx) => {
-            int n_pages = (lines.length + lines_per_page - 1) / lines_per_page;
-            if (n_pages < 1) {
-                n_pages = 1;
+            double dpi_x = ctx.get_dpi_x ();
+            double dpi_y = ctx.get_dpi_y ();
+            if (!(dpi_x > 0)) {
+                dpi_x = 72.0;
             }
-            op.set_n_pages (n_pages);
+            if (!(dpi_y > 0)) {
+                dpi_y = 72.0;
+            }
+            double margin_x = PrintLayout.points_to_pixels (PrintLayout.margin (), dpi_x);
+            double margin_y = PrintLayout.points_to_pixels (PrintLayout.margin (), dpi_y);
+            double content_width = ctx.get_width () - 2.0 * margin_x;
+            double content_height = ctx.get_height () - 2.0 * margin_y;
+            if (content_width < 1.0) {
+                content_width = 1.0;
+            }
+            if (content_height < 1.0) {
+                content_height = 1.0;
+            }
+
+            // Measure with the same width/wrap/font as draw_page so wrapped
+            // long lines occupy the visual height they will actually print.
+            var measure = ctx.create_pango_layout ();
+            measure.set_font_description (font_description);
+            measure.set_width ((int) (content_width * Pango.SCALE));
+            measure.set_wrap (Pango.WrapMode.WORD_CHAR);
+
+            int[] heights = new int[lines.length];
+            for (int i = 0; i < lines.length; i++) {
+                measure.set_text (lines[i], -1);
+                int w, h;
+                measure.get_pixel_size (out w, out h);
+                heights[i] = int.max (h, 1);
+            }
+
+            page_starts.remove_range (0, page_starts.length);
+            var starts = PrintLayout.paginate_by_heights (heights, (int) content_height);
+            for (int i = 0; i < starts.length; i++) {
+                page_starts.add (starts[i]);
+            }
+
+            op.set_n_pages (page_starts.length);
         });
 
         print.draw_page.connect ((op, ctx, page_nr) => {
+            if (page_nr < 0 || page_nr >= page_starts.length) {
+                return;
+            }
+            double dpi_x = ctx.get_dpi_x ();
+            double dpi_y = ctx.get_dpi_y ();
+            if (!(dpi_x > 0)) {
+                dpi_x = 72.0;
+            }
+            if (!(dpi_y > 0)) {
+                dpi_y = 72.0;
+            }
+            double margin_x = PrintLayout.points_to_pixels (PrintLayout.margin (), dpi_x);
+            double margin_y = PrintLayout.points_to_pixels (PrintLayout.margin (), dpi_y);
+            double content_width = ctx.get_width () - 2.0 * margin_x;
+            if (content_width < 1.0) {
+                content_width = 1.0;
+            }
+
             var cr = ctx.get_cairo_context ();
             cr.set_source_rgb (0, 0, 0);
 
             var layout = ctx.create_pango_layout ();
             layout.set_font_description (font_description);
+            layout.set_width ((int) (content_width * Pango.SCALE));
+            layout.set_wrap (Pango.WrapMode.WORD_CHAR);
 
-            int start = page_nr * lines_per_page;
-            int end = int.min (start + lines_per_page, lines.length);
+            int start = page_starts[page_nr];
+            int end = page_nr + 1 < page_starts.length ? page_starts[page_nr + 1] : lines.length;
 
             var sb = new StringBuilder ();
             for (int i = start; i < end; i++) {
+                if (i > start) {
+                    sb.append_c ('\n');
+                }
                 sb.append (lines[i]);
-                sb.append_c ('\n');
             }
             layout.set_text (sb.str, -1);
-            cr.move_to (20, 20);
+
+            cr.move_to (margin_x, margin_y);
             Pango.cairo_show_layout (cr, layout);
         });
 

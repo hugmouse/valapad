@@ -16,6 +16,15 @@ text_file_probe_test = executable(
 
 test('text file probe', text_file_probe_test)
 
+print_layout_test = executable(
+    'print-layout-test',
+    'PrintLayoutTest.vala',
+    print_layout_source,
+    dependencies: [dependency('glib-2.0'), dependency('gobject-2.0'), dependency('pango'), dependency('pangocairo')],
+)
+
+test('print layout', print_layout_test)
+
 run_target(
     'dogtail-tests',
     command: [

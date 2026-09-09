@@ -7,6 +7,7 @@ recovery_snapshot_source = files('RecoverySnapshot.vala')
 recovery_store_source = files('RecoveryStore.vala')
 autosave_controller_source = files('AutosaveController.vala')
 recovery_workflow_source = files('RecoveryWorkflow.vala')
+print_layout_source = files('PrintLayout.vala')
 css_source = files('CSS.vala')
 
 valapad_files = files(
@@ -36,6 +37,7 @@ valapad_executable = executable(
     recovery_store_source,
     autosave_controller_source,
     recovery_workflow_source,
+    print_layout_source,
     config_file,
     dependencies: dependencies,
     install: true,
