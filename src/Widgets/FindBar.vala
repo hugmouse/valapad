@@ -58,7 +58,7 @@ public class ValaPad.FindBar : Gtk.Box {
         var close_button = new Gtk.Button.from_icon_name ("window-close-symbolic") {
             tooltip_text = _("Close")
         };
-        close_button.clicked.connect (hide_bar);
+        close_button.clicked.connect (hide);
 
         var search_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6) {
             margin_start = 12,
@@ -138,10 +138,6 @@ public class ValaPad.FindBar : Gtk.Box {
         text_view.grab_focus ();
     }
 
-    public void hide_bar () {
-        hide ();
-    }
-
     private bool find_match (
         Gtk.TextIter start,
         bool forward,
@@ -149,11 +145,6 @@ public class ValaPad.FindBar : Gtk.Box {
         out Gtk.TextIter match_end
     ) {
         string needle = search_entry.text;
-        if (needle == "") {
-            match_start = start;
-            match_end = start;
-            return false;
-        }
 
         Gtk.TextSearchFlags flags = Gtk.TextSearchFlags.TEXT_ONLY;
         if (!match_case_toggle.active) {
@@ -264,12 +255,7 @@ public class ValaPad.FindBar : Gtk.Box {
             return;
         }
 
-        string needle = search_entry.text;
         string replacement = replace_entry.text;
-        Gtk.TextSearchFlags flags = Gtk.TextSearchFlags.TEXT_ONLY;
-        if (!match_case_toggle.active) {
-            flags |= Gtk.TextSearchFlags.CASE_INSENSITIVE;
-        }
 
         buffer.begin_user_action ();
 
@@ -279,7 +265,7 @@ public class ValaPad.FindBar : Gtk.Box {
         int safety = 100000;
         while (safety-- > 0) {
             Gtk.TextIter match_start, match_end;
-            if (!iter.forward_search (needle, flags, out match_start, out match_end, null)) {
+            if (!find_match (iter, true, out match_start, out match_end)) {
                 break;
             }
 

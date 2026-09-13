@@ -532,13 +532,21 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             }
             bool looks_like_text = yield file_looks_like_text (file);
             if (!looks_like_text) {
-                bool open_unsupported = yield confirm_open_unsupported_file (file);
+                string unsupported_message = _(
+                    "“%s” does not appear to be a supported text file. Opening it may display corrupted text, " +
+                    "and saving it could damage the file."
+                ).printf (file.get_basename ());
+                bool open_unsupported = yield confirm_open_anyway (unsupported_message);
                 if (!open_unsupported) {
                     return;
                 }
             }
             if (info.get_size () >= LARGE_FILE_BYTES) {
-                bool open_large = yield confirm_open_large_file (file, info.get_size ());
+                string large_message = _(
+                    "“%s” is %s. Opening it may make ValaPad unresponsive and requires substantially more memory " +
+                    "than the file size."
+                ).printf (file.get_basename (), GLib.format_size ((uint64) info.get_size ()));
+                bool open_large = yield confirm_open_anyway (large_message);
                 if (!open_large) {
                     return;
                 }
@@ -591,32 +599,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
     }
 
-    private async bool confirm_open_unsupported_file (File file) {
-        string message = _(
-            "“%s” does not appear to be a supported text file. Opening it may display corrupted text, " +
-            "and saving it could damage the file."
-        ).printf (file.get_basename ());
-        var alert = new Gtk.AlertDialog (message) {
-            modal = true,
-            buttons = { _("Cancel"), _("Open Anyway") },
-            cancel_button = 0,
-            default_button = 0
-        };
-
-        try {
-            int response = yield alert.choose (this, null);
-            return response == 1;
-        } catch (Error error) {
-            return false;
-        }
-    }
-
-    private async bool confirm_open_large_file (File file, int64 size) {
-        string size_text = GLib.format_size ((uint64) size);
-        string message = _(
-            "“%s” is %s. Opening it may make ValaPad unresponsive and requires substantially more memory " +
-            "than the file size."
-        ).printf (file.get_basename (), size_text);
+    private async bool confirm_open_anyway (string message) {
         var alert = new Gtk.AlertDialog (message) {
             modal = true,
             buttons = { _("Cancel"), _("Open Anyway") },
@@ -717,8 +700,8 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             if (!(dpi_y > 0)) {
                 dpi_y = 72.0;
             }
-            double margin_x = PrintLayout.points_to_pixels (PrintLayout.margin (), dpi_x);
-            double margin_y = PrintLayout.points_to_pixels (PrintLayout.margin (), dpi_y);
+            double margin_x = PrintLayout.margin_px (dpi_x);
+            double margin_y = PrintLayout.margin_px (dpi_y);
             double content_width = ctx.get_width () - 2.0 * margin_x;
             double content_height = ctx.get_height () - 2.0 * margin_y;
             if (content_width < 1.0) {
@@ -764,8 +747,8 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             if (!(dpi_y > 0)) {
                 dpi_y = 72.0;
             }
-            double margin_x = PrintLayout.points_to_pixels (PrintLayout.margin (), dpi_x);
-            double margin_y = PrintLayout.points_to_pixels (PrintLayout.margin (), dpi_y);
+            double margin_x = PrintLayout.margin_px (dpi_x);
+            double margin_y = PrintLayout.margin_px (dpi_y);
             double content_width = ctx.get_width () - 2.0 * margin_x;
             if (content_width < 1.0) {
                 content_width = 1.0;
