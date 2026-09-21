@@ -159,36 +159,14 @@ public class ValaPad.FindBar : Gtk.Box {
     }
 
     public void find_next () {
-        if (search_entry.text == "") {
-            return;
-        }
-
-        Gtk.TextIter start;
-        if (buffer.get_has_selection ()) {
-            Gtk.TextIter sel_start, sel_end;
-            buffer.get_selection_bounds (out sel_start, out sel_end);
-            start = sel_end;
-        } else {
-            buffer.get_iter_at_mark (out start, buffer.get_insert ());
-        }
-
-        Gtk.TextIter match_start, match_end;
-        if (find_match (start, true, out match_start, out match_end)) {
-            buffer.select_range (match_start, match_end);
-            scroll_to_iter (match_start);
-            return;
-        }
-
-        if (wrap_toggle.active) {
-            buffer.get_start_iter (out start);
-            if (find_match (start, true, out match_start, out match_end)) {
-                buffer.select_range (match_start, match_end);
-                scroll_to_iter (match_start);
-            }
-        }
+        find_in_direction (true);
     }
 
     public void find_previous () {
+        find_in_direction (false);
+    }
+
+    private void find_in_direction (bool forward) {
         if (search_entry.text == "") {
             return;
         }
@@ -197,21 +175,25 @@ public class ValaPad.FindBar : Gtk.Box {
         if (buffer.get_has_selection ()) {
             Gtk.TextIter sel_start, sel_end;
             buffer.get_selection_bounds (out sel_start, out sel_end);
-            start = sel_start;
+            start = forward ? sel_end : sel_start;
         } else {
             buffer.get_iter_at_mark (out start, buffer.get_insert ());
         }
 
         Gtk.TextIter match_start, match_end;
-        if (find_match (start, false, out match_start, out match_end)) {
+        if (find_match (start, forward, out match_start, out match_end)) {
             buffer.select_range (match_start, match_end);
             scroll_to_iter (match_start);
             return;
         }
 
         if (wrap_toggle.active) {
-            buffer.get_end_iter (out start);
-            if (find_match (start, false, out match_start, out match_end)) {
+            if (forward) {
+                buffer.get_start_iter (out start);
+            } else {
+                buffer.get_end_iter (out start);
+            }
+            if (find_match (start, forward, out match_start, out match_end)) {
                 buffer.select_range (match_start, match_end);
                 scroll_to_iter (match_start);
             }

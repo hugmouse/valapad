@@ -48,11 +48,13 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
         recovery_store = new RecoveryStore ();
         build_ui ();
+        restore_window_state ();
         autosave_controller = new AutosaveController (buffer, recovery_store);
         autosave_controller.save_failed.connect (show_recovery_warning);
         update_autosave_document ();
         add_window_actions ();
         connect_signals ();
+        load_zoom ();
         update_status ();
         update_zoom_css ();
     }
@@ -860,12 +862,33 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     // --- View actions ---------------------------------------------------------------------------------
 
     // helper
+    private void restore_window_state () {
+        default_width = settings.get_int ("window-width").clamp (400, 10000);
+        default_height = settings.get_int ("window-height").clamp (300, 10000);
+        if (settings.get_boolean ("window-maximized")) {
+            maximized = true;
+        }
+    }
+
+    private void save_window_state () {
+        settings.set_boolean ("window-maximized", maximized);
+        if (!maximized) {
+            settings.set_int ("window-width", get_width ());
+            settings.set_int ("window-height", get_height ());
+        }
+    }
+
+    private void load_zoom () {
+        set_zoom (settings.get_int ("zoom-percentage"));
+    }
+
     private void set_zoom (int value) {
         var new_zoom = value.clamp (MIN_ZOOM, MAX_ZOOM);
         if (new_zoom == zoom_percentage) {
             return;
         }
         zoom_percentage = new_zoom;
+        settings.set_int ("zoom-percentage", zoom_percentage);
         update_zoom_css ();
         update_status ();
     }
@@ -1001,6 +1024,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     public override bool close_request () {
+        save_window_state ();
         if (confirmed_close || !buffer.get_modified ()) {
             return false; // allow close
         }

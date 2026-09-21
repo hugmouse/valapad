@@ -27,16 +27,7 @@ public class ValaPad.RecoveryStore : Object {
         File directory = root.get_child (snapshot.id);
         ensure_directory (directory);
 
-        uint8[] content = snapshot.text.data;
-        string? ignored_etag;
-        yield directory.get_child (CONTENT_FILE).replace_contents_async (
-            content,
-            null,
-            false,
-            FileCreateFlags.REPLACE_DESTINATION | FileCreateFlags.PRIVATE,
-            cancellable,
-            out ignored_etag
-        );
+        yield write_child_file (directory, CONTENT_FILE, snapshot.text.data, cancellable);
 
         var metadata = new KeyFile ();
         metadata.set_integer (GROUP, "version", RecoverySnapshot.FORMAT_VERSION);
@@ -54,8 +45,16 @@ public class ValaPad.RecoveryStore : Object {
 
         string metadata_text = metadata.to_data ();
         uint8[] metadata_content = metadata_text.data;
-        yield directory.get_child (METADATA_FILE).replace_contents_async (
-            metadata_content,
+        yield write_child_file (directory, METADATA_FILE, metadata_content, cancellable);
+    }
+
+    private async void write_child_file (File directory,
+                                         string name,
+                                         uint8[] contents,
+                                         Cancellable? cancellable) throws Error {
+        string? ignored_etag;
+        yield directory.get_child (name).replace_contents_async (
+            contents,
             null,
             false,
             FileCreateFlags.REPLACE_DESTINATION | FileCreateFlags.PRIVATE,
