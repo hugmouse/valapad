@@ -303,7 +303,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         // Help actions
         add_action_with_callback (Application.ACTION_ABOUT, action_about);
 
-        // Fuckton of bindings
+        // Keyboard shortcuts
         var app = (Application) application;
         app.set_accels_for_action ("win." + Application.ACTION_NEW, { "<Control>n" });
         app.set_accels_for_action ("win." + Application.ACTION_OPEN, { "<Control>o" });
@@ -470,23 +470,27 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     // --- File actions ---------------------------------------------------------------------------------
 
+    private void set_document_state (File? file, string? etag, string text, bool crlf, string encoding, bool modified) {
+        autosave_controller.suspend ();
+        buffer.text = text;
+        current_file = file;
+        current_etag = etag;
+        use_crlf = crlf;
+        encoding_name = encoding;
+        buffer.set_modified (modified);
+        autosave_controller.resume ();
+        update_autosave_document ();
+        update_title ();
+        update_status ();
+    }
+
     private async void action_new () {
         if (!yield confirm_discard ()) {
             return;
         }
 
         yield autosave_controller.reset ();
-        autosave_controller.suspend ();
-        buffer.text = "";
-        current_file = null;
-        current_etag = null;
-        use_crlf = false;
-        encoding_name = "UTF-8";
-        buffer.set_modified (false);
-        autosave_controller.resume ();
-        update_autosave_document ();
-        update_title ();
-        update_status ();
+        set_document_state (null, null, "", false, "UTF-8", false);
     }
 
     private async void action_open () {
@@ -565,21 +569,14 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 out repaired
             );
 
+            string new_encoding;
             if (repaired) {
-                encoding_name = _("UTF-8 (invalid bytes replaced)");
+                new_encoding = _("UTF-8 (invalid bytes replaced)");
             } else {
-                encoding_name = has_bom ? "UTF-8-BOM" : "UTF-8";
+                new_encoding = has_bom ? "UTF-8-BOM" : "UTF-8";
             }
 
-            autosave_controller.suspend ();
-            buffer.text = text;
-            current_file = file;
-            current_etag = etag;
-            buffer.set_modified (false);
-            autosave_controller.resume ();
-            update_autosave_document ();
-            update_title ();
-            update_status ();
+            set_document_state (file, etag, text, use_crlf, new_encoding, false);
         } catch (Error e) {
             show_error (_("Open failed"), e.message);
         }
@@ -684,6 +681,29 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
     }
 
+    private void get_print_metrics (Gtk.PrintContext ctx, out double margin_x, out double margin_y, out double content_width, out double content_height) {
+        double dpi_x = ctx.get_dpi_x ();
+        double dpi_y = ctx.get_dpi_y ();
+        if (!(dpi_x > 0)) {
+            dpi_x = 72.0;
+        }
+        if (!(dpi_y > 0)) {
+            dpi_y = 72.0;
+        }
+        margin_x = PrintLayout.margin_px (dpi_x);
+        margin_y = PrintLayout.margin_px (dpi_y);
+        content_width = double.max (ctx.get_width () - 2.0 * margin_x, 1.0);
+        content_height = double.max (ctx.get_height () - 2.0 * margin_y, 1.0);
+    }
+
+    private Pango.Layout create_print_layout (Gtk.PrintContext ctx, double content_width) {
+        var layout = ctx.create_pango_layout ();
+        layout.set_font_description (font_description);
+        layout.set_width ((int) (content_width * Pango.SCALE));
+        layout.set_wrap (Pango.WrapMode.WORD_CHAR);
+        return layout;
+    }
+
     private void action_print () {
         var print = new Gtk.PrintOperation ();
         print.print_settings = new Gtk.PrintSettings ();
@@ -692,31 +712,12 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         var page_starts = new GenericArray<int> ();
 
         print.begin_print.connect ((op, ctx) => {
-            double dpi_x = ctx.get_dpi_x ();
-            double dpi_y = ctx.get_dpi_y ();
-            if (!(dpi_x > 0)) {
-                dpi_x = 72.0;
-            }
-            if (!(dpi_y > 0)) {
-                dpi_y = 72.0;
-            }
-            double margin_x = PrintLayout.margin_px (dpi_x);
-            double margin_y = PrintLayout.margin_px (dpi_y);
-            double content_width = ctx.get_width () - 2.0 * margin_x;
-            double content_height = ctx.get_height () - 2.0 * margin_y;
-            if (content_width < 1.0) {
-                content_width = 1.0;
-            }
-            if (content_height < 1.0) {
-                content_height = 1.0;
-            }
+            double margin_x, margin_y, content_width, content_height;
+            get_print_metrics (ctx, out margin_x, out margin_y, out content_width, out content_height);
 
             // Measure with the same width/wrap/font as draw_page so wrapped
             // long lines occupy the visual height they will actually print.
-            var measure = ctx.create_pango_layout ();
-            measure.set_font_description (font_description);
-            measure.set_width ((int) (content_width * Pango.SCALE));
-            measure.set_wrap (Pango.WrapMode.WORD_CHAR);
+            var measure = create_print_layout (ctx, content_width);
 
             int[] heights = new int[lines.length];
             for (int i = 0; i < lines.length; i++) {
@@ -739,28 +740,13 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             if (page_nr < 0 || page_nr >= page_starts.length) {
                 return;
             }
-            double dpi_x = ctx.get_dpi_x ();
-            double dpi_y = ctx.get_dpi_y ();
-            if (!(dpi_x > 0)) {
-                dpi_x = 72.0;
-            }
-            if (!(dpi_y > 0)) {
-                dpi_y = 72.0;
-            }
-            double margin_x = PrintLayout.margin_px (dpi_x);
-            double margin_y = PrintLayout.margin_px (dpi_y);
-            double content_width = ctx.get_width () - 2.0 * margin_x;
-            if (content_width < 1.0) {
-                content_width = 1.0;
-            }
+            double margin_x, margin_y, content_width, content_height;
+            get_print_metrics (ctx, out margin_x, out margin_y, out content_width, out content_height);
 
             var cr = ctx.get_cairo_context ();
             cr.set_source_rgb (0, 0, 0);
 
-            var layout = ctx.create_pango_layout ();
-            layout.set_font_description (font_description);
-            layout.set_width ((int) (content_width * Pango.SCALE));
-            layout.set_wrap (Pango.WrapMode.WORD_CHAR);
+            var layout = create_print_layout (ctx, content_width);
 
             int start = page_starts[page_nr];
             int end = page_nr + 1 < page_starts.length ? page_starts[page_nr + 1] : lines.length;
@@ -977,24 +963,22 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             snapshot.original_changed.to_string ()
         );
         autosave_controller.adopt_recovery (snapshot.id);
-        autosave_controller.suspend ();
-        buffer.text = snapshot.text;
-        current_file = snapshot.original_uri != null
+        File? snapshot_file = snapshot.original_uri != null
             ? File.new_for_uri (snapshot.original_uri)
             : null;
-        current_etag = snapshot.original_etag;
-        use_crlf = snapshot.use_crlf;
-        encoding_name = snapshot.encoding_name;
-        buffer.set_modified (true);
+        set_document_state (
+            snapshot_file,
+            snapshot.original_etag,
+            snapshot.text,
+            snapshot.use_crlf,
+            snapshot.encoding_name,
+            true
+        );
         Gtk.TextIter cursor;
         buffer.get_iter_at_offset (out cursor, snapshot.cursor_offset.clamp (0, buffer.get_char_count ()));
         buffer.place_cursor (cursor);
         text_view.scroll_to_iter (cursor, 0.0, false, 0.0, 0.0);
-        autosave_controller.resume ();
-        update_autosave_document ();
         autosave_controller.schedule_now ();
-        update_title ();
-        update_status ();
         string? conflict = RecoveryWorkflow.conflict_warning (
             snapshot,
             _("The original file changed after this backup was created. Use Save As to avoid replacing newer changes.")

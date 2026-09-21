@@ -66,10 +66,7 @@ public class ValaPad.AutosaveController : Object {
     }
 
     public void adopt_recovery (string id) {
-        cancel_timers ();
-        generation++;
-        dirty = false;
-        save_cancellable?.cancel ();
+        invalidate_pending ();
 
         recovery_id = id;
         debug ("Recovery snapshot adopted: id=%s", recovery_id);
@@ -77,10 +74,7 @@ public class ValaPad.AutosaveController : Object {
 
     public async void reset () {
         string old_id = recovery_id;
-        cancel_timers ();
-        generation++;
-        dirty = false;
-        save_cancellable?.cancel ();
+        invalidate_pending ();
 
         recovery_id = Uuid.string_random ();
         debug ("Recovery controller reset: old-id=%s new-id=%s", old_id, recovery_id);
@@ -92,10 +86,7 @@ public class ValaPad.AutosaveController : Object {
     }
 
     public async void clear () {
-        cancel_timers ();
-        generation++;
-        dirty = false;
-        save_cancellable?.cancel ();
+        invalidate_pending ();
 
         debug ("Clearing recovery snapshot: id=%s", recovery_id);
         try {
@@ -118,11 +109,7 @@ public class ValaPad.AutosaveController : Object {
         }
         dirty = true;
         if (debounce_source == 0) {
-            debounce_source = Timeout.add (debounce_milliseconds, () => {
-                debounce_source = 0;
-                start_save ();
-                return Source.REMOVE;
-            });
+            arm_debounce ();
         }
     }
 
@@ -132,22 +119,8 @@ public class ValaPad.AutosaveController : Object {
         }
 
         dirty = true;
-        if (debounce_source != 0) {
-            Source.remove (debounce_source);
-        }
-        debounce_source = Timeout.add (debounce_milliseconds, () => {
-            debounce_source = 0;
-            start_save ();
-            return Source.REMOVE;
-        });
-
-        if (deadline_source == 0) {
-            deadline_source = Timeout.add (deadline_milliseconds, () => {
-                deadline_source = 0;
-                start_save ();
-                return Source.REMOVE;
-            });
-        }
+        arm_debounce ();
+        arm_deadline ();
     }
 
     private void start_save () {
@@ -208,6 +181,35 @@ public class ValaPad.AutosaveController : Object {
         } else if (dirty) {
             start_save ();
         }
+    }
+
+    private void invalidate_pending () {
+        cancel_timers ();
+        generation++;
+        dirty = false;
+        save_cancellable?.cancel ();
+    }
+
+    private void arm_debounce () {
+        if (debounce_source != 0) {
+            Source.remove (debounce_source);
+        }
+        debounce_source = Timeout.add (debounce_milliseconds, () => {
+            debounce_source = 0;
+            start_save ();
+            return Source.REMOVE;
+        });
+    }
+
+    private void arm_deadline () {
+        if (deadline_source != 0) {
+            return;
+        }
+        deadline_source = Timeout.add (deadline_milliseconds, () => {
+            deadline_source = 0;
+            start_save ();
+            return Source.REMOVE;
+        });
     }
 
     private void cancel_timers () {
