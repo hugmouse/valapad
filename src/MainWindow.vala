@@ -681,7 +681,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
     }
 
-    private void get_print_metrics (Gtk.PrintContext ctx, out double margin_x, out double margin_y, out double content_width, out double content_height) {
+    private void get_print_metrics (Gtk.PrintContext ctx,
+                                    out double margin_x,
+                                    out double margin_y,
+                                    out double content_width,
+                                    out double content_height) {
         double dpi_x = ctx.get_dpi_x ();
         double dpi_y = ctx.get_dpi_y ();
         if (!(dpi_x > 0)) {
@@ -979,6 +983,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         buffer.place_cursor (cursor);
         text_view.scroll_to_iter (cursor, 0.0, false, 0.0, 0.0);
         autosave_controller.schedule_now ();
+        update_status ();
         string? conflict = RecoveryWorkflow.conflict_warning (
             snapshot,
             _("The original file changed after this backup was created. Use Save As to avoid replacing newer changes.")
