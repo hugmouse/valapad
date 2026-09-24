@@ -36,6 +36,15 @@
     <color type="primary">#3689e6</color>
   </branding>
   <releases>
+    <release version="1.2.0" date="2026-09-24">
+      <description>
+        <p>Escape closes the search and replace bar, and the go to, font and recovery dialogs.</p>
+        <p>Errors open in a proper dialog instead of an alert that printed the message twice.</p>
+        <p>Cancelling the prompt for a binary or oversized file no longer leaves an empty window behind.</p>
+        <p>Monospace fonts no longer appear under Sans Serif in the font dialog.</p>
+        <p>The About dialog shows the website, the author and the translators.</p>
+      </description>
+    </release>
     <release version="1.1.1" date="2026-08-02">
       <description>
         <p>Fixes related to the release on GitHub, no visual changes.</p>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dev.mysh.valapad-extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-24 18:58+0200\n"
+"POT-Creation-Date: 2026-09-24 19:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,43 +59,69 @@ msgid "Recover unsaved documents after a crash"
 msgstr ""
 
 #: data/dev.mysh.valapad.metainfo.xml.in.in:41
+msgid ""
+"Escape closes the search and replace bar, and the go to, font and recovery "
+"dialogs."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in.in:42
+msgid ""
+"Errors open in a proper dialog instead of an alert that printed the message "
+"twice."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in.in:43
+msgid ""
+"Cancelling the prompt for a binary or oversized file no longer leaves an "
+"empty window behind."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in.in:44
+msgid "Monospace fonts no longer appear under Sans Serif in the font dialog."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in.in:45
+msgid "The About dialog shows the website, the author and the translators."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in.in:50
 msgid "Fixes related to the release on GitHub, no visual changes."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:46
+#: data/dev.mysh.valapad.metainfo.xml.in.in:55
 msgid ""
 "The autosave feature has been added. ValaPad regularly saves your changes, "
 "so if app crashes, you can still restore the document."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:51
+#: data/dev.mysh.valapad.metainfo.xml.in.in:60
 msgid "Changed strings related to RDNN change, no visual changes."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:56
+#: data/dev.mysh.valapad.metainfo.xml.in.in:65
 msgid "Fixed link to the screenshot of the app."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:61
+#: data/dev.mysh.valapad.metainfo.xml.in.in:70
 msgid "Changed RDNN string to previous one."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:62
+#: data/dev.mysh.valapad.metainfo.xml.in.in:71
 msgid "Fixed Russian and German translations."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:63
+#: data/dev.mysh.valapad.metainfo.xml.in.in:72
 msgid "Currently used font is now highlighted in fonts menu."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:68
+#: data/dev.mysh.valapad.metainfo.xml.in.in:77
 msgid "Changed the application ID to meet AppCenter publishing requirements."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:73
+#: data/dev.mysh.valapad.metainfo.xml.in.in:82
 msgid "Added the icon."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in.in:78
+#: data/dev.mysh.valapad.metainfo.xml.in.in:87
 msgid "Initial release."
 msgstr ""
