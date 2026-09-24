@@ -257,6 +257,8 @@ public class ValaPad.FontDialog : Gtk.Window {
             end_child = detail_box
         };
         child = content;
+
+        EscapeController.dismiss_on_escape (this);
     }
 
     private double get_initial_size () {

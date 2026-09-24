@@ -15,6 +15,7 @@ valapad_files = files(
     'Dialogs' / 'GoToDialog.vala',
     'Widgets' / 'FindBar.vala',
     'Application.vala',
+    'EscapeController.vala',
     'MainWindow.vala',
 )
 

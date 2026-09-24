@@ -362,6 +362,16 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             return false;
         });
         text_view.add_controller (scroll_controller);
+
+        // Escape closes the find bar; the search entry eats the key first
+        var escape = EscapeController.attach (this, Gtk.PropagationPhase.CAPTURE);
+        escape.key_pressed.connect ((keyval, keycode, state) => {
+            if (keyval != Gdk.Key.Escape || !find_bar.visible) {
+                return false;
+            }
+            find_bar.hide_bar ();
+            return true;
+        });
     }
 
     // --- Status updates ---------------------------------------------------------------------------------

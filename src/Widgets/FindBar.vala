@@ -38,12 +38,12 @@ public class ValaPad.FindBar : Gtk.Box {
         search_entry.activate.connect (find_next);
 
         next_button = new Gtk.Button.from_icon_name ("go-down-symbolic") {
-            tooltip_text = _("Find Next (F3)")
+            tooltip_markup = Granite.markup_accel_tooltip ({ "F3" }, _("Find Next"))
         };
         next_button.clicked.connect (find_next);
 
         prev_button = new Gtk.Button.from_icon_name ("go-up-symbolic") {
-            tooltip_text = _("Find Previous (Shift+F3)")
+            tooltip_markup = Granite.markup_accel_tooltip ({ "<Shift>F3" }, _("Find Previous"))
         };
         prev_button.clicked.connect (find_previous);
 
@@ -56,9 +56,9 @@ public class ValaPad.FindBar : Gtk.Box {
         };
 
         var close_button = new Gtk.Button.from_icon_name ("window-close-symbolic") {
-            tooltip_text = _("Close")
+            tooltip_markup = Granite.markup_accel_tooltip ({ "Escape" }, _("Close"))
         };
-        close_button.clicked.connect (hide);
+        close_button.clicked.connect (hide_bar);
 
         var search_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6) {
             margin_start = 12,
@@ -133,7 +133,7 @@ public class ValaPad.FindBar : Gtk.Box {
         search_entry.grab_focus ();
     }
 
-    public new void hide () {
+    public void hide_bar () {
         visible = false;
         text_view.grab_focus ();
     }

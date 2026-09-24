@@ -101,6 +101,8 @@ public class ValaPad.RecoveryDialog : Gtk.Window {
         content.append (list);
         content.append (buttons);
         child = content;
+
+        EscapeController.dismiss_on_escape (this);
     }
 
     private void finish (bool recover) {

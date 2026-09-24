@@ -62,6 +62,8 @@ public class ValaPad.GoToDialog : Gtk.Window {
         content.append (line_spin);
         content.append (button_box);
         child = content;
+
+        EscapeController.dismiss_on_escape (this);
     }
 
     public void show_dialog () {
