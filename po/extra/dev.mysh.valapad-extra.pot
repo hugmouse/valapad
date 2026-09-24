@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dev.mysh.valapad-extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-02 11:39+0200\n"
+"POT-Creation-Date: 2026-09-24 18:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/dev.mysh.valapad.desktop.in:6 data/dev.mysh.valapad.metainfo.xml.in:7
+#: data/dev.mysh.valapad.desktop.in:6
+#: data/dev.mysh.valapad.metainfo.xml.in.in:7
 msgid "ValaPad"
 msgstr ""
 
@@ -25,65 +26,76 @@ msgstr ""
 msgid "Edit plain-text files"
 msgstr ""
 
-#: data/dev.mysh.valapad.desktop.in:9
+#: data/dev.mysh.valapad.desktop.in:8
+msgid "Text Editor"
+msgstr ""
+
+#: data/dev.mysh.valapad.desktop.in:10
 msgid "valapad;text;editor;plain;"
 msgstr ""
 
-#: data/dev.mysh.valapad.desktop.in:20
+#: data/dev.mysh.valapad.desktop.in:21
 msgid "New Window"
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:8
+#: data/dev.mysh.valapad.metainfo.xml.in.in:8
+#: data/dev.mysh.valapad.metainfo.xml.in.in:22
 msgid "Edit plain-text files with a familiar set of tools"
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:10
+#: data/dev.mysh.valapad.metainfo.xml.in.in:10
 msgid "Iaroslav Angliuster"
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:13
+#: data/dev.mysh.valapad.metainfo.xml.in.in:13
 msgid ""
 "ValaPad is a lightweight plain-text editor with a familiar menu bar and a "
 "live status bar showing line and column, zoom level, line-ending style, and "
 "encoding. Exciting!"
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:32
+#: data/dev.mysh.valapad.metainfo.xml.in.in:26
+msgid "Recover unsaved documents after a crash"
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in.in:41
+msgid "Fixes related to the release on GitHub, no visual changes."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in.in:46
+msgid ""
+"The autosave feature has been added. ValaPad regularly saves your changes, "
+"so if app crashes, you can still restore the document."
+msgstr ""
+
+#: data/dev.mysh.valapad.metainfo.xml.in.in:51
 msgid "Changed strings related to RDNN change, no visual changes."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:37
+#: data/dev.mysh.valapad.metainfo.xml.in.in:56
 msgid "Fixed link to the screenshot of the app."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:42
+#: data/dev.mysh.valapad.metainfo.xml.in.in:61
 msgid "Changed RDNN string to previous one."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:43
+#: data/dev.mysh.valapad.metainfo.xml.in.in:62
 msgid "Fixed Russian and German translations."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:44
+#: data/dev.mysh.valapad.metainfo.xml.in.in:63
 msgid "Currently used font is now highlighted in fonts menu."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:49
-msgid "Changed RDNN string due to publishing requirements."
+#: data/dev.mysh.valapad.metainfo.xml.in.in:68
+msgid "Changed the application ID to meet AppCenter publishing requirements."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:50
-msgid "Previous: dev.mysh.valapad"
-msgstr ""
-
-#: data/dev.mysh.valapad.metainfo.xml.in:51
-msgid "New: dev.mysh.valapad"
-msgstr ""
-
-#: data/dev.mysh.valapad.metainfo.xml.in:56
+#: data/dev.mysh.valapad.metainfo.xml.in.in:73
 msgid "Added the icon."
 msgstr ""
 
-#: data/dev.mysh.valapad.metainfo.xml.in:61
+#: data/dev.mysh.valapad.metainfo.xml.in.in:78
 msgid "Initial release."
 msgstr ""
