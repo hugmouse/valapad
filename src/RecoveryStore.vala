@@ -96,7 +96,7 @@ public class ValaPad.RecoveryStore : Object {
                     debug (
                         "Recovery snapshot found: id=%s chars=%d original-changed=%s",
                         snapshot.id,
-                        snapshot.text.char_count (),
+                        (int) snapshot.text.char_count (),
                         snapshot.original_changed.to_string ()
                     );
                     snapshots += snapshot;

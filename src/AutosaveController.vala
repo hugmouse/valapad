@@ -159,7 +159,7 @@ public class ValaPad.AutosaveController : Object {
             debug (
                 "Recovery snapshot write completed: id=%s chars=%d cursor=%d",
                 snapshot.id,
-                snapshot.text.char_count (),
+                (int) snapshot.text.char_count (),
                 snapshot.cursor_offset
             );
         } catch (IOError.CANCELLED error) {

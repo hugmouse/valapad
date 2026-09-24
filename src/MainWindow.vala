@@ -1000,7 +1000,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         debug (
             "Restoring recovery snapshot: id=%s chars=%d cursor=%d original-changed=%s",
             snapshot.id,
-            snapshot.text.char_count (),
+            (int) snapshot.text.char_count (),
             snapshot.cursor_offset,
             snapshot.original_changed.to_string ()
         );
