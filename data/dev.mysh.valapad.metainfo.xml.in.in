@@ -18,11 +18,20 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/hugmouse/valapad/raw/@VERSION@/data/screenshots/main.webp?raw=true</image>
+      <image>https://github.com/hugmouse/valapad/raw/@VERSION@/data/screenshots/main.webp</image>
+      <caption>Edit plain-text files with a familiar set of tools</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/hugmouse/valapad/raw/@VERSION@/docs/screenshots/recover-documents.webp</image>
+      <caption>Recover unsaved documents after a crash</caption>
     </screenshot>
   </screenshots>
   <launchable type="desktop-id">dev.mysh.valapad.desktop</launchable>
   <url type="homepage">https://github.com/hugmouse/valapad</url>
+  <url type="bugtracker">https://github.com/hugmouse/valapad/issues</url>
+  <provides>
+    <binary>dev.mysh.valapad</binary>
+  </provides>
   <branding>
     <color type="primary">#3689e6</color>
   </branding>
@@ -56,9 +65,7 @@
     </release>
     <release version="1.0.1" date="2026-07-20">
       <description>
-        <p>Changed RDNN string due to publishing requirements.</p>
-        <p>Previous: dev.mysh.valapad</p>
-        <p>New: dev.mysh.valapad</p>
+        <p>Changed the application ID to meet AppCenter publishing requirements.</p>
       </description>
     </release>
     <release version="1.0.0" date="2026-07-20">
@@ -73,8 +80,9 @@
     </release>
   </releases>
   <content_rating type="oars-1.1" />
-  <recommends>
+  <supports>
     <control>keyboard</control>
     <control>touch</control>
-  </recommends>
+    <control>pointing</control>
+  </supports>
 </component>

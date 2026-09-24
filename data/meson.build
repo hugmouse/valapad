@@ -65,10 +65,3 @@ install_data(
     install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'scalable' / 'apps',
     rename: app_id + '.svg',
 )
-
-# Do I actually need to add this one? Where is it even used?
-#install_data(
-#  'icons/symbolic.svg',
-#  install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'symbolic' / 'apps',
-#  rename: app_id + '-symbolic.svg'
-#)

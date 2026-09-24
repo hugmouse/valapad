@@ -1,4 +1,4 @@
-![Screenshot of ValaPad](https://github.com/hugmouse/valanote/blob/master/data/screenshots/main.webp?raw=true)
+![Screenshot of ValaPad](https://github.com/hugmouse/valapad/raw/master/data/screenshots/main.webp)
 
 # ValaPad
 

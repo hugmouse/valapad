@@ -4,6 +4,7 @@ Type=Application
 
 Name=ValaPad
 Comment=Edit plain-text files
+GenericName=Text Editor
 Categories=Utility;TextEditor;
 Keywords=valapad;text;editor;plain;
 
@@ -18,3 +19,4 @@ Actions=NewWindow;
 [Desktop Action NewWindow]
 Name=New Window
 Exec=dev.mysh.valapad
+Icon=window-new
