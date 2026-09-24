@@ -25,6 +25,25 @@ print_layout_test = executable(
 
 test('print layout', print_layout_test)
 
+recovery_workflow_test = executable(
+    'recovery-workflow-test',
+    'RecoveryWorkflowTest.vala',
+    recovery_workflow_source,
+    recovery_snapshot_source,
+    dependencies: [dependency('glib-2.0'), dependency('gobject-2.0')],
+)
+
+test('recovery workflow', recovery_workflow_test)
+
+font_filter_test = executable(
+    'font-filter-test',
+    'FontFilterTest.vala',
+    font_filter_source,
+    dependencies: [dependency('glib-2.0'), dependency('gobject-2.0')],
+)
+
+test('font filter', font_filter_test)
+
 run_target(
     'dogtail-tests',
     command: [
