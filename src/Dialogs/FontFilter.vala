@@ -56,7 +56,8 @@ public class ValaPad.FontFilter : Object {
             case FontCategory.MONOSPACE:
                 return is_monospace;
             case FontCategory.SANS_SERIF:
-                return is_sans_serif (family_name);
+                // Sans Serif, but not monospace
+                return !is_monospace && is_sans_serif (family_name);
             default:
                 return true;
         }
