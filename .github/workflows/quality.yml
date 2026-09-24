@@ -36,6 +36,31 @@ jobs:
       - name: Check Meson formatting
         run: meson format --check-only --recursive .
 
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            appstream \
+            desktop-file-utils \
+            gettext \
+            libglib2.0-bin \
+            libgranite-7-dev \
+            libgtk-4-dev \
+            libpango1.0-dev \
+            meson \
+            ninja-build \
+            shared-mime-info \
+            valac
+      - name: Build and run unit tests
+        run: |
+          meson setup build
+          meson test -C build --print-errorlogs
+
   dogtail:
     name: Dogtail recovery tests
     runs-on: ubuntu-24.04
