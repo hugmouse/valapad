@@ -926,6 +926,9 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             comments = _("A lightweight plain-text editor."),
             license_type = Gtk.License.GPL_3_0,
             logo_icon_name = application.application_id,
+            website = "https://github.com/hugmouse/valapad",
+            authors = { "Iaroslav Angliuster" },
+            translator_credits = _("translator-credits"),
             copyright = "© 2026 Iaroslav Angliuster and Contributors"
         };
         about.present ();
@@ -1027,10 +1030,17 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     private void show_error (string title, string message) {
-        var alert = new Gtk.AlertDialog ("%s: %s".printf (title, message));
-        alert.modal = true;
-        alert.detail = message;
-        alert.show (this);
+        var dialog = new Granite.MessageDialog.with_image_from_icon_name (
+            title,
+            message,
+            "dialog-error",
+            Gtk.ButtonsType.CLOSE
+        ) {
+            transient_for = this,
+            modal = true
+        };
+        dialog.response.connect (() => dialog.destroy ());
+        dialog.present ();
     }
 
     public override bool close_request () {
