@@ -529,7 +529,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
     }
 
-    public async void open_file (File file) {
+    public async bool open_file (File file) {
         try {
             // Reject unsafe inputs from metadata and a small sample before the
             // complete file is allocated and decoded.
@@ -544,7 +544,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                     _("Open failed"),
                     _("“%s” is not a regular file.").printf (file.get_parse_name ())
                 );
-                return;
+                return false;
             }
             bool looks_like_text = yield file_looks_like_text (file);
             if (!looks_like_text) {
@@ -554,7 +554,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 ).printf (file.get_basename ());
                 bool open_unsupported = yield confirm_open_anyway (unsupported_message);
                 if (!open_unsupported) {
-                    return;
+                    return false;
                 }
             }
             if (info.get_size () >= LARGE_FILE_BYTES) {
@@ -564,7 +564,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 ).printf (file.get_basename (), GLib.format_size ((uint64) info.get_size ()));
                 bool open_large = yield confirm_open_anyway (large_message);
                 if (!open_large) {
-                    return;
+                    return false;
                 }
             }
 
@@ -591,7 +591,9 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             set_document_state (file, etag, text, use_crlf, new_encoding, false);
         } catch (Error e) {
             show_error (_("Open failed"), e.message);
+            return false;
         }
+        return true;
     }
 
     private async bool file_looks_like_text (File file) throws Error {

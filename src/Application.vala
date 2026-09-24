@@ -166,7 +166,10 @@ public class ValaPad.Application : Gtk.Application {
     private async void open_files (File[] files) {
         foreach (var file in files) {
             var window = new_window ();
-            yield window.open_file (file);
+            bool opened = yield window.open_file (file);
+            if (!opened) {
+                window.close ();
+            }
         }
     }
 
