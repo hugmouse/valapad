@@ -53,20 +53,22 @@ public class ValaPad.Application : Gtk.Application {
     protected override void startup () {
         base.startup ();
 
-        var granite_settings = Granite.Settings.get_default ();
-        var gtk_settings = Gtk.Settings.get_default ();
-        if (gtk_settings != null) {
-            gtk_settings.gtk_application_prefer_dark_theme =
-                granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
-
-            granite_settings.notify["prefers-color-scheme"].connect (() => {
-                gtk_settings.gtk_application_prefer_dark_theme =
-                    granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
-            });
-        }
+        sync_dark_theme ();
+        Granite.Settings.get_default ().notify["prefers-color-scheme"].connect (sync_dark_theme);
 
         add_app_actions ();
         set_accels_for_action ("app." + ACTION_QUIT, { "<Control>q" });
+    }
+
+    private void sync_dark_theme () {
+        var gtk_settings = Gtk.Settings.get_default ();
+        if (gtk_settings == null) {
+            return;
+        }
+
+        var granite_settings = Granite.Settings.get_default ();
+        gtk_settings.gtk_application_prefer_dark_theme =
+            granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
     }
 
     private void add_app_actions () {
