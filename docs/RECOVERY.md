@@ -26,6 +26,7 @@ display-name=notes.txt
 saved-at=1785410325
 cursor-offset=42
 use-crlf=false
+use-bom=false
 encoding=UTF-8
 original-uri=file:///home/user/Documents/notes.txt
 original-etag=1712157396:5310:531086966
@@ -40,6 +41,7 @@ original-etag=1712157396:5310:531086966
 | `saved-at`      | Unix timestamp of the snapshot                                   |
 | `cursor-offset` | Character offset of the insertion cursor                         |
 | `use-crlf`      | Whether an explicit save should produce CRLF endings             |
+| `use-bom`       | Whether an explicit save should write a UTF-8 BOM                |
 | `encoding`      | Encoding label shown and restored by ValaPad                     |
 | `original-uri`  | URI of the original file, when the document has one              |
 | `original-etag` | File identity/version value captured when it was opened or saved |

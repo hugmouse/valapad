@@ -63,6 +63,47 @@ private void test_clear_rotates_recovery_id () {
     loop.run ();
 }
 
+private async void run_document_facts_survive_recovery (string temp_dir) {
+    var store = new ValaPad.RecoveryStore (temp_dir);
+    var buffer = new Gtk.TextBuffer (null);
+    var controller = new ValaPad.AutosaveController (buffer, store);
+    var document = ValaPad.Document.from_bytes (
+        null,
+        null,
+        { 0xef, 0xbb, 0xbf, 'h', 'i', '\r', '\n' }
+    );
+    controller.update_document (document);
+
+    buffer.text = "hi\nedited";
+    buffer.set_modified (true);
+    assert (yield controller.flush ());
+
+    ValaPad.RecoverySnapshot[] snapshots = yield load_all (store);
+    assert (snapshots.length == 1);
+    assert (snapshots[0].text == "hi\nedited");
+    assert (snapshots[0].display_name == "Untitled");
+    assert (snapshots[0].use_crlf);
+    assert (snapshots[0].has_bom);
+    assert (snapshots[0].encoding_name == "UTF-8-BOM");
+}
+
+private void test_document_facts_survive_recovery () {
+    string temp_dir;
+    try {
+        temp_dir = DirUtils.make_tmp ("valapad-autosave-test-XXXXXX");
+    } catch (FileError error) {
+        assert_not_reached ();
+    }
+
+    MainLoop loop = new MainLoop ();
+    run_document_facts_survive_recovery.begin (temp_dir, (obj, res) => {
+        run_document_facts_survive_recovery.end (res);
+        delete_recursively (File.new_for_path (temp_dir));
+        loop.quit ();
+    });
+    loop.run ();
+}
+
 private void delete_recursively (File file) {
     try {
         FileInfo info = file.query_info (
@@ -87,5 +128,6 @@ private void delete_recursively (File file) {
 public int main (string[] args) {
     Test.init (ref args);
     Test.add_func ("/autosave-controller/clear-rotates-recovery-id", test_clear_rotates_recovery_id);
+    Test.add_func ("/autosave-controller/document-facts-survive-recovery", test_document_facts_survive_recovery);
     return Test.run ();
 }

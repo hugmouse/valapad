@@ -16,11 +16,7 @@ public class ValaPad.AutosaveController : Object {
     private Gtk.TextBuffer buffer;
     private RecoveryStore store;
     private string recovery_id;
-    private string display_name = "Untitled";
-    private string? original_uri;
-    private string? original_etag;
-    private bool use_crlf;
-    private string encoding_name = "UTF-8";
+    private Document document = new Document ();
     private uint debounce_source;
     private uint deadline_source;
     private uint debounce_milliseconds;
@@ -45,17 +41,11 @@ public class ValaPad.AutosaveController : Object {
         buffer.changed.connect (on_buffer_changed);
     }
 
-    public void update_document (string display_name,
-                                 File? original_file,
-                                 string? original_etag,
-                                 bool use_crlf,
-                                 string encoding_name) {
-        this.display_name = display_name;
-        this.original_uri = original_file != null? original_file.get_uri () : null;
-
-        this.original_etag = original_etag;
-        this.use_crlf = use_crlf;
-        this.encoding_name = encoding_name;
+    // Points the controller at the document the next snapshot describes.
+    // Documents are replaced rather than modified, so keeping the reference is
+    // safe.
+    public void update_document (Document document) {
+        this.document = document;
     }
 
     // Buffer changes such as opening or restoring a file must not
@@ -245,15 +235,17 @@ public class ValaPad.AutosaveController : Object {
     private async void save_snapshot (uint save_generation, Cancellable cancellable) {
         Gtk.TextIter cursor;
         buffer.get_iter_at_offset (out cursor, buffer.cursor_position);
+        File? file = document.file;
         var snapshot = new RecoverySnapshot (recovery_id) {
             text = buffer.text,
-            display_name = display_name,
-            original_uri = original_uri,
-            original_etag = original_etag,
+            display_name = document.display_name (),
+            original_uri = file != null ? file.get_uri () : null,
+            original_etag = document.etag,
             saved_at = new DateTime.now_utc ().to_unix (),
             cursor_offset = cursor.get_offset (),
-            use_crlf = use_crlf,
-            encoding_name = encoding_name
+            use_crlf = document.use_crlf,
+            has_bom = document.has_bom,
+            encoding_name = document.encoding
         };
 
         bool written = false;

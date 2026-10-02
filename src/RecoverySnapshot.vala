@@ -16,6 +16,7 @@ public class ValaPad.RecoverySnapshot : Object {
     public int64 saved_at { get; set; }
     public int cursor_offset { get; set; }
     public bool use_crlf { get; set; }
+    public bool has_bom { get; set; }
     public string encoding_name { get; set; default = "UTF-8"; }
     public bool original_changed { get; set; default = false; }
 

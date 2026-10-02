@@ -1,5 +1,6 @@
 src/Application.vala
 src/MainWindow.vala
+src/Document.vala
 src/Dialogs/GoToDialog.vala
 src/Dialogs/FontDialog.vala
 src/Dialogs/RecoveryDialog.vala
