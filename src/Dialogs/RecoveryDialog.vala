@@ -46,6 +46,8 @@ public class ValaPad.RecoveryDialog : Gtk.Window {
                 active = true,
                 valign = Gtk.Align.CENTER
             };
+            check.label = snapshot.display_name;
+            check.update_property (Gtk.AccessibleProperty.LABEL, snapshot.display_name);
             checks += check;
 
             string date = new DateTime.from_unix_local (snapshot.saved_at).format ("%c");

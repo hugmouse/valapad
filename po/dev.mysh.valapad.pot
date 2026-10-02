@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dev.mysh.valapad\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-24 18:58+0200\n"
+"POT-Creation-Date: 2026-09-30 11:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,261 +17,276 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/MainWindow.vala:46
+#: src/MainWindow.vala:47
 msgid "Untitled - ValaPad"
 msgstr ""
 
-#: src/MainWindow.vala:97
+#: src/MainWindow.vala:98
 msgid "Dismiss"
+msgstr ""
+
+#: src/MainWindow.vala:100
+msgid "Dismiss warning"
 msgstr ""
 
 #. ------------------------------
 #. Ln 1 Col 1 | 100% | LF | UTF-8
-#: src/MainWindow.vala:167
+#: src/MainWindow.vala:169
 msgid "Ln 1"
 msgstr ""
 
-#: src/MainWindow.vala:173
+#: src/MainWindow.vala:175
 msgid "Col 1"
 msgstr ""
 
+#: src/MainWindow.vala:201
+msgid "Saving"
+msgstr ""
+
 #. File
-#: src/MainWindow.vala:214
+#: src/MainWindow.vala:225
 msgid "New"
 msgstr ""
 
-#: src/MainWindow.vala:215
+#: src/MainWindow.vala:226
 msgid "New Window"
 msgstr ""
 
-#: src/MainWindow.vala:216
+#: src/MainWindow.vala:227
 msgid "Open…"
 msgstr ""
 
-#: src/MainWindow.vala:218 src/MainWindow.vala:951
+#: src/MainWindow.vala:229 src/MainWindow.vala:976
 msgid "Save"
 msgstr ""
 
-#: src/MainWindow.vala:219
+#: src/MainWindow.vala:230
 msgid "Save As…"
 msgstr ""
 
-#: src/MainWindow.vala:222
+#: src/MainWindow.vala:233
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:224
+#: src/MainWindow.vala:235
 msgid "Exit"
 msgstr ""
 
-#: src/MainWindow.vala:225
+#: src/MainWindow.vala:236
 msgid "File"
 msgstr ""
 
 #. Edit
-#: src/MainWindow.vala:229
+#: src/MainWindow.vala:240
 msgid "Undo"
 msgstr ""
 
-#: src/MainWindow.vala:230
+#: src/MainWindow.vala:241
 msgid "Redo"
 msgstr ""
 
-#: src/MainWindow.vala:232
+#: src/MainWindow.vala:243
 msgid "Cut"
 msgstr ""
 
-#: src/MainWindow.vala:233
+#: src/MainWindow.vala:244
 msgid "Copy"
 msgstr ""
 
-#: src/MainWindow.vala:234
+#: src/MainWindow.vala:245
 msgid "Paste"
 msgstr ""
 
-#: src/MainWindow.vala:235
+#: src/MainWindow.vala:246
 msgid "Delete"
 msgstr ""
 
-#: src/MainWindow.vala:238
+#: src/MainWindow.vala:249
 msgid "Find…"
 msgstr ""
 
-#: src/MainWindow.vala:239 src/Widgets/FindBar.vala:41
+#: src/MainWindow.vala:250 src/Widgets/FindBar.vala:44
+#: src/Widgets/FindBar.vala:46
 msgid "Find Next"
 msgstr ""
 
-#: src/MainWindow.vala:240 src/Widgets/FindBar.vala:46
+#: src/MainWindow.vala:251 src/Widgets/FindBar.vala:50
+#: src/Widgets/FindBar.vala:52
 msgid "Find Previous"
 msgstr ""
 
-#: src/MainWindow.vala:241
+#: src/MainWindow.vala:252
 msgid "Replace…"
 msgstr ""
 
-#: src/MainWindow.vala:243
+#: src/MainWindow.vala:254
 msgid "Go To…"
 msgstr ""
 
-#: src/MainWindow.vala:244
+#: src/MainWindow.vala:255
 msgid "Select All"
 msgstr ""
 
-#: src/MainWindow.vala:245
+#: src/MainWindow.vala:256
 msgid "Time/Date"
 msgstr ""
 
-#: src/MainWindow.vala:246
+#: src/MainWindow.vala:257
 msgid "Edit"
 msgstr ""
 
 #. Format
-#: src/MainWindow.vala:250
+#: src/MainWindow.vala:261
 msgid "Word Wrap"
 msgstr ""
 
-#: src/MainWindow.vala:251
+#: src/MainWindow.vala:262
 msgid "Font…"
 msgstr ""
 
-#: src/MainWindow.vala:252
+#: src/MainWindow.vala:263
 msgid "Format"
 msgstr ""
 
 #. View
-#: src/MainWindow.vala:256
+#: src/MainWindow.vala:267
 msgid "Zoom In"
 msgstr ""
 
-#: src/MainWindow.vala:257
+#: src/MainWindow.vala:268
 msgid "Zoom Out"
 msgstr ""
 
-#: src/MainWindow.vala:258
+#: src/MainWindow.vala:269
 msgid "Restore Default Zoom"
 msgstr ""
 
-#: src/MainWindow.vala:259
+#: src/MainWindow.vala:270
 msgid "View"
 msgstr ""
 
 #. Help
-#: src/MainWindow.vala:263
+#: src/MainWindow.vala:274
 msgid "About ValaPad"
 msgstr ""
 
-#: src/MainWindow.vala:264
+#: src/MainWindow.vala:275
 msgid "Help"
 msgstr ""
 
-#: src/MainWindow.vala:380 src/MainWindow.vala:946 src/MainWindow.vala:980
+#: src/MainWindow.vala:391 src/MainWindow.vala:971 src/MainWindow.vala:1005
 msgid "Untitled"
 msgstr ""
 
-#: src/MainWindow.vala:382 src/MainWindow.vala:926
+#: src/MainWindow.vala:393 src/MainWindow.vala:951
 msgid "ValaPad"
 msgstr ""
 
-#: src/MainWindow.vala:388
+#: src/MainWindow.vala:399
 #, c-format
 msgid "Ln %d"
 msgstr ""
 
-#: src/MainWindow.vala:389
+#: src/MainWindow.vala:400
 #, c-format
 msgid "Col %d"
 msgstr ""
 
-#: src/MainWindow.vala:514
+#: src/MainWindow.vala:525
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:522 src/MainWindow.vala:544 src/MainWindow.vala:593
+#: src/MainWindow.vala:533 src/MainWindow.vala:555 src/MainWindow.vala:604
 msgid "Open failed"
 msgstr ""
 
-#: src/MainWindow.vala:545
+#: src/MainWindow.vala:556
 #, c-format
 msgid "“%s” is not a regular file."
 msgstr ""
 
-#: src/MainWindow.vala:552
+#: src/MainWindow.vala:563
 #, c-format
 msgid ""
 "“%s” does not appear to be a supported text file. Opening it may display "
 "corrupted text, and saving it could damage the file."
 msgstr ""
 
-#: src/MainWindow.vala:562
+#: src/MainWindow.vala:573
 #, c-format
 msgid ""
 "“%s” is %s. Opening it may make ValaPad unresponsive and requires "
 "substantially more memory than the file size."
 msgstr ""
 
-#: src/MainWindow.vala:586
+#: src/MainWindow.vala:597
 msgid "UTF-8 (invalid bytes replaced)"
 msgstr ""
 
-#: src/MainWindow.vala:616 src/MainWindow.vala:951
-#: src/Dialogs/GoToDialog.vala:36 src/Dialogs/FontDialog.vala:232
+#: src/MainWindow.vala:627 src/MainWindow.vala:976
+#: src/Dialogs/GoToDialog.vala:38 src/Dialogs/FontDialog.vala:239
+#: src/Dialogs/RecoveryDialog.vala:124
 msgid "Cancel"
 msgstr ""
 
-#: src/MainWindow.vala:616
+#: src/MainWindow.vala:627
 msgid "Open Anyway"
 msgstr ""
 
-#: src/MainWindow.vala:639
+#: src/MainWindow.vala:650
 msgid "Save As"
 msgstr ""
 
-#: src/MainWindow.vala:640
+#: src/MainWindow.vala:651
 msgid "Untitled.txt"
 msgstr ""
 
-#: src/MainWindow.vala:648 src/MainWindow.vala:688
+#: src/MainWindow.vala:659 src/MainWindow.vala:705
 msgid "Save failed"
 msgstr ""
 
-#: src/MainWindow.vala:788
+#: src/MainWindow.vala:813
 msgid "Print failed"
 msgstr ""
 
-#: src/MainWindow.vala:928
+#: src/MainWindow.vala:953
 msgid "A lightweight plain-text editor."
 msgstr ""
 
-#: src/MainWindow.vala:933
+#: src/MainWindow.vala:958
 msgid "translator-credits"
 msgstr ""
 
-#: src/MainWindow.vala:948
+#: src/MainWindow.vala:973
 #, c-format
 msgid "Do you want to save changes to %s?"
 msgstr ""
 
-#: src/MainWindow.vala:951
+#: src/MainWindow.vala:976
 msgid "Don't Save"
 msgstr ""
 
-#: src/MainWindow.vala:991
+#: src/MainWindow.vala:1016
 #, c-format
 msgid "Changes could not be backed up: %s"
 msgstr ""
 
-#: src/MainWindow.vala:1027
+#: src/MainWindow.vala:1052
 msgid ""
 "The original file changed after this backup was created. Use Save As to "
 "avoid replacing newer changes."
 msgstr ""
 
-#: src/Dialogs/GoToDialog.vala:15 src/Dialogs/GoToDialog.vala:39
+#: src/Dialogs/GoToDialog.vala:15 src/Dialogs/GoToDialog.vala:41
 msgid "Go To"
 msgstr ""
 
 #: src/Dialogs/GoToDialog.vala:25
-msgid "Line number:"
+msgid "_Line number:"
+msgstr ""
+
+#: src/Dialogs/GoToDialog.vala:36
+msgid "Line number"
 msgstr ""
 
 #: src/Dialogs/FontDialog.vala:7
@@ -282,43 +297,55 @@ msgstr ""
 msgid "Choose Font"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:121
+#: src/Dialogs/FontDialog.vala:93
+msgid "Current"
+msgstr ""
+
+#: src/Dialogs/FontDialog.vala:123 src/Dialogs/FontDialog.vala:125
 msgid "Search fonts"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:129
+#: src/Dialogs/FontDialog.vala:132
 msgid "All Fonts"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:130
+#: src/Dialogs/FontDialog.vala:133
 msgid "Monospace"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:131
+#: src/Dialogs/FontDialog.vala:134
 msgid "Sans Serif"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:173
+#: src/Dialogs/FontDialog.vala:158
+msgid "Font families"
+msgstr ""
+
+#: src/Dialogs/FontDialog.vala:178
 msgid "Regular"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:199
-msgid "Current font"
-msgstr ""
-
-#: src/Dialogs/FontDialog.vala:201
+#: src/Dialogs/FontDialog.vala:183 src/Dialogs/FontDialog.vala:208
 msgid "Style"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:203
+#: src/Dialogs/FontDialog.vala:190
+msgid "Font size"
+msgstr ""
+
+#: src/Dialogs/FontDialog.vala:206
+msgid "Current font"
+msgstr ""
+
+#: src/Dialogs/FontDialog.vala:210
 msgid "Size"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:217
+#: src/Dialogs/FontDialog.vala:224
 msgid "Preview"
 msgstr ""
 
-#: src/Dialogs/FontDialog.vala:224
+#: src/Dialogs/FontDialog.vala:231
 msgid "Select"
 msgstr ""
 
@@ -334,61 +361,87 @@ msgstr ""
 msgid "Select the documents you want to recover."
 msgstr ""
 
-#: src/Dialogs/RecoveryDialog.vala:61
+#: src/Dialogs/RecoveryDialog.vala:63
 #, c-format
 msgid "%s — original file changed"
 msgstr ""
 
-#: src/Dialogs/RecoveryDialog.vala:82
+#: src/Dialogs/RecoveryDialog.vala:84
 msgid "Discard Selected"
 msgstr ""
 
-#: src/Dialogs/RecoveryDialog.vala:84
+#: src/Dialogs/RecoveryDialog.vala:87
 msgid "Recover Selected"
 msgstr ""
 
+#: src/Dialogs/RecoveryDialog.vala:120
+#, c-format
+msgid "Permanently delete %d backup(s)?"
+msgstr ""
+
+#: src/Dialogs/RecoveryDialog.vala:123
+msgid "Discarded backups cannot be restored."
+msgstr ""
+
+#: src/Dialogs/RecoveryDialog.vala:124
+msgid "Discard"
+msgstr ""
+
 #. Search row
-#: src/Widgets/FindBar.vala:34
+#: src/Widgets/FindBar.vala:36
 msgid "Find"
 msgstr ""
 
-#: src/Widgets/FindBar.vala:50
-msgid "Aa"
+#: src/Widgets/FindBar.vala:40
+msgid "Find in document"
 msgstr ""
 
-#: src/Widgets/FindBar.vala:51
+#: src/Widgets/FindBar.vala:55 src/Widgets/FindBar.vala:56
 msgid "Match Case"
 msgstr ""
 
-#: src/Widgets/FindBar.vala:53
-msgid "↩"
-msgstr ""
-
-#: src/Widgets/FindBar.vala:54
-msgid "Wrap Around"
+#: src/Widgets/FindBar.vala:58
+msgid "Wrap"
 msgstr ""
 
 #: src/Widgets/FindBar.vala:59
+msgid "Wrap Around"
+msgstr ""
+
+#: src/Widgets/FindBar.vala:64
 msgid "Close"
 msgstr ""
 
+#: src/Widgets/FindBar.vala:66
+msgid "Close Find Bar"
+msgstr ""
+
 #. Replace row
-#: src/Widgets/FindBar.vala:79
+#: src/Widgets/FindBar.vala:104 src/Widgets/FindBar.vala:108
 msgid "Replace with"
 msgstr ""
 
-#: src/Widgets/FindBar.vala:84
+#: src/Widgets/FindBar.vala:110
 msgid "Replace"
 msgstr ""
 
-#: src/Widgets/FindBar.vala:85
+#: src/Widgets/FindBar.vala:111
 msgid "Replace next match"
 msgstr ""
 
-#: src/Widgets/FindBar.vala:89
+#: src/Widgets/FindBar.vala:115
 msgid "Replace All"
 msgstr ""
 
-#: src/Widgets/FindBar.vala:90
+#: src/Widgets/FindBar.vala:116
 msgid "Replace all matches"
+msgstr ""
+
+#: src/Widgets/FindBar.vala:236 src/Widgets/FindBar.vala:314
+msgid "No more matches"
+msgstr ""
+
+#: src/Widgets/FindBar.vala:312
+#, c-format
+msgid "Replaced %d matches"
 msgstr ""

@@ -19,6 +19,8 @@ public class ValaPad.FindBar : Gtk.Box {
     private Gtk.ToggleButton match_case_toggle;
     private Gtk.ToggleButton wrap_toggle;
 
+    private Gtk.Label search_status_label;
+
     public FindBar (Gtk.TextView text_view) {
         Object (orientation: Gtk.Orientation.VERTICAL, spacing: 0);
         this.text_view = text_view;
@@ -35,22 +37,25 @@ public class ValaPad.FindBar : Gtk.Box {
             hexpand = true,
             width_chars = 24
         };
+        search_entry.update_property (Gtk.AccessibleProperty.LABEL, _("Find in document"));
         search_entry.activate.connect (find_next);
 
         next_button = new Gtk.Button.from_icon_name ("go-down-symbolic") {
             tooltip_markup = Granite.markup_accel_tooltip ({ "F3" }, _("Find Next"))
         };
+        next_button.update_property (Gtk.AccessibleProperty.LABEL, _("Find Next"));
         next_button.clicked.connect (find_next);
 
         prev_button = new Gtk.Button.from_icon_name ("go-up-symbolic") {
             tooltip_markup = Granite.markup_accel_tooltip ({ "<Shift>F3" }, _("Find Previous"))
         };
+        prev_button.update_property (Gtk.AccessibleProperty.LABEL, _("Find Previous"));
         prev_button.clicked.connect (find_previous);
 
-        match_case_toggle = new Gtk.ToggleButton.with_label (_("Aa")) {
+        match_case_toggle = new Gtk.ToggleButton.with_label (_("Match Case")) {
             tooltip_text = _("Match Case")
         };
-        wrap_toggle = new Gtk.ToggleButton.with_label (_("↩")) {
+        wrap_toggle = new Gtk.ToggleButton.with_label (_("Wrap")) {
             tooltip_text = _("Wrap Around"),
             active = true
         };
@@ -58,6 +63,7 @@ public class ValaPad.FindBar : Gtk.Box {
         var close_button = new Gtk.Button.from_icon_name ("window-close-symbolic") {
             tooltip_markup = Granite.markup_accel_tooltip ({ "Escape" }, _("Close"))
         };
+        close_button.update_property (Gtk.AccessibleProperty.LABEL, _("Close Find Bar"));
         close_button.clicked.connect (hide_bar);
 
         var search_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6) {
@@ -74,12 +80,32 @@ public class ValaPad.FindBar : Gtk.Box {
         search_box.append (new Gtk.Separator (Gtk.Orientation.VERTICAL));
         search_box.append (close_button);
 
+        var search_scroll = new Gtk.ScrolledWindow () {
+            hscrollbar_policy = Gtk.PolicyType.AUTOMATIC,
+            vscrollbar_policy = Gtk.PolicyType.NEVER,
+            hexpand = true
+        };
+        search_scroll.child = search_box;
+        append (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
+        append (search_scroll);
+
+        search_status_label = new Gtk.Label (null) {
+            hexpand = true,
+            xalign = 0,
+            margin_start = 12,
+            margin_end = 12,
+            margin_bottom = 6,
+            visible = false
+        };
+        append (search_status_label);
+
         // Replace row
         replace_entry = new Gtk.Entry () {
             placeholder_text = _("Replace with"),
             hexpand = true,
             width_chars = 24
         };
+        replace_entry.update_property (Gtk.AccessibleProperty.LABEL, _("Replace with"));
 
         replace_button = new Gtk.Button.with_label (_("Replace")) {
             tooltip_text = _("Replace next match")
@@ -89,7 +115,7 @@ public class ValaPad.FindBar : Gtk.Box {
         replace_all_button = new Gtk.Button.with_label (_("Replace All")) {
             tooltip_text = _("Replace all matches")
         };
-        replace_all_button.clicked.connect (replace_all);
+        replace_all_button.clicked.connect (() => replace_all ());
 
         var replace_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6) {
             margin_start = 12,
@@ -101,20 +127,25 @@ public class ValaPad.FindBar : Gtk.Box {
         replace_box.append (replace_button);
         replace_box.append (replace_all_button);
 
+        var replace_scroll = new Gtk.ScrolledWindow () {
+            hscrollbar_policy = Gtk.PolicyType.AUTOMATIC,
+            vscrollbar_policy = Gtk.PolicyType.NEVER,
+            hexpand = true
+        };
+        replace_scroll.child = replace_box;
+
         replace_revealer = new Gtk.Revealer () {
             transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN,
-            child = replace_box,
+            child = replace_scroll,
             reveal_child = false
         };
-
-        append (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
-        append (search_box);
         append (replace_revealer);
     }
 
     public void show_bar () {
         visible = true;
         replace_revealer.reveal_child = false;
+        clear_search_status ();
         search_entry.grab_focus ();
         if (buffer.get_has_selection ()) {
             Gtk.TextIter start, end;
@@ -182,6 +213,7 @@ public class ValaPad.FindBar : Gtk.Box {
 
         Gtk.TextIter match_start, match_end;
         if (find_match (start, forward, out match_start, out match_end)) {
+            clear_search_status ();
             buffer.select_range (match_start, match_end);
             scroll_to_iter (match_start);
             return;
@@ -194,10 +226,25 @@ public class ValaPad.FindBar : Gtk.Box {
                 buffer.get_end_iter (out start);
             }
             if (find_match (start, forward, out match_start, out match_end)) {
+                clear_search_status ();
                 buffer.select_range (match_start, match_end);
                 scroll_to_iter (match_start);
+                return;
             }
         }
+
+        announce_search_status (_("No more matches"));
+    }
+
+    private void clear_search_status () {
+        search_status_label.label = null;
+        search_status_label.visible = false;
+    }
+
+    private void announce_search_status (string message) {
+        search_status_label.label = message;
+        search_status_label.visible = true;
+        search_status_label.update_property (Gtk.AccessibleProperty.LABEL, message);
     }
 
     private void replace_one () {
@@ -244,6 +291,7 @@ public class ValaPad.FindBar : Gtk.Box {
         Gtk.TextIter iter;
         buffer.get_start_iter (out iter);
 
+        int count = 0;
         int safety = 100000;
         while (safety-- > 0) {
             Gtk.TextIter match_start, match_end;
@@ -255,9 +303,16 @@ public class ValaPad.FindBar : Gtk.Box {
             Gtk.TextIter insert_iter = match_start;
             buffer.insert (ref insert_iter, replacement, replacement.length);
             iter = insert_iter;
+            count++;
         }
 
         buffer.end_user_action ();
+
+        if (count > 0) {
+            announce_search_status (_("Replaced %d matches").printf (count));
+        } else {
+            announce_search_status (_("No more matches"));
+        }
     }
 
     private void scroll_to_iter (Gtk.TextIter iter) {

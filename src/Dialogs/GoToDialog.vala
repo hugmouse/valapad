@@ -22,7 +22,7 @@ public class ValaPad.GoToDialog : Gtk.Window {
     }
 
     private void build_ui () {
-        var label = new Gtk.Label (_("Line number:")) {
+        var label = new Gtk.Label.with_mnemonic (_("_Line number:")) {
             xalign = 0
         };
 
@@ -32,6 +32,8 @@ public class ValaPad.GoToDialog : Gtk.Window {
             width_chars = 10,
             activates_default = true
         };
+        label.set_mnemonic_widget (line_spin);
+        line_spin.update_property (Gtk.AccessibleProperty.LABEL, _("Line number"));
 
         var cancel_button = new Gtk.Button.with_label (_("Cancel"));
         cancel_button.clicked.connect (() => close ());
@@ -67,6 +69,9 @@ public class ValaPad.GoToDialog : Gtk.Window {
     }
 
     public void show_dialog () {
+        int line_count = int.max (buffer.get_line_count (), 1);
+        line_spin.set_range (1, line_count);
+
         Gtk.TextIter iter;
         buffer.get_iter_at_mark (out iter, buffer.get_insert ());
         line_spin.set_value (iter.get_line () + 1);
@@ -75,9 +80,12 @@ public class ValaPad.GoToDialog : Gtk.Window {
     }
 
     private void go_to_line (int line_number) {
+        int last_line = int.max (buffer.get_line_count (), 1);
+        int clamped = line_number.clamp (1, last_line);
+
         Gtk.TextIter iter;
         buffer.get_start_iter (out iter);
-        iter.set_line (line_number - 1);
+        iter.set_line (clamped - 1);
         iter.set_line_offset (0);
 
         buffer.place_cursor (iter);

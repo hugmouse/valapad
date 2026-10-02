@@ -88,10 +88,12 @@ public class ValaPad.FontDialog : Gtk.Window {
             var container = list_item != null ? list_item.child as Gtk.Box : null;
             var label = container != null ? container.get_first_child () as Gtk.Label : null;
             if (family != null && container != null && label != null) {
-                label.label = family.get_name ();
-                if (family.get_name () == applied_font.get_family ()) {
+                bool is_current = family.get_name () == applied_font.get_family ();
+                if (is_current) {
+                    label.label = "%s (%s)".printf (family.get_name (), _("Current"));
                     label.add_css_class ("accent");
                 } else {
+                    label.label = family.get_name ();
                     label.remove_css_class ("accent");
                 }
             }
@@ -120,6 +122,7 @@ public class ValaPad.FontDialog : Gtk.Window {
             hexpand = true,
             placeholder_text = _("Search fonts")
         };
+        search_entry.update_property (Gtk.AccessibleProperty.LABEL, _("Search fonts"));
         search_entry.notify["text"].connect (() => {
             filter_state.search_text = search_entry.text;
             family_filter.changed (Gtk.FilterChange.DIFFERENT);
@@ -152,14 +155,16 @@ public class ValaPad.FontDialog : Gtk.Window {
         family_list.activate.connect ((position) => {
             family_selection.selected = position;
         });
+        family_list.update_property (Gtk.AccessibleProperty.LABEL, _("Font families"));
         var family_scroller = new Gtk.ScrolledWindow () {
             child = family_list,
             hscrollbar_policy = Gtk.PolicyType.NEVER,
             vexpand = true,
-            min_content_width = 280
+            min_content_width = 200
         };
         var family_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
-            width_request = 280
+            width_request = 240,
+            hexpand = true
         };
         family_box.append (filter_box);
         family_box.append (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
@@ -175,12 +180,14 @@ public class ValaPad.FontDialog : Gtk.Window {
             expression = face_expression,
             hexpand = true
         };
+        face_dropdown.update_property (Gtk.AccessibleProperty.LABEL, _("Style"));
         face_dropdown.notify["selected"].connect (update_preview);
 
         size_spin = new Gtk.SpinButton.with_range (6, 144, 1) {
             value = get_initial_size (),
             width_chars = 5
         };
+        size_spin.update_property (Gtk.AccessibleProperty.LABEL, _("Font size"));
         size_spin.value_changed.connect (update_preview);
 
         var controls = new Gtk.Grid () {
@@ -248,13 +255,19 @@ public class ValaPad.FontDialog : Gtk.Window {
         detail_box.append (preview_frame);
         detail_box.append (button_box);
 
+        var detail_scroll = new Gtk.ScrolledWindow () {
+            hexpand = true,
+            vexpand = true
+        };
+        detail_scroll.child = detail_box;
+
         var content = new Gtk.Paned (Gtk.Orientation.HORIZONTAL) {
-            position = 280,
-            resize_start_child = false,
-            shrink_start_child = false,
-            shrink_end_child = false,
+            position = 240,
+            resize_start_child = true,
+            shrink_start_child = true,
+            shrink_end_child = true,
             start_child = family_box,
-            end_child = detail_box
+            end_child = detail_scroll
         };
         child = content;
 

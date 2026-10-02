@@ -3,6 +3,8 @@
  * SPDX-FileCopyrightText: 2026 Iaroslav Angliuster
  */
 
+// TODO: decouple stuff from here since this class is insanely long
+// TODO: document every single function
 public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     private const int BASE_FONT_PX = 14;
     private const int MIN_ZOOM = 10;
@@ -98,6 +100,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         var dismiss_warning = new Gtk.Button.from_icon_name ("window-close-symbolic") {
             tooltip_text = _("Dismiss")
         };
+        dismiss_warning.update_property (Gtk.AccessibleProperty.LABEL, _("Dismiss warning"));
         dismiss_warning.add_css_class ("flat");
         dismiss_warning.clicked.connect (() => recovery_warning.reveal_child = false);
         var warning_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12) {
