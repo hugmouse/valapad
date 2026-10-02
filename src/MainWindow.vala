@@ -138,7 +138,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         );
 
         var style_provider = new Gtk.CssProvider ();
-        style_provider.load_from_string (STATUSBAR_CSS);
+        style_provider.load_from_resource ("/dev/mysh/valapad/style.css");
         Css.add_provider (
             this,
             style_provider,
@@ -146,20 +146,6 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         );
     }
 
-    private const string STATUSBAR_CSS = """
-        .valapad-statusbar {
-            border-top: 1px solid @borders;
-            padding: 4px 0;
-            font-size: 0.85em;
-            color: @theme_text_color;
-        }
-        .valapad-statusbar label {
-            opacity: 0.8;
-        }
-        .valapad-findbar {
-            border-top: 1px solid @borders;
-        }
-    """;
 
     // ------------------------------
     // Ln 1 Col 1 | 100% | LF | UTF-8

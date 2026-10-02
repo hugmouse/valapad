@@ -9,6 +9,12 @@ autosave_controller_source = files('AutosaveController.vala')
 recovery_workflow_source = files('RecoveryWorkflow.vala')
 print_layout_source = files('PrintLayout.vala')
 css_source = files('CSS.vala')
+style_resources = gnome.compile_resources(
+    'valapad-resources',
+    '../data/dev.mysh.valapad.gresource.xml',
+    source_dir: '../data',
+    c_name: 'valapad',
+)
 
 valapad_files = files(
     'Dialogs' / 'RecoveryDialog.vala',
@@ -29,6 +35,7 @@ valapad_executable = executable(
     meson.project_name(),
     valapad_files,
     css_source,
+    style_resources,
     font_filter_source,
     font_dialog_source,
     word_wrap_controller_source,

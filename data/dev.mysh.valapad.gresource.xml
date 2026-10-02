@@ -1,0 +1,7 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: 2026 Iaroslav Angliuster -->
+<gresources>
+    <gresource prefix="/dev/mysh/valapad">
+        <file>style.css</file>
+    </gresource>
+</gresources>
