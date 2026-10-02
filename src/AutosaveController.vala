@@ -10,6 +10,8 @@ public class ValaPad.AutosaveController : Object {
     // and if user didn't type anything for the last 2 seconds, we save too.
 
     public signal void save_failed (string message);
+    public signal void saved ();
+    private signal void pending_save_invalidated ();
 
     private Gtk.TextBuffer buffer;
     private RecoveryStore store;
@@ -26,6 +28,7 @@ public class ValaPad.AutosaveController : Object {
     private bool suspended;
     private bool dirty;
     private bool saving;
+    private string? last_saved_text;
     private uint generation;
     private Cancellable? save_cancellable;
 
@@ -86,11 +89,15 @@ public class ValaPad.AutosaveController : Object {
     }
 
     public async void clear () {
+        string old_id = recovery_id;
         invalidate_pending ();
 
-        debug ("Clearing recovery snapshot: id=%s", recovery_id);
+        // Rotate the id so a save that is still finishing for the old id can
+        // never delete a snapshot that a later save writes under this controller.
+        recovery_id = Uuid.string_random ();
+        debug ("Clearing recovery snapshot: old-id=%s new-id=%s", old_id, recovery_id);
         try {
-            yield store.delete (recovery_id);
+            yield store.delete (old_id);
         } catch (Error error) {
             save_failed (error.message);
         }
@@ -101,6 +108,101 @@ public class ValaPad.AutosaveController : Object {
             dirty = true;
             start_save ();
         }
+    }
+
+    public async bool flush () {
+        if (suspended) {
+            debug ("Recovery flush skipped: id=%s generation=%u reason=suspended", recovery_id, generation);
+            return false;
+        }
+        if (!buffer.get_modified ()) {
+            debug ("Recovery flush skipped: id=%s reason=buffer-clean", recovery_id);
+            return true;
+        }
+
+        uint attempt = 0;
+        debug (
+            "Recovery flush started: id=%s generation=%u chars=%d",
+            recovery_id,
+            generation,
+            (int) buffer.text.char_count ()
+        );
+        while (buffer.get_modified ()) {
+            if (suspended) {
+                debug ("Recovery flush aborted: id=%s generation=%u reason=suspended", recovery_id, generation);
+                return false;
+            }
+            attempt++;
+            last_saved_text = null;
+            debug (
+                "Recovery flush waiting: id=%s generation=%u attempt=%u chars=%d",
+                recovery_id,
+                generation,
+                attempt,
+                (int) buffer.text.char_count ()
+            );
+            if (!(yield wait_for_save ())) {
+                debug (
+                    "Recovery flush failed: id=%s generation=%u attempt=%u",
+                    recovery_id,
+                    generation,
+                    attempt
+                );
+                return false;
+            }
+            if (last_saved_text == buffer.text || !buffer.get_modified ()) {
+                debug (
+                    "Recovery flush completed: id=%s generation=%u attempt=%u chars=%d",
+                    recovery_id,
+                    generation,
+                    attempt,
+                    (int) buffer.text.char_count ()
+                );
+                return true;
+            }
+            debug (
+                "Recovery flush retrying: id=%s generation=%u attempt=%u saved-chars=%d current-chars=%d",
+                recovery_id,
+                generation,
+                attempt,
+                last_saved_text != null ? (int) last_saved_text.char_count () : 0,
+                (int) buffer.text.char_count ()
+            );
+        }
+        return true;
+    }
+
+    private async bool wait_for_save () {
+        SourceFunc callback = wait_for_save.callback;
+        bool succeeded = false;
+        bool completed = false;
+        ulong saved_handler = saved.connect (() => {
+            if (!completed) {
+                succeeded = true;
+                completed = true;
+                callback ();
+            }
+        });
+        ulong failed_handler = save_failed.connect ((message) => {
+            if (!completed) {
+                completed = true;
+                callback ();
+            }
+        });
+        ulong invalidated_handler = pending_save_invalidated.connect (() => {
+            if (!completed) {
+                completed = true;
+                callback ();
+            }
+        });
+
+        schedule_now ();
+        yield;
+
+        disconnect (saved_handler);
+        disconnect (failed_handler);
+        disconnect (invalidated_handler);
+        return succeeded;
     }
 
     public void schedule_cursor_update () {
@@ -154,8 +256,10 @@ public class ValaPad.AutosaveController : Object {
             encoding_name = encoding_name
         };
 
+        bool written = false;
         try {
             yield store.save (snapshot, cancellable);
+            written = true;
             debug (
                 "Recovery snapshot write completed: id=%s chars=%d cursor=%d",
                 snapshot.id,
@@ -178,15 +282,23 @@ public class ValaPad.AutosaveController : Object {
                 yield store.delete (snapshot.id);
             } catch (Error error) {
             }
-        } else if (dirty) {
-            start_save ();
+        } else {
+            if (written) {
+                last_saved_text = snapshot.text;
+                saved ();
+            }
+            if (dirty) {
+                start_save ();
+            }
         }
     }
 
     private void invalidate_pending () {
+        pending_save_invalidated ();
         cancel_timers ();
         generation++;
         dirty = false;
+        last_saved_text = null;
         save_cancellable?.cancel ();
     }
 

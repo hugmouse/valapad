@@ -80,10 +80,12 @@ public class ValaPad.RecoveryDialog : Gtk.Window {
         }
 
         var discard_button = new Gtk.Button.with_label (_("Discard Selected"));
-        discard_button.clicked.connect (() => finish (false));
+        discard_button.add_css_class ("destructive-action");
+        discard_button.clicked.connect (() => confirm_discard.begin ());
         var recover_button = new Gtk.Button.with_label (_("Recover Selected"));
         recover_button.add_css_class ("suggested-action");
         recover_button.clicked.connect (() => finish (true));
+        default_widget = recover_button;
 
         var buttons = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6) {
             halign = Gtk.Align.END
@@ -105,15 +107,45 @@ public class ValaPad.RecoveryDialog : Gtk.Window {
         EscapeController.dismiss_on_escape (this);
     }
 
-    private void finish (bool recover) {
+    private async void confirm_discard () {
+        RecoverySnapshot[] selected = selected_snapshots ();
+        if (selected.length == 0) {
+            finish (false);
+            return;
+        }
+
+        var alert = new Gtk.AlertDialog (
+            _("Permanently delete %d backup(s)?").printf (selected.length)
+        ) {
+            modal = true,
+            detail = _("Discarded backups cannot be restored."),
+            buttons = { _("Cancel"), _("Discard") },
+            cancel_button = 0,
+            default_button = 0
+        };
+
+        int response = 0;
+        try {
+            response = yield alert.choose (this, null);
+        } catch (Error error) {
+            return;
+        }
+
+        if (response == 1) {
+            finish (false);
+        }
+    }
+
+    private RecoverySnapshot[] selected_snapshots () {
         bool[] selected_rows = new bool[checks.length];
         for (int i = 0; i < checks.length; i++) {
             selected_rows[i] = checks[i].active;
         }
-        RecoverySnapshot[] selected = RecoveryWorkflow.selected_snapshots (
-            snapshots,
-            selected_rows
-        );
+        return RecoveryWorkflow.selected_snapshots (snapshots, selected_rows);
+    }
+
+    private void finish (bool recover) {
+        RecoverySnapshot[] selected = selected_snapshots ();
         completed = true;
         if (recover) {
             recover_requested (selected);

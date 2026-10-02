@@ -18,6 +18,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     private Gtk.Label encoding_label;
     private Gtk.Revealer recovery_warning;
     private Gtk.Label recovery_warning_label;
+    private Gtk.Spinner save_spinner;
 
     private Gtk.CssProvider font_provider;
     private Pango.FontDescription font_description;
@@ -37,6 +38,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     private GoToDialog? go_to_dialog;
 
     private bool confirmed_close = false;
+    private bool saving = false;
 
     public MainWindow (Gtk.Application app) {
         Object (
@@ -175,9 +177,18 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             margin_end = 8,
             margin_start = 8
         };
+        save_spinner = new Gtk.Spinner () {
+            margin_start = 8,
+            margin_end = 8,
+            valign = Gtk.Align.CENTER,
+            visible = false,
+            spinning = false
+        };
+        save_spinner.update_property (Gtk.AccessibleProperty.LABEL, _("Saving"));
 
         var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         box.add_css_class ("valapad-statusbar");
+        box.append (save_spinner);
         box.append (ln_label);
         box.append (col_label);
         box.append (new Gtk.Separator (Gtk.Orientation.VERTICAL));
@@ -483,6 +494,9 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     private async void action_new () {
+        if (saving) {
+            return;
+        }
         if (!yield confirm_discard ()) {
             return;
         }
@@ -492,6 +506,9 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     private async void action_open () {
+        if (saving) {
+            return;
+        }
         if (!yield confirm_discard ()) {
             return;
         }
@@ -613,8 +630,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     private async void action_save () {
+        if (saving) {
+            return;
+        }
         if (current_file != null) {
-            save_to_file (current_file);
+            yield save_to_file_async (current_file);
         } else {
             yield save_as_async ();
         }
@@ -640,38 +660,87 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             return false;
         }
 
-        save_to_file (file);
+        yield save_to_file_async (file);
         return !buffer.get_modified ();
     }
 
-    private void save_to_file (File file) {
+    private async void save_to_file_async (File file) {
+        if (saving) {
+            return;
+        }
+        saving = true;
+        debug ("Document save started: name=%s", file.get_basename ());
+
+        if (!save_spinner.visible) {
+            save_spinner.visible = true;
+            save_spinner.start ();
+        }
         try {
-            string text = buffer.text;
+            bool recovery_flushed = yield autosave_controller.flush ();
+            if (!recovery_flushed) {
+                debug ("Document save continuing without a flushed recovery snapshot: name=%s", file.get_basename ());
+            } else {
+                debug ("Recovery snapshot flushed before document save: name=%s", file.get_basename ());
+            }
+
+            string saved_text = buffer.text;
+            string text = saved_text;
             if (use_crlf) {
                 text = text.replace ("\n", "\r\n");
             }
 
             uint8[] contents = text.data;
-            string? new_etag;
-            file.replace_contents (
+            string? new_etag = null;
+            debug (
+                "Writing document file asynchronously: name=%s chars=%d bytes=%zu",
+                file.get_basename (),
+                (int) saved_text.char_count (),
+                contents.length
+            );
+            yield file.replace_contents_async (
                 contents,
                 null,
                 false,
                 FileCreateFlags.REPLACE_DESTINATION,
+                null,
                 out new_etag
             );
 
             current_file = file;
             current_etag = new_etag;
-            buffer.set_modified (false);
+            debug ("Document file write completed: name=%s", file.get_basename ());
             update_autosave_document ();
-            apply_recovery_outcome.begin (RecoveryDocumentOutcome.SAVE_SUCCEEDED);
-            recovery_warning.reveal_child = false;
+
+            // The buffer can keep changing while the write is in flight.
+            // Only clear the dirty flag when the buffer still matches what we wrote
+            // and anything newer stays dirty and is re-backed-up below
+            if (buffer.text == saved_text) {
+                buffer.set_modified (false);
+                yield autosave_controller.clear ();
+                recovery_warning.reveal_child = false;
+                debug ("Document save completed cleanly: name=%s", file.get_basename ());
+            } else {
+                debug (
+                    "Document changed during file write: name=%s saved-chars=%d current-chars=%d",
+                    file.get_basename (),
+                    (int) saved_text.char_count (),
+                    (int) buffer.text.char_count ()
+                );
+            }
+
             update_title ();
             update_status ();
         } catch (Error e) {
+            debug ("Document save failed: name=%s error=%s", file.get_basename (), e.message);
             apply_recovery_outcome.begin (RecoveryDocumentOutcome.SAVE_FAILED);
             show_error (_("Save failed"), e.message);
+        } finally {
+            if (buffer.get_modified ()) {
+                autosave_controller.schedule_now ();
+            }
+            save_spinner.stop ();
+            save_spinner.visible = false;
+            saving = false;
         }
     }
 
@@ -948,7 +1017,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         if (response == 0) {
             // Save
             if (current_file != null) {
-                save_to_file (current_file);
+                yield save_to_file_async (current_file);
                 return !buffer.get_modified ();
             }
             return yield save_as_async ();
@@ -1033,6 +1102,9 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     public override bool close_request () {
         save_window_state ();
+        if (saving) {
+            return true;
+        }
         if (confirmed_close || !buffer.get_modified ()) {
             return false; // allow close
         }

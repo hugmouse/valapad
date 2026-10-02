@@ -262,6 +262,19 @@ class RecoveryTest(ValaPadDogtailTest):
                 return window
         return None
 
+    def _find_confirm_dialog(self, button_name: str):
+        application = self._app()
+        if application is None:
+            return None
+        for window in application.children:
+            if (
+                window.roleName == "dialog"
+                and window.showing
+                and window.isChild(button_name, retry=False)
+            ):
+                return window
+        return None
+
     def test_recover_selected_restores_unsaved_text(self) -> None:
         dialog = self._launch_recovery()
         self.assertTrue(dialog.isChild("Dogtail Recovery.txt", roleName="label"))
@@ -278,6 +291,11 @@ class RecoveryTest(ValaPadDogtailTest):
     def test_discard_selected_deletes_snapshot_and_opens_blank_editor(self) -> None:
         dialog = self._launch_recovery()
         self._activate(dialog.button("Discard Selected"))
+        confirm = self._wait_for_node(
+            lambda: self._find_confirm_dialog("Discard"),
+            "discard confirmation dialog",
+        )
+        self._activate(confirm.button("Discard"))
         editor = self._editor_window()
 
         self._wait_for_node(
@@ -285,6 +303,103 @@ class RecoveryTest(ValaPadDogtailTest):
             "discarded snapshot deletion",
         )
         self.assertEqual(self._text_view(editor).text, "")
+
+
+class SaveTest(ValaPadDogtailTest):
+    def _find_document_window(self):
+        application = self._app()
+        if application is None:
+            return None
+        for window in application.children:
+            if window.name and window.name.endswith("save-test.txt - ValaPad"):
+                return window
+        return None
+
+    def test_save_writes_typed_changes(self) -> None:
+        document = self.home / "save-test.txt"
+        document.write_text("original", encoding="utf-8")
+
+        self._launch([str(document)], self._find_document_window, "document window")
+
+        editor = self._find_document_window()
+        text_view = self._text_view(editor)
+
+        # Insert text through the editable-text: headless Wayland
+        # backend cannot focus the text view for keyboard input
+        # for some reason
+        editable = text_view.queryEditableText()
+        editable.insertText(editable.caretOffset, "EDITED", len("EDITED"))
+
+        # Editing must mark the buffer modified, which prefixes the title with "*"
+        self._wait_for_node(
+            lambda: self._frame_with_title("*save-test.txt - ValaPad"),
+            "modified title after editing",
+        )
+
+        editor.doActionNamed("win.save")
+
+        def file_updated():
+            try:
+                content = document.read_text(encoding="utf-8")
+            except (FileNotFoundError, OSError):
+                return None
+            return content if "EDITED" in content else None
+
+        self._wait_for_node(file_updated, "file containing typed text")
+        self._wait_for_node(
+            lambda: self._frame_with_title("save-test.txt - ValaPad"),
+            "clean title after save",
+        )
+
+    def _find_blank_window(self):
+        application = self._app()
+        if application is None:
+            return None
+        for window in application.children:
+            if window.name and window.name.endswith(" - ValaPad"):
+                return window
+        return None
+
+    def _find_save_dialog(self):
+        application = self._app()
+        if application is None:
+            return None
+        for child in application.children:
+            if child.roleName == "dialog" and child.name == "Save As" and child.showing:
+                return child
+        return None
+
+    def test_save_as_writes_new_file(self) -> None:
+        target = self.home / "saved-as.txt"
+
+        self._launch([], self._find_blank_window, "blank editor window")
+
+        editor = self._find_blank_window()
+        text_view = self._text_view(editor)
+        editable = text_view.queryEditableText()
+        editable.insertText(0, "saved as content", 16)
+
+        editor.doActionNamed("win.save-as")
+        dialog = self._wait_for_node(self._find_save_dialog, "save dialog")
+
+        name_entry = dialog.findChild(
+            lambda node: node.roleName == "text" and node.name == "Name"
+        )
+        self.assertIsNotNone(
+            name_entry, "the Save As dialog must expose a file name entry"
+        )
+        name_entry.queryEditableText().setTextContents(str(target))
+        self._activate(dialog.button("Save"))
+
+        def file_created():
+            return target if target.exists() else None
+
+        self._wait_for_node(file_created, "saved-as file created")
+        self.assertEqual(target.read_text(encoding="utf-8"), "saved as content")
+        self._wait_for_node(
+            lambda: self._frame_with_title("saved-as.txt - ValaPad"),
+            "clean title after save as",
+        )
 
 
 if __name__ == "__main__":

@@ -35,6 +35,22 @@ recovery_workflow_test = executable(
 
 test('recovery workflow', recovery_workflow_test)
 
+autosave_controller_test = executable(
+    'autosave-controller-test',
+    'AutosaveControllerTest.vala',
+    autosave_controller_source,
+    recovery_store_source,
+    recovery_snapshot_source,
+    config_file,
+    dependencies: [
+        dependency('glib-2.0'),
+        dependency('gobject-2.0'),
+        dependency('gtk4'),
+    ],
+)
+
+test('autosave controller', autosave_controller_test)
+
 font_filter_test = executable(
     'font-filter-test',
     'FontFilterTest.vala',

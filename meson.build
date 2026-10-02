@@ -21,9 +21,16 @@ add_project_arguments(
     language: 'vala',
 )
 
+if host_machine.system() == 'linux'
+    add_project_arguments('--define=LINUX', language: 'vala')
+elif host_machine.system() == 'darwin'
+    add_project_arguments('--define=MACOS', language: 'vala')
+endif
+
 add_project_arguments(
     '-Wall',
     '-Wextra',
+    '-D_GNU_SOURCE',
     '-DGETTEXT_PACKAGE="@0@"'.format(gettext_name),
     language: 'c',
 )

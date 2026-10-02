@@ -3,6 +3,26 @@
  * SPDX-FileCopyrightText: 2026 Iaroslav Angliuster
  */
 
+// rename(2) cannot atomically replace a non-empty directory, so
+// let's use linux 3.15+ renameat2 API which suppose to at least
+// try to make it atomic.
+//
+// Caveats: NFS, WEKA, CephFS, ZFS and some FUSE-based fss
+// don't support renameat2 and will fail with ENOSYS.
+// So I just hope nobody is using any of these.
+#if LINUX
+[CCode (cname = "renameat2", cheader_filename = "stdio.h")]
+extern int renameat2 (int old_dirfd, string old_path, int new_dirfd, string new_path, uint flags);
+
+#elif MACOS
+[CCode (cname = "renameatx_np", cheader_filename = "stdio.h")]
+extern int renameatx_np (int old_dirfd, string old_path, int new_dirfd, string new_path, uint flags);
+
+// #elif WINDOWS
+// [CCode (cname = "MoveFileExW", cheader_filename = "windows.h")]
+// extern bool move_file_ex (string lp_existing_file_name, string lp_new_file_name, uint32 dw_flags);
+#endif
+
 // Persists one private recovery directory per document in the user's state
 // directory. Text and metadata are loaded at startup.
 public class ValaPad.RecoveryStore : Object {
@@ -10,14 +30,22 @@ public class ValaPad.RecoveryStore : Object {
     private const string CONTENT_FILE = "content.txt";
     private const string GROUP = "Recovery";
     private const int64 MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
+    private const string STAGING_SUFFIX = ".tmp";
+#if LINUX
+    private const int AT_FDCWD = -100;
+    private const uint RENAME_EXCHANGE = 2;
+#elif MACOS
+    private const int AT_FDCWD = -2;
+    private const uint RENAME_SWAP = 2;
+#endif
 
     private File root;
 
     public RecoveryStore (string? directory = null) {
         string path = directory ?? Path.build_filename (
-            Environment.get_user_state_dir (),
-            Build.PROJECT_NAME,
-            "recovery"
+                                                        Environment.get_user_state_dir (),
+                                                        Build.PROJECT_NAME,
+                                                        "recovery"
         );
         root = File.new_for_path (path);
     }
@@ -25,9 +53,17 @@ public class ValaPad.RecoveryStore : Object {
     public async void save (RecoverySnapshot snapshot, Cancellable? cancellable = null) throws Error {
         debug ("Writing recovery snapshot: id=%s bytes=%zu", snapshot.id, snapshot.text.data.length);
         File directory = root.get_child (snapshot.id);
-        ensure_directory (directory);
+        File staging = root.get_child (snapshot.id + STAGING_SUFFIX);
 
-        yield write_child_file (directory, CONTENT_FILE, snapshot.text.data, cancellable);
+        // If save was interrupted before the previous snapshot was published,
+        // the staging directory may still exist.
+        // Delete it to ensure a clean slate.
+        if (staging.query_exists (cancellable)) {
+            yield delete_directory (staging, cancellable);
+        }
+        ensure_directory (staging);
+
+        yield write_child_file (staging, CONTENT_FILE, snapshot.text.data, cancellable);
 
         var metadata = new KeyFile ();
         metadata.set_integer (GROUP, "version", RecoverySnapshot.FORMAT_VERSION);
@@ -45,7 +81,26 @@ public class ValaPad.RecoveryStore : Object {
 
         string metadata_text = metadata.to_data ();
         uint8[] metadata_content = metadata_text.data;
-        yield write_child_file (directory, METADATA_FILE, metadata_content, cancellable);
+        yield write_child_file (staging, METADATA_FILE, metadata_content, cancellable);
+        debug ("Recovery snapshot staged: id=%s", snapshot.id);
+
+        // In theory this should actually be atomic and safe. In practice, I can only hope.
+        if (directory.query_exists (cancellable)) {
+            debug ("Exchanging staged recovery snapshot with current snapshot: id=%s", snapshot.id);
+#if LINUX
+            if (renameat2 (AT_FDCWD, staging.get_path (), AT_FDCWD, directory.get_path (), RENAME_EXCHANGE) != 0) {
+#elif MACOS
+            if (renameatx_np (AT_FDCWD, staging.get_path (), AT_FDCWD, directory.get_path (), RENAME_SWAP) != 0) {
+#endif
+                throw new FileError.FAILED ("atomic snapshot exchange failed. Check if your filesystem supports renameat2/renameatx_np syscalls");
+            }
+            // The staging directory now holds the superseded snapshot.
+            yield delete_directory (staging, cancellable);
+        } else {
+            debug ("Publishing first recovery snapshot: id=%s", snapshot.id);
+            staging.set_display_name (snapshot.id);
+        }
+        debug ("Recovery snapshot published: id=%s", snapshot.id);
     }
 
     private async void write_child_file (File directory,
@@ -54,12 +109,13 @@ public class ValaPad.RecoveryStore : Object {
                                          Cancellable? cancellable) throws Error {
         string? ignored_etag;
         yield directory.get_child (name).replace_contents_async (
-            contents,
-            null,
-            false,
-            FileCreateFlags.REPLACE_DESTINATION | FileCreateFlags.PRIVATE,
-            cancellable,
-            out ignored_etag
+                                                                 contents,
+                                                                 null,
+                                                                 false,
+                                                                 FileCreateFlags.REPLACE_DESTINATION
+                                                                 | FileCreateFlags.PRIVATE,
+                                                                 cancellable,
+                                                                 out ignored_etag
         );
     }
 
@@ -71,12 +127,10 @@ public class ValaPad.RecoveryStore : Object {
             return snapshots;
         }
 
-        FileEnumerator enumerator = yield root.enumerate_children_async (
-            FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
+        FileEnumerator enumerator = yield root.enumerate_children_async (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
             FileQueryInfoFlags.NONE,
             Priority.DEFAULT,
-            cancellable
-        );
+            cancellable);
 
         FileInfo? info;
         while ((info = enumerator.next_file (cancellable)) != null) {
@@ -85,19 +139,30 @@ public class ValaPad.RecoveryStore : Object {
             }
 
             File directory = root.get_child (info.get_name ());
+
+            // A staging directory is leftover from an interrupted save before publication.
+            // It is stale and should be removed.
+            if (info.get_name ().has_suffix (STAGING_SUFFIX)) {
+                debug ("Removing stale recovery staging directory: name=%s", info.get_name ());
+                yield delete_directory (directory, cancellable);
+
+                continue;
+            }
+
             try {
                 // Scanning also removes entries that cannot be safely offered for recovery.
                 RecoverySnapshot snapshot = yield load_one (directory, info.get_name (), cancellable);
+
                 if (is_expired (snapshot)) {
                     debug ("Removing expired recovery snapshot: id=%s", snapshot.id);
                     yield delete_directory (directory, cancellable);
                 } else {
                     snapshot.original_changed = original_has_changed (snapshot, cancellable);
                     debug (
-                        "Recovery snapshot found: id=%s chars=%d original-changed=%s",
-                        snapshot.id,
-                        (int) snapshot.text.char_count (),
-                        snapshot.original_changed.to_string ()
+                           "Recovery snapshot found: id=%s chars=%d original-changed=%s",
+                           snapshot.id,
+                           (int) snapshot.text.char_count (),
+                           snapshot.original_changed.to_string ()
                     );
                     snapshots += snapshot;
                 }
@@ -117,6 +182,7 @@ public class ValaPad.RecoveryStore : Object {
         File directory = root.get_child (id);
         if (directory.query_exists (cancellable)) {
             yield delete_directory (directory, cancellable);
+
             debug ("Recovery snapshot deleted: id=%s", id);
         } else {
             debug ("Recovery snapshot already absent: id=%s", id);
@@ -127,10 +193,11 @@ public class ValaPad.RecoveryStore : Object {
         uint8[] metadata_bytes;
         string? ignored_etag;
         yield directory.get_child (METADATA_FILE).load_contents_async (
-            cancellable,
-            out metadata_bytes,
-            out ignored_etag
+                                                                       cancellable,
+                                                                       out metadata_bytes,
+                                                                       out ignored_etag
         );
+
         var metadata = new KeyFile ();
         metadata.load_from_data ((string) metadata_bytes, metadata_bytes.length, KeyFileFlags.NONE);
         if (metadata.get_integer (GROUP, "version") != RecoverySnapshot.FORMAT_VERSION) {
@@ -139,10 +206,11 @@ public class ValaPad.RecoveryStore : Object {
 
         uint8[] content;
         yield directory.get_child (CONTENT_FILE).load_contents_async (
-            cancellable,
-            out content,
-            out ignored_etag
+                                                                      cancellable,
+                                                                      out content,
+                                                                      out ignored_etag
         );
+
         string text = (string) content;
         if (!text.validate ()) {
             throw new IOError.INVALID_DATA ("Recovery content is not UTF-8");
@@ -171,9 +239,9 @@ public class ValaPad.RecoveryStore : Object {
         }
         try {
             FileInfo info = File.new_for_uri (snapshot.original_uri).query_info (
-                FileAttribute.ETAG_VALUE,
-                FileQueryInfoFlags.NONE,
-                cancellable
+                                                                                 FileAttribute.ETAG_VALUE,
+                                                                                 FileQueryInfoFlags.NONE,
+                                                                                 cancellable
             );
             return info.get_etag () != snapshot.original_etag;
         } catch (Error error) {
