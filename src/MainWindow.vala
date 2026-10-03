@@ -30,10 +30,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     private RecoveryStore recovery_store;
     private AutosaveController autosave_controller;
 
-    private File? current_file = null;
-    private string? current_etag = null;
-    private bool use_crlf = false;
-    private string encoding_name = "UTF-8";
+    private Document current = new Document ();
     private int zoom_percentage = 100;
 
     private FindBar? find_bar;
@@ -377,7 +374,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     // --- Status updates ---------------------------------------------------------------------------------
 
     private void update_title () {
-        string name = current_file != null ? current_file.get_basename () : _("Untitled");
+        string name = current.display_name ();
         string prefix = buffer.get_modified () ? "*" : "";
         title = "%s%s - %s".printf (prefix, name, _("ValaPad"));
     }
@@ -388,8 +385,8 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         ln_label.label = _("Ln %d").printf (line);
         col_label.label = _("Col %d").printf (col);
         zoom_label.label = "%d%%".printf (zoom_percentage);
-        line_ending_label.label = use_crlf ? "CRLF" : "LF";
-        encoding_label.label = encoding_name;
+        line_ending_label.label = current.use_crlf ? "CRLF" : "LF";
+        encoding_label.label = current.encoding;
     }
 
     private void compute_line_col (out int line, out int col) {
@@ -400,95 +397,15 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     private void update_zoom_css () {
-        string family = font_description.get_family () ?? "system-ui";
-        family = family.replace ("\\", "\\\\").replace ("\"", "\\\"");
-
-        double size = font_description.get_size () / (double) Pango.SCALE;
-        size *= zoom_percentage / 100.0;
-        string unit = font_description.get_size_is_absolute () ? "px" : "pt";
-
-        font_provider.load_from_string ("""
-            .valapad-text {
-                font-family: "%s";
-                font-size: %.2f%s;
-                font-style: %s;
-                font-weight: %d;
-                font-stretch: %s;
-                font-variant-caps: %s;
-            }
-        """.printf (
-            family,
-            size,
-            unit,
-            font_style_to_css (font_description.get_style ()),
-            (int) font_description.get_weight (),
-            font_stretch_to_css (font_description.get_stretch ()),
-            font_variant_to_css (font_description.get_variant ())
-        ));
-    }
-
-    private static string font_style_to_css (Pango.Style style) {
-        switch (style) {
-            case Pango.Style.ITALIC:
-                return "italic";
-            case Pango.Style.OBLIQUE:
-                return "oblique";
-            default:
-                return "normal";
-        }
-    }
-
-    private static string font_stretch_to_css (Pango.Stretch stretch) {
-        switch (stretch) {
-            case Pango.Stretch.ULTRA_CONDENSED:
-                return "ultra-condensed";
-            case Pango.Stretch.EXTRA_CONDENSED:
-                return "extra-condensed";
-            case Pango.Stretch.CONDENSED:
-                return "condensed";
-            case Pango.Stretch.SEMI_CONDENSED:
-                return "semi-condensed";
-            case Pango.Stretch.SEMI_EXPANDED:
-                return "semi-expanded";
-            case Pango.Stretch.EXPANDED:
-                return "expanded";
-            case Pango.Stretch.EXTRA_EXPANDED:
-                return "extra-expanded";
-            case Pango.Stretch.ULTRA_EXPANDED:
-                return "ultra-expanded";
-            default:
-                return "normal";
-        }
-    }
-
-    private static string font_variant_to_css (Pango.Variant variant) {
-        switch (variant) {
-            case Pango.Variant.SMALL_CAPS:
-                return "small-caps";
-            case Pango.Variant.ALL_SMALL_CAPS:
-                return "all-small-caps";
-            case Pango.Variant.PETITE_CAPS:
-                return "petite-caps";
-            case Pango.Variant.ALL_PETITE_CAPS:
-                return "all-petite-caps";
-            case Pango.Variant.UNICASE:
-                return "unicase";
-            case Pango.Variant.TITLE_CAPS:
-                return "titling-caps";
-            default:
-                return "normal";
-        }
+        font_provider.load_from_string (FontCss.build (font_description, zoom_percentage));
     }
 
     // --- File actions ---------------------------------------------------------------------------------
 
-    private void set_document_state (File? file, string? etag, string text, bool crlf, string encoding, bool modified) {
+    private void set_document (Document document, bool modified) {
         autosave_controller.suspend ();
-        buffer.text = text;
-        current_file = file;
-        current_etag = etag;
-        use_crlf = crlf;
-        encoding_name = encoding;
+        buffer.text = document.text;
+        current = document;
         buffer.set_modified (modified);
         autosave_controller.resume ();
         update_autosave_document ();
@@ -505,7 +422,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
 
         yield autosave_controller.reset ();
-        set_document_state (null, null, "", false, "UTF-8", false);
+        set_document (Document.untitled (), false);
     }
 
     private async void action_open () {
@@ -578,23 +495,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             string? etag;
             yield file.load_contents_async (null, out contents, out etag);
 
-            bool has_bom;
-            bool repaired;
-            string text = TextFileDecoder.decode (
-                contents,
-                out has_bom,
-                out use_crlf,
-                out repaired
-            );
-
-            string new_encoding;
-            if (repaired) {
-                new_encoding = _("UTF-8 (invalid bytes replaced)");
-            } else {
-                new_encoding = has_bom ? "UTF-8-BOM" : "UTF-8";
-            }
-
-            set_document_state (file, etag, text, use_crlf, new_encoding, false);
+            set_document (Document.from_bytes (file, etag, contents), false);
         } catch (Error e) {
             show_error (_("Open failed"), e.message);
             return false;
@@ -636,17 +537,19 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         if (saving) {
             return;
         }
-        if (current_file != null) {
-            yield save_to_file_async (current_file);
+        File? open_file = current.file;
+        if (open_file != null) {
+            yield save_to_file_async (open_file);
         } else {
             yield save_as_async ();
         }
     }
 
     private async bool save_as_async () {
+        File? open_file = current.file;
         var dialog = new Gtk.FileDialog () {
             title = _("Save As"),
-            initial_name = current_file != null ? current_file.get_basename () : _("Untitled.txt")
+            initial_name = open_file != null ? open_file.get_basename () : _("Untitled.txt")
         };
 
         File? file = null;
@@ -687,10 +590,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             }
 
             string saved_text = buffer.text;
-            string text = saved_text;
-            if (use_crlf) {
-                text = text.replace ("\n", "\r\n");
-            }
+            string text = current.to_file_text (saved_text);
 
             uint8[] contents = text.data;
             string? new_etag = null;
@@ -709,8 +609,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 out new_etag
             );
 
-            current_file = file;
-            current_etag = new_etag;
+            current = current.saved_as (file, new_etag, saved_text);
             debug ("Document file write completed: name=%s", file.get_basename ());
             update_autosave_document ();
 
@@ -1001,7 +900,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             return true;
         }
 
-        string name = current_file != null ? current_file.get_basename () : _("Untitled");
+        string name = current.display_name ();
         var question = new Gtk.AlertDialog (
             _("Do you want to save changes to %s?").printf (name)
         );
@@ -1019,8 +918,9 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
         if (response == 0) {
             // Save
-            if (current_file != null) {
-                yield save_to_file_async (current_file);
+            File? open_file = current.file;
+            if (open_file != null) {
+                yield save_to_file_async (open_file);
                 return !buffer.get_modified ();
             }
             return yield save_as_async ();
@@ -1035,14 +935,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
     }
 
     private void update_autosave_document () {
-        string name = current_file != null ? current_file.get_basename () : _("Untitled");
-        autosave_controller.update_document (
-            name,
-            current_file,
-            current_etag,
-            use_crlf,
-            encoding_name
-        );
+        autosave_controller.update_document (current);
     }
 
     private void show_recovery_warning (string message) {
@@ -1066,14 +959,15 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         File? snapshot_file = snapshot.original_uri != null
             ? File.new_for_uri (snapshot.original_uri)
             : null;
-        set_document_state (
-            snapshot_file,
-            snapshot.original_etag,
-            snapshot.text,
-            snapshot.use_crlf,
-            snapshot.encoding_name,
-            true
-        );
+        var recovered = new Document () {
+            file = snapshot_file,
+            etag = snapshot.original_etag,
+            text = snapshot.text,
+            use_crlf = snapshot.use_crlf,
+            has_bom = snapshot.has_bom,
+            encoding = snapshot.encoding_name
+        };
+        set_document (recovered, true);
         Gtk.TextIter cursor;
         buffer.get_iter_at_offset (out cursor, snapshot.cursor_offset.clamp (0, buffer.get_char_count ()));
         buffer.place_cursor (cursor);

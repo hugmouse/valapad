@@ -71,6 +71,7 @@ public class ValaPad.RecoveryStore : Object {
         metadata.set_int64 (GROUP, "saved-at", snapshot.saved_at);
         metadata.set_integer (GROUP, "cursor-offset", snapshot.cursor_offset);
         metadata.set_boolean (GROUP, "use-crlf", snapshot.use_crlf);
+        metadata.set_boolean (GROUP, "use-bom", snapshot.has_bom);
         metadata.set_string (GROUP, "encoding", snapshot.encoding_name);
         if (snapshot.original_uri != null) {
             metadata.set_string (GROUP, "original-uri", snapshot.original_uri);
@@ -222,6 +223,8 @@ public class ValaPad.RecoveryStore : Object {
             saved_at = metadata.get_int64 (GROUP, "saved-at"),
             cursor_offset = metadata.get_integer (GROUP, "cursor-offset"),
             use_crlf = metadata.get_boolean (GROUP, "use-crlf"),
+            // Snapshots written before the BOM was restored on save have no key.
+            has_bom = metadata.has_key (GROUP, "use-bom") && metadata.get_boolean (GROUP, "use-bom"),
             encoding_name = metadata.get_string (GROUP, "encoding")
         };
         if (metadata.has_key (GROUP, "original-uri")) {

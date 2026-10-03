@@ -16,6 +16,33 @@ text_file_probe_test = executable(
 
 test('text file probe', text_file_probe_test)
 
+document_test = executable(
+    'document-test',
+    'DocumentTest.vala',
+    document_source,
+    text_file_decoder_source,
+    dependencies: [
+        dependency('gio-2.0'),
+        dependency('glib-2.0'),
+        dependency('gobject-2.0'),
+    ],
+)
+
+test('document', document_test)
+
+font_css_test = executable(
+    'font-css-test',
+    'FontCssTest.vala',
+    font_css_source,
+    dependencies: [
+        dependency('glib-2.0'),
+        dependency('gobject-2.0'),
+        dependency('pango'),
+    ],
+)
+
+test('font css', font_css_test)
+
 print_layout_test = executable(
     'print-layout-test',
     'PrintLayoutTest.vala',
@@ -41,6 +68,8 @@ autosave_controller_test = executable(
     autosave_controller_source,
     recovery_store_source,
     recovery_snapshot_source,
+    document_source,
+    text_file_decoder_source,
     config_file,
     dependencies: [
         dependency('glib-2.0'),

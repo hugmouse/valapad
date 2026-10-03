@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: valapad 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 22:38+0200\n"
+"POT-Creation-Date: 2026-10-03 12:15+0200\n"
 "PO-Revision-Date: 2026-07-24 15:06+0200\n"
 "Last-Translator: Iaroslav Angliuster <me@mysh.dev>\n"
 "Language-Team: German\n"
@@ -12,265 +12,276 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/MainWindow.vala:50
+#: src/MainWindow.vala:47
 msgid "Untitled - ValaPad"
 msgstr "Unbenannt – ValaPad"
 
-#: src/MainWindow.vala:101
+#: src/MainWindow.vala:98
 msgid "Dismiss"
 msgstr "Verwerfen"
 
-#: src/MainWindow.vala:103
+#: src/MainWindow.vala:100
 msgid "Dismiss warning"
 msgstr "Warnung verwerfen"
 
 #. ------------------------------
 #. Ln 1 Col 1 | 100% | LF | UTF-8
-#: src/MainWindow.vala:158
+#: src/MainWindow.vala:155
 msgid "Ln 1"
 msgstr "Zeile 1"
 
-#: src/MainWindow.vala:164
+#: src/MainWindow.vala:161
 msgid "Col 1"
 msgstr "Spalte 1"
 
-#: src/MainWindow.vala:190
+#: src/MainWindow.vala:187
 msgid "Saving"
 msgstr "Wird gespeichert"
 
 #. File
-#: src/MainWindow.vala:214
+#: src/MainWindow.vala:211
 msgid "New"
 msgstr "Neu"
 
-#: src/MainWindow.vala:215
+#: src/MainWindow.vala:212
 msgid "New Window"
 msgstr "Neues Fenster"
 
-#: src/MainWindow.vala:216
+#: src/MainWindow.vala:213
 msgid "Open…"
 msgstr "Öffnen …"
 
-#: src/MainWindow.vala:218 src/MainWindow.vala:1009
+#: src/MainWindow.vala:215 src/MainWindow.vala:908
 msgid "Save"
 msgstr "Speichern"
 
-#: src/MainWindow.vala:219
+#: src/MainWindow.vala:216
 msgid "Save As…"
 msgstr "Speichern unter…"
 
-#: src/MainWindow.vala:222
+#: src/MainWindow.vala:219
 msgid "Print…"
 msgstr "Drucken…"
 
-#: src/MainWindow.vala:224
+#: src/MainWindow.vala:221
 msgid "Exit"
 msgstr "Beenden"
 
-#: src/MainWindow.vala:225
+#: src/MainWindow.vala:222
 msgid "File"
 msgstr "Datei"
 
 #. Edit
-#: src/MainWindow.vala:229
+#: src/MainWindow.vala:226
 msgid "Undo"
 msgstr "Rückgängig"
 
-#: src/MainWindow.vala:230
+#: src/MainWindow.vala:227
 msgid "Redo"
 msgstr "Wiederholen"
 
-#: src/MainWindow.vala:232
+#: src/MainWindow.vala:229
 msgid "Cut"
 msgstr "Ausschneiden"
 
-#: src/MainWindow.vala:233
+#: src/MainWindow.vala:230
 msgid "Copy"
 msgstr "Kopieren"
 
-#: src/MainWindow.vala:234
+#: src/MainWindow.vala:231
 msgid "Paste"
 msgstr "Einfügen"
 
-#: src/MainWindow.vala:235
+#: src/MainWindow.vala:232
 msgid "Delete"
 msgstr "Löschen"
 
-#: src/MainWindow.vala:238
+#: src/MainWindow.vala:235
 msgid "Find…"
 msgstr "Suchen …"
 
-#: src/MainWindow.vala:239 src/Widgets/FindBar.vala:44
+#: src/MainWindow.vala:236 src/Widgets/FindBar.vala:44
 #: src/Widgets/FindBar.vala:46
 msgid "Find Next"
 msgstr "Weitersuchen"
 
-#: src/MainWindow.vala:240 src/Widgets/FindBar.vala:50
+#: src/MainWindow.vala:237 src/Widgets/FindBar.vala:50
 #: src/Widgets/FindBar.vala:52
 msgid "Find Previous"
 msgstr "Rückwärts suchen"
 
-#: src/MainWindow.vala:241
+#: src/MainWindow.vala:238
 msgid "Replace…"
 msgstr "Ersetzen…"
 
-#: src/MainWindow.vala:243
+#: src/MainWindow.vala:240
 msgid "Go To…"
 msgstr "Gehe zu…"
 
-#: src/MainWindow.vala:244
+#: src/MainWindow.vala:241
 msgid "Select All"
 msgstr "Alles auswählen"
 
-#: src/MainWindow.vala:245
+#: src/MainWindow.vala:242
 msgid "Time/Date"
 msgstr "Uhrzeit/Datum"
 
-#: src/MainWindow.vala:246
+#: src/MainWindow.vala:243
 msgid "Edit"
 msgstr "Bearbeiten"
 
 #. Format
-#: src/MainWindow.vala:250
+#: src/MainWindow.vala:247
 msgid "Word Wrap"
 msgstr "Zeilenumbruch"
 
-#: src/MainWindow.vala:251
+#: src/MainWindow.vala:248
 msgid "Font…"
 msgstr "Schriftart…"
 
-#: src/MainWindow.vala:252
+#: src/MainWindow.vala:249
 msgid "Format"
 msgstr "Format"
 
 #. View
-#: src/MainWindow.vala:256
+#: src/MainWindow.vala:253
 msgid "Zoom In"
 msgstr "Vergrößern"
 
-#: src/MainWindow.vala:257
+#: src/MainWindow.vala:254
 msgid "Zoom Out"
 msgstr "Verkleinern"
 
-#: src/MainWindow.vala:258
+#: src/MainWindow.vala:255
 msgid "Restore Default Zoom"
 msgstr "Standardzoom wiederherstellen"
 
-#: src/MainWindow.vala:259
+#: src/MainWindow.vala:256
 msgid "View"
 msgstr "Ansicht"
 
 #. Help
-#: src/MainWindow.vala:263
+#: src/MainWindow.vala:260
 msgid "About ValaPad"
 msgstr "Info zu ValaPad"
 
-#: src/MainWindow.vala:264
+#: src/MainWindow.vala:261
 msgid "Help"
 msgstr "Hilfe"
 
-#: src/MainWindow.vala:380 src/MainWindow.vala:1004 src/MainWindow.vala:1038
-msgid "Untitled"
-msgstr "Unbenannt"
-
-#: src/MainWindow.vala:382 src/MainWindow.vala:984
+#: src/MainWindow.vala:379 src/MainWindow.vala:883
 msgid "ValaPad"
 msgstr "ValaPad"
 
-#: src/MainWindow.vala:388
+#: src/MainWindow.vala:385
 #, c-format
 msgid "Ln %d"
 msgstr "Zeile %d"
 
-#: src/MainWindow.vala:389
+#: src/MainWindow.vala:386
 #, c-format
 msgid "Col %d"
 msgstr "Spalte %d"
 
-#: src/MainWindow.vala:520
+#: src/MainWindow.vala:437
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/MainWindow.vala:528 src/MainWindow.vala:550 src/MainWindow.vala:599
+#: src/MainWindow.vala:445 src/MainWindow.vala:467 src/MainWindow.vala:500
 msgid "Open failed"
 msgstr "Öffnen ist fehlgeschlagen"
 
-#: src/MainWindow.vala:551
+#: src/MainWindow.vala:468
 #, c-format
 msgid "“%s” is not a regular file."
 msgstr "„%s“ ist keine reguläre Datei."
 
-#: src/MainWindow.vala:558
+#: src/MainWindow.vala:475
 #, c-format
 msgid ""
 "“%s” does not appear to be a supported text file. Opening it may display "
 "corrupted text, and saving it could damage the file."
-msgstr "„%s“ scheint keine unterstützte Textdatei zu sein. Beim Öffnen kann beschädigter Text angezeigt werden, beim Speichern kann die Datei beschädigt werden."
+msgstr ""
+"„%s“ scheint keine unterstützte Textdatei zu sein. Beim Öffnen kann "
+"beschädigter Text angezeigt werden, beim Speichern kann die Datei beschädigt "
+"werden."
 
-#: src/MainWindow.vala:568
+#: src/MainWindow.vala:485
 #, c-format
 msgid ""
 "“%s” is %s. Opening it may make ValaPad unresponsive and requires "
 "substantially more memory than the file size."
-msgstr "„%s“ ist %s groß. Beim Öffnen kann ValaPad nicht mehr reagieren, und es wird erheblich mehr Speicher benötigt, als die Datei groß ist."
+msgstr ""
+"„%s“ ist %s groß. Beim Öffnen kann ValaPad nicht mehr reagieren, und es wird "
+"erheblich mehr Speicher benötigt, als die Datei groß ist."
 
-#: src/MainWindow.vala:592
-msgid "UTF-8 (invalid bytes replaced)"
-msgstr "UTF-8 (ungültige Bytes ersetzt)"
-
-#: src/MainWindow.vala:622 src/MainWindow.vala:1009
+#: src/MainWindow.vala:523 src/MainWindow.vala:908
 #: src/Dialogs/GoToDialog.vala:38 src/Dialogs/FontDialog.vala:239
 #: src/Dialogs/RecoveryDialog.vala:127
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/MainWindow.vala:622
+#: src/MainWindow.vala:523
 msgid "Open Anyway"
 msgstr "Trotzdem öffnen"
 
-#: src/MainWindow.vala:648
+#: src/MainWindow.vala:551
 msgid "Save As"
 msgstr "Speichern unter"
 
-#: src/MainWindow.vala:649
+#: src/MainWindow.vala:552
 msgid "Untitled.txt"
 msgstr "Unbenannt.txt"
 
-#: src/MainWindow.vala:657 src/MainWindow.vala:739
+#: src/MainWindow.vala:560 src/MainWindow.vala:638
 msgid "Save failed"
 msgstr "Speichern ist fehlgeschlagen"
 
-#: src/MainWindow.vala:846
+#: src/MainWindow.vala:745
 msgid "Print failed"
 msgstr "Drucken ist fehlgeschlagen"
 
-#: src/MainWindow.vala:986
+#: src/MainWindow.vala:885
 msgid "A lightweight plain-text editor."
 msgstr "Ein schlanker Nur-Text-Editor."
 
-#: src/MainWindow.vala:991
+#: src/MainWindow.vala:890
 msgid "translator-credits"
 msgstr ""
 
-#: src/MainWindow.vala:1006
+#: src/MainWindow.vala:905
 #, c-format
 msgid "Do you want to save changes to %s?"
 msgstr "Möchten Sie die Änderungen an %s speichern?"
 
-#: src/MainWindow.vala:1009
+#: src/MainWindow.vala:908
 msgid "Don't Save"
 msgstr "Nicht speichern"
 
-#: src/MainWindow.vala:1049
+#: src/MainWindow.vala:942
 #, c-format
 msgid "Changes could not be backed up: %s"
 msgstr "Die Änderungen konnten nicht gesichert werden: %s"
 
-#: src/MainWindow.vala:1085
+#: src/MainWindow.vala:979
 msgid ""
 "The original file changed after this backup was created. Use Save As to "
 "avoid replacing newer changes."
-msgstr "Die Originaldatei wurde nach dem Erstellen dieser Sicherung geändert. Verwenden Sie „Speichern unter“, um neuere Änderungen nicht zu überschreiben."
+msgstr ""
+"Die Originaldatei wurde nach dem Erstellen dieser Sicherung geändert. "
+"Verwenden Sie „Speichern unter“, um neuere Änderungen nicht zu überschreiben."
+
+#: src/Document.vala:58
+msgid "Untitled"
+msgstr "Unbenannt"
+
+#: src/Document.vala:80
+msgid "UTF-8-BOM (invalid bytes replaced)"
+msgstr "UTF-8-BOM (ungültige Bytes ersetzt)"
+
+#: src/Document.vala:81
+msgid "UTF-8 (invalid bytes replaced)"
+msgstr "UTF-8 (ungültige Bytes ersetzt)"
 
 #: src/Dialogs/GoToDialog.vala:15 src/Dialogs/GoToDialog.vala:41
 msgid "Go To"
