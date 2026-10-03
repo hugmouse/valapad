@@ -46,7 +46,6 @@ public class ValaPad.RecoveryDialog : Gtk.Window {
                 active = true,
                 valign = Gtk.Align.CENTER
             };
-            check.label = snapshot.display_name;
             check.update_property (Gtk.AccessibleProperty.LABEL, snapshot.display_name);
             checks += check;
 
@@ -117,7 +116,11 @@ public class ValaPad.RecoveryDialog : Gtk.Window {
         }
 
         var alert = new Gtk.AlertDialog (
-            _("Permanently delete %d backup(s)?").printf (selected.length)
+            ngettext (
+                "Permanently delete %d backup?",
+                "Permanently delete %d backups?",
+                selected.length
+            ).printf (selected.length)
         ) {
             modal = true,
             detail = _("Discarded backups cannot be restored."),

@@ -161,11 +161,13 @@ public class ValaPad.FindBar : Gtk.Box {
     public void show_replace () {
         visible = true;
         replace_revealer.reveal_child = true;
+        clear_search_status ();
         search_entry.grab_focus ();
     }
 
     public void hide_bar () {
         visible = false;
+        clear_search_status ();
         text_view.grab_focus ();
     }
 
@@ -244,7 +246,7 @@ public class ValaPad.FindBar : Gtk.Box {
     private void announce_search_status (string message) {
         search_status_label.label = message;
         search_status_label.visible = true;
-        search_status_label.update_property (Gtk.AccessibleProperty.LABEL, message);
+        announce (message, Gtk.AccessibleAnnouncementPriority.MEDIUM);
     }
 
     private void replace_one () {
@@ -309,9 +311,11 @@ public class ValaPad.FindBar : Gtk.Box {
         buffer.end_user_action ();
 
         if (count > 0) {
-            announce_search_status (_("Replaced %d matches").printf (count));
+            announce_search_status (
+                ngettext ("Replaced %d match", "Replaced %d matches", count).printf (count)
+            );
         } else {
-            announce_search_status (_("No more matches"));
+            announce_search_status (_("Nothing to replace"));
         }
     }
 
