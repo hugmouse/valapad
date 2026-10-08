@@ -2,26 +2,29 @@
 
 TLDR version:
 
-Valapad creates temporary files for opened document and stores
-them in `~/.local/state/dev.mysh.valapad/recovery/`. In there we have folders
-with unique IDs and each folder has `content.txt` and `metadata.ini`.
+Valapad creates a temporary file for each opened document and stores
+them in `~/.local/state/dev.mysh.valapad/recovery/`. Every snapshot is a
+single self-contained file named after a UUID.
 
-- `content.txt` is the current text buffer of the currently open document.
-- `metadata.ini` is the file that contains basic info about the file, in GLib's KeyFile format.
+The file starts with a small header (VALAPADR) then the GLib KeyFile metadata, and last the content of the currently open document:
 
-Looks something like the following:
+Container layout:
 
-```bash
-<UUID>
-├── content.txt    # Current file contents
-└── metadata.ini   # GLib KeyFile metadata
-```
+| Offset         | Size | Field                         |
+| -------------- | ---- | ----------------------------- |
+| 0              | 8    | Magic signature `VALAPADR`    |
+| 8              | 4    | Format version, currently `2` |
+| 12             | 4    | Size of the metadata section  |
+| 16             | `n`  | GLib KeyFile metadata         |
+| 16 + `n`       | `m`  | Document contents as UTF-8    |
+| 16 + `n` + `m` | 1    | NUL                           |
 
-Example of such ini file:
+The text follows the metadata with a NUL byte after it.
+
+Example of the metadata section:
 
 ```ini
 [Recovery]
-version=1
 display-name=notes.txt
 saved-at=1785410325
 cursor-offset=42
@@ -32,11 +35,10 @@ original-uri=file:///home/user/Documents/notes.txt
 original-etag=1712157396:5310:531086966
 ```
 
-## `metadata.ini` fields
+## Metadata fields
 
 | Field           | Purpose                                                          |
 | --------------- | ---------------------------------------------------------------- |
-| `version`       | Recovery format version, currently `1`                           |
 | `display-name`  | Name shown in the recovery list                                  |
 | `saved-at`      | Unix timestamp of the snapshot                                   |
 | `cursor-offset` | Character offset of the insertion cursor                         |
@@ -55,11 +57,10 @@ if user is currently writing something.
 
 On every autosave ValaPad does the following:
 
-1. Atomically create/replace `content.txt`
-2. Atomically create/replace `metadata.ini`
+1. Writes the complete snapshot to `<UUID>.tmp`.
+2. Publishes it by renaming `<UUID>.tmp` over `<UUID>`.
 
-So for the following events at least the contents should be recoverable (with the
-2-15 seconds window and we can also crash in the middle of the both operations):
+So for the following events at least the contents should be recoverable (with the 2-15 seconds window):
 
 - The process crashes.
 - The computer loses power.
@@ -69,10 +70,25 @@ So for the following events at least the contents should be recoverable (with th
 - The close confirmation is cancelled.
 - The recovery dialog is closed without selecting Recover or Discard.
 
-In case such as running out of storage, then we can´t do anything.
-One way would be to reserve some space in advance and then write data in there,
-but this will require to have some sort of custom save format which is not
-currently implemented in ValaPad.
+In a case such as running out of storage there is not much we can do: when the
+staging write fails there is nothing to publish, so the previous snapshot stays
+in place but the newest changes are lost. Reserving space in advance so the
+snapshot always fits could help, but I don't know how to approach that.
+
+## Migration from version 1 to version 2
+
+Format version 1 stored each snapshot as a directory with separate
+`content.txt` and `metadata.ini` files. Those directories are still read: when a
+legacy directory is loaded it is rewritten in place as a single version 2 file,
+so the next start already uses the new layout. A legacy directory that is
+overwritten by a save is removed before the rename.
+
+Migration from v1 to v2 is one-way. 
+
+Version 1 only scanned recovery dirs and ignored regular files, so once a
+snapshot has been rewritten as a version 2 file an older build no longer sees it.
+The file stays on disk, but downgrading ValaPad effectively hides the snapshots
+that were already migrated.
 
 Additionally, ValaPad does not monitor changes to a current document,
 so changes made to a file by other software will not be recognised immediately
@@ -80,7 +96,7 @@ and may result in a funky state.
 
 ## Crash and unsaved changes detection
 
-On each startup, ValaPad scans all recovery folders and reconstructs `RecoverySnapshot`
+On each startup, ValaPad scans all recovery files and reconstructs `RecoverySnapshot`
 objects from their content and metadata.
 
 If recoveries exist, ValaPad presents a recover documents window, in there user
@@ -121,4 +137,3 @@ The current retention period is:
 ```vala
 private const int64 MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 ```
-

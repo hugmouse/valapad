@@ -62,6 +62,21 @@ recovery_workflow_test = executable(
 
 test('recovery workflow', recovery_workflow_test)
 
+recovery_store_test = executable(
+    'recovery-store-test',
+    'RecoveryStoreTest.vala',
+    recovery_store_source,
+    recovery_snapshot_source,
+    config_file,
+    dependencies: [
+        dependency('glib-2.0'),
+        dependency('gobject-2.0'),
+        dependency('gio-2.0'),
+    ],
+)
+
+test('recovery store', recovery_store_test)
+
 autosave_controller_test = executable(
     'autosave-controller-test',
     'AutosaveControllerTest.vala',

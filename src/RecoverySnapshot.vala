@@ -6,7 +6,10 @@
 // Complete editor state saved for crash recovery. The ID remains the same while
 // one document is open so newer snapshots replace its previous recovery copy.
 public class ValaPad.RecoverySnapshot : Object {
-    public const int FORMAT_VERSION = 1;
+    // Version of the snapshot container written by RecoveryStore.
+    // Version 1 kept the metadata and the content as two files in a directory.
+    // See RECOVERY.md for details.
+    public const int FORMAT_VERSION = 2;
 
     public string id { get; set; }
     public string text { get; set; default = ""; }

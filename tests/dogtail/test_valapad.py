@@ -8,12 +8,12 @@ from __future__ import annotations
 
 import configparser
 import os
-from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import time
 import unittest
+from pathlib import Path
 
 from dogtail.config import config
 
@@ -27,9 +27,10 @@ config.searchCutoffCount = 50
 
 from dogtail.tree import root
 
-
 APP_ID = "dev.mysh.valapad"
-BINARY_IMAGE = Path(__file__).resolve().parents[2] / "data" / "screenshots" / "main.webp"
+BINARY_IMAGE = (
+    Path(__file__).resolve().parents[2] / "data" / "screenshots" / "main.webp"
+)
 WARNING_FRAGMENT = "does not appear to be a supported text file"
 REPLACED_ENCODING = "UTF-8 (invalid bytes replaced)"
 RECOVERED_TEXT = "The recovered first line\nThe recovered second line"
@@ -223,9 +224,7 @@ class BinaryFileTest(ValaPadDogtailTest):
 class RecoveryTest(ValaPadDogtailTest):
     def setUp(self) -> None:
         super().setUp()
-        self.snapshot_dir = (
-            self.home / "state" / APP_ID / "recovery" / SNAPSHOT_ID
-        )
+        self.snapshot_dir = self.home / "state" / APP_ID / "recovery" / SNAPSHOT_ID
         self._seed_snapshot()
 
     def _seed_snapshot(self) -> None:
@@ -284,7 +283,7 @@ class RecoveryTest(ValaPadDogtailTest):
 
         self.assertEqual(self._text_view(editor).text, RECOVERED_TEXT)
         self.assertTrue(
-            self.snapshot_dir.is_dir(),
+            self.snapshot_dir.exists(),
             "Recovering must keep the snapshot until the document is saved or discarded",
         )
 
