@@ -31,13 +31,13 @@ private async void delete (ValaPad.RecoveryStore store, string id) {
 
 private ValaPad.RecoverySnapshot snapshot_for (string id, string text) {
     return new ValaPad.RecoverySnapshot (id) {
-        text = text,
-        display_name = "notes.txt",
-        saved_at = new DateTime.now_utc ().to_unix (),
-        cursor_offset = 3,
-        use_crlf = true,
-        has_bom = true,
-        encoding_name = "UTF-8-BOM"
+               text = text,
+               display_name = "notes.txt",
+               saved_at = new DateTime.now_utc ().to_unix (),
+               cursor_offset = 3,
+               use_crlf = true,
+               has_bom = true,
+               encoding_name = "UTF-8-BOM"
     };
 }
 
@@ -86,6 +86,7 @@ private async void run_round_trip (string temp_dir) {
     assert (entry_type (entry_path (temp_dir, "round-trip")) == FileType.REGULAR);
 
     ValaPad.RecoverySnapshot[] snapshots = yield load_all (store);
+
     assert (snapshots.length == 1);
     assert (snapshots[0].id == "round-trip");
     assert (snapshots[0].text == "hello\nworld");
@@ -122,6 +123,7 @@ private async void run_legacy_migration (string temp_dir) {
 
     var store = new ValaPad.RecoveryStore (temp_dir);
     ValaPad.RecoverySnapshot[] snapshots = yield load_all (store);
+
     assert (snapshots.length == 1);
     assert (snapshots[0].id == "legacy");
     assert (snapshots[0].text == "legacy text");
@@ -132,6 +134,7 @@ private async void run_legacy_migration (string temp_dir) {
     assert (!File.new_for_path (entry_path (temp_dir, "legacy.tmp")).query_exists ());
 
     ValaPad.RecoverySnapshot[] again = yield load_all (store);
+
     assert (again.length == 1);
     assert (again[0].text == "legacy text");
 }
@@ -162,9 +165,11 @@ private async void run_save_replaces_legacy_directory (string temp_dir) {
 
     var store = new ValaPad.RecoveryStore (temp_dir);
     yield save (store, snapshot_for ("same-id", "new text"));
+
     assert (entry_type (entry_path (temp_dir, "same-id")) == FileType.REGULAR);
 
     ValaPad.RecoverySnapshot[] snapshots = yield load_all (store);
+
     assert (snapshots.length == 1);
     assert (snapshots[0].text == "new text");
 }
@@ -180,118 +185,6 @@ private void test_save_replaces_legacy_directory () {
     MainLoop loop = new MainLoop ();
     run_save_replaces_legacy_directory.begin (temp_dir, (obj, res) => {
         run_save_replaces_legacy_directory.end (res);
-        delete_recursively (File.new_for_path (temp_dir));
-        loop.quit ();
-    });
-    loop.run ();
-}
-
-private async void run_save_replaces_legacy_staging_directory (string temp_dir) {
-    // A version 1 staging directory can be left behind when the previous build
-    // crashed mid-save. The next save must still be able to publish.
-    try {
-        seed_legacy_snapshot (entry_path (temp_dir, "same-id.tmp"), "old text", now ());
-    } catch (Error error) {
-        assert_not_reached ();
-    }
-
-    var store = new ValaPad.RecoveryStore (temp_dir);
-    yield save (store, snapshot_for ("same-id", "new text"));
-    assert (entry_type (entry_path (temp_dir, "same-id")) == FileType.REGULAR);
-    assert (!File.new_for_path (entry_path (temp_dir, "same-id.tmp")).query_exists ());
-
-    ValaPad.RecoverySnapshot[] snapshots = yield load_all (store);
-    assert (snapshots.length == 1);
-    assert (snapshots[0].text == "new text");
-}
-
-private void test_save_replaces_legacy_staging_directory () {
-    string temp_dir;
-    try {
-        temp_dir = DirUtils.make_tmp ("valapad-recovery-store-test-XXXXXX");
-    } catch (FileError error) {
-        assert_not_reached ();
-    }
-
-    MainLoop loop = new MainLoop ();
-    run_save_replaces_legacy_staging_directory.begin (temp_dir, (obj, res) => {
-        run_save_replaces_legacy_staging_directory.end (res);
-        delete_recursively (File.new_for_path (temp_dir));
-        loop.quit ();
-    });
-    loop.run ();
-}
-
-private async void run_interrupted_save_is_published (string temp_dir) {
-    var store = new ValaPad.RecoveryStore (temp_dir);
-    yield save (store, snapshot_for ("staged", "staged text"));
-
-    // Simulate a crash between writing the snapshot and publishing it: the
-    // complete container sits under the staging name with nothing published.
-    try {
-        File published = File.new_for_path (entry_path (temp_dir, "staged"));
-        File staging = File.new_for_path (entry_path (temp_dir, "interrupted.tmp"));
-        published.move (staging, FileCopyFlags.NONE, null, null);
-    } catch (Error error) {
-        assert_not_reached ();
-    }
-
-    ValaPad.RecoverySnapshot[] snapshots = yield load_all (store);
-    assert (snapshots.length == 1);
-    assert (snapshots[0].id == "interrupted");
-    assert (snapshots[0].text == "staged text");
-    assert (entry_type (entry_path (temp_dir, "interrupted")) == FileType.REGULAR);
-    assert (!File.new_for_path (entry_path (temp_dir, "interrupted.tmp")).query_exists ());
-}
-
-private void test_interrupted_save_is_published () {
-    string temp_dir;
-    try {
-        temp_dir = DirUtils.make_tmp ("valapad-recovery-store-test-XXXXXX");
-    } catch (FileError error) {
-        assert_not_reached ();
-    }
-
-    MainLoop loop = new MainLoop ();
-    run_interrupted_save_is_published.begin (temp_dir, (obj, res) => {
-        run_interrupted_save_is_published.end (res);
-        delete_recursively (File.new_for_path (temp_dir));
-        loop.quit ();
-    });
-    loop.run ();
-}
-
-private async void run_stale_staging_is_removed (string temp_dir) {
-    // A truncated container is not published.
-    try {
-        FileUtils.set_contents (entry_path (temp_dir, "garbage.tmp"), "VALAPADR");
-    } catch (FileError error) {
-        assert_not_reached ();
-    }
-    try {
-        seed_legacy_snapshot (entry_path (temp_dir, "stale.tmp"), "stale text", now ());
-    } catch (Error error) {
-        assert_not_reached ();
-    }
-
-    var store = new ValaPad.RecoveryStore (temp_dir);
-    ValaPad.RecoverySnapshot[] snapshots = yield load_all (store);
-    assert (snapshots.length == 0);
-    assert (!File.new_for_path (entry_path (temp_dir, "garbage.tmp")).query_exists ());
-    assert (!File.new_for_path (entry_path (temp_dir, "stale.tmp")).query_exists ());
-}
-
-private void test_stale_staging_is_removed () {
-    string temp_dir;
-    try {
-        temp_dir = DirUtils.make_tmp ("valapad-recovery-store-test-XXXXXX");
-    } catch (FileError error) {
-        assert_not_reached ();
-    }
-
-    MainLoop loop = new MainLoop ();
-    run_stale_staging_is_removed.begin (temp_dir, (obj, res) => {
-        run_stale_staging_is_removed.end (res);
         delete_recursively (File.new_for_path (temp_dir));
         loop.quit ();
     });
@@ -322,43 +215,6 @@ private void test_delete_removes_legacy_directory () {
     MainLoop loop = new MainLoop ();
     run_delete_removes_legacy_directory.begin (temp_dir, (obj, res) => {
         run_delete_removes_legacy_directory.end (res);
-        delete_recursively (File.new_for_path (temp_dir));
-        loop.quit ();
-    });
-    loop.run ();
-}
-
-private async void run_delete_discards_staging (string temp_dir) {
-    var store = new ValaPad.RecoveryStore (temp_dir);
-    yield save (store, snapshot_for ("kept", "published text"));
-
-    // A newer copy that was written but not published yet.
-    try {
-        File published = File.new_for_path (entry_path (temp_dir, "kept"));
-        File staging = File.new_for_path (entry_path (temp_dir, "kept.tmp"));
-        published.move (staging, FileCopyFlags.NONE, null, null);
-    } catch (Error error) {
-        assert_not_reached ();
-    }
-
-    yield delete (store, "kept");
-
-    // The staging copy must not resurrect the snapshot on the next scan.
-    assert ((yield load_all (store)).length == 0);
-    assert (!File.new_for_path (entry_path (temp_dir, "kept.tmp")).query_exists ());
-}
-
-private void test_delete_discards_staging () {
-    string temp_dir;
-    try {
-        temp_dir = DirUtils.make_tmp ("valapad-recovery-store-test-XXXXXX");
-    } catch (FileError error) {
-        assert_not_reached ();
-    }
-
-    MainLoop loop = new MainLoop ();
-    run_delete_discards_staging.begin (temp_dir, (obj, res) => {
-        run_delete_discards_staging.end (res);
         delete_recursively (File.new_for_path (temp_dir));
         loop.quit ();
     });
@@ -402,8 +258,8 @@ private void delete_recursively (File file) {
         );
         if (info.get_file_type () == FileType.DIRECTORY) {
             FileEnumerator enumerator = file.enumerate_children (
-                                                                FileAttribute.STANDARD_NAME,
-                                                                FileQueryInfoFlags.NOFOLLOW_SYMLINKS
+                                                                 FileAttribute.STANDARD_NAME,
+                                                                 FileQueryInfoFlags.NOFOLLOW_SYMLINKS
             );
             FileInfo? child;
             while ((child = enumerator.next_file ()) != null) {
@@ -420,11 +276,7 @@ public int main (string[] args) {
     Test.add_func ("/recovery-store/round-trip", test_round_trip);
     Test.add_func ("/recovery-store/legacy-migration", test_legacy_migration);
     Test.add_func ("/recovery-store/save-replaces-legacy-directory", test_save_replaces_legacy_directory);
-    Test.add_func ("/recovery-store/save-replaces-legacy-staging-directory", test_save_replaces_legacy_staging_directory);
-    Test.add_func ("/recovery-store/interrupted-save-is-published", test_interrupted_save_is_published);
-    Test.add_func ("/recovery-store/stale-staging-is-removed", test_stale_staging_is_removed);
     Test.add_func ("/recovery-store/delete-removes-legacy-directory", test_delete_removes_legacy_directory);
-    Test.add_func ("/recovery-store/delete-discards-staging", test_delete_discards_staging);
     Test.add_func ("/recovery-store/expired-legacy-is-removed", test_expired_legacy_is_removed);
     return Test.run ();
 }

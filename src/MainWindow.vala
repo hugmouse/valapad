@@ -41,10 +41,10 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     public MainWindow (Gtk.Application app) {
         Object (
-            application: app,
-            default_height: 600,
-            default_width: 800,
-            title: _("Untitled - ValaPad")
+                application : app,
+                default_height : 600,
+                default_width : 800,
+                title : _("Untitled - ValaPad")
         );
 
         recovery_store = new RecoveryStore ();
@@ -134,20 +134,19 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             font_description.set_absolute_size (BASE_FONT_PX * Pango.SCALE);
         }
         Css.add_provider (
-            this,
-            font_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_USER
+                          this,
+                          font_provider,
+                          Gtk.STYLE_PROVIDER_PRIORITY_USER
         );
 
         var style_provider = new Gtk.CssProvider ();
         style_provider.load_from_resource ("/dev/mysh/valapad/style.css");
         Css.add_provider (
-            this,
-            style_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                          this,
+                          style_provider,
+                          Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         );
     }
-
 
     // ------------------------------
     // Ln 1 Col 1 | 100% | LF | UTF-8
@@ -422,6 +421,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
 
         yield autosave_controller.reset ();
+
         set_document (Document.untitled (), false);
     }
 
@@ -456,36 +456,38 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         try {
             // Reject unsafe inputs from metadata and a small sample before the
             // complete file is allocated and decoded.
-            FileInfo info = yield file.query_info_async (
-                FileAttribute.STANDARD_TYPE + "," + FileAttribute.STANDARD_SIZE,
+            FileInfo info = yield file.query_info_async (FileAttribute.STANDARD_TYPE + "," + FileAttribute.STANDARD_SIZE,
                 FileQueryInfoFlags.NONE,
                 Priority.DEFAULT,
-                null
-            );
+                null);
+
             if (info.get_file_type () != FileType.REGULAR) {
                 show_error (
-                    _("Open failed"),
-                    _("“%s” is not a regular file.").printf (file.get_parse_name ())
+                            _("Open failed"),
+                            _("“%s” is not a regular file.").printf (file.get_parse_name ())
                 );
                 return false;
             }
             bool looks_like_text = yield file_looks_like_text (file);
+
             if (!looks_like_text) {
                 string unsupported_message = _(
-                    "“%s” does not appear to be a supported text file. Opening it may display corrupted text, " +
-                    "and saving it could damage the file."
+                                               "“%s” does not appear to be a supported text file. Opening it may display corrupted text, "
+                                               + "and saving it could damage the file."
                 ).printf (file.get_basename ());
                 bool open_unsupported = yield confirm_open_anyway (unsupported_message);
+
                 if (!open_unsupported) {
                     return false;
                 }
             }
             if (info.get_size () >= LARGE_FILE_BYTES) {
                 string large_message = _(
-                    "“%s” is %s. Opening it may make ValaPad unresponsive and requires substantially more memory " +
-                    "than the file size."
+                                         "“%s” is %s. Opening it may make ValaPad unresponsive and requires substantially more memory "
+                                         + "than the file size."
                 ).printf (file.get_basename (), GLib.format_size ((uint64) info.get_size ()));
                 bool open_large = yield confirm_open_anyway (large_message);
+
                 if (!open_large) {
                     return false;
                 }
@@ -505,10 +507,12 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     private async bool file_looks_like_text (File file) throws Error {
         var stream = yield file.read_async (Priority.DEFAULT, null);
+
         uint8[] sample = new uint8[TextFileProbe.SAMPLE_BYTES];
         try {
             ssize_t bytes_read = yield stream.read_async (sample, Priority.DEFAULT, null);
-            return TextFileProbe.is_probably_text (sample[0: (int) bytes_read]);
+
+            return TextFileProbe.is_probably_text (sample[0 : (int) bytes_read]);
         } finally {
             try {
                 stream.close (null);
@@ -527,6 +531,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
         try {
             int response = yield alert.choose (this, null);
+
             return response == 1;
         } catch (Error error) {
             return false;
@@ -549,7 +554,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         File? open_file = current.file;
         var dialog = new Gtk.FileDialog () {
             title = _("Save As"),
-            initial_name = open_file != null ? open_file.get_basename () : _("Untitled.txt")
+            initial_name = open_file != null? open_file.get_basename () : _("Untitled.txt")
         };
 
         File? file = null;
@@ -567,6 +572,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
 
         yield save_to_file_async (file);
+
         return !buffer.get_modified ();
     }
 
@@ -583,6 +589,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         }
         try {
             bool recovery_flushed = yield autosave_controller.flush ();
+
             if (!recovery_flushed) {
                 debug ("Document save continuing without a flushed recovery snapshot: name=%s", file.get_basename ());
             } else {
@@ -592,22 +599,39 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             string saved_text = buffer.text;
             string text = current.to_file_text (saved_text);
 
-            uint8[] contents = text.data;
-            string? new_etag = null;
             debug (
-                "Writing document file asynchronously: name=%s chars=%d bytes=%zu",
-                file.get_basename (),
-                (int) saved_text.char_count (),
-                contents.length
+                   "Writing document file durably: name=%s chars=%d bytes=%zu",
+                   file.get_basename (),
+                   (int) saved_text.char_count (),
+                   text.data.length
             );
-            yield file.replace_contents_async (
-                contents,
-                null,
-                false,
-                FileCreateFlags.REPLACE_DESTINATION,
-                null,
-                out new_etag
-            );
+
+            string? new_etag = null;
+            if (file.get_path () == null) {
+                // Remote file has no local path, so set_contents_full()
+                // cannot open/fsync/rename it.
+                yield file.replace_contents_async (text.data,
+                    null,
+                    false,
+                    FileCreateFlags.REPLACE_DESTINATION,
+                    null,
+                    out new_etag);
+            } else {
+                FileUtils.set_contents_full (file.get_path (),
+                    text,
+                    text.data.length,
+                    FileSetContentsFlags.CONSISTENT | FileSetContentsFlags.DURABLE,
+                    0666);
+                try {
+                    new_etag = file.query_info (
+                                                FileAttribute.ETAG_VALUE,
+                                                FileQueryInfoFlags.NONE,
+                                                null
+                    ).get_etag ();
+                } catch (Error error) {
+                    new_etag = null;
+                }
+            }
 
             current = current.saved_as (file, new_etag, saved_text);
             debug ("Document file write completed: name=%s", file.get_basename ());
@@ -619,14 +643,15 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             if (buffer.text == saved_text) {
                 buffer.set_modified (false);
                 yield autosave_controller.clear ();
+
                 recovery_warning.reveal_child = false;
                 debug ("Document save completed cleanly: name=%s", file.get_basename ());
             } else {
                 debug (
-                    "Document changed during file write: name=%s saved-chars=%d current-chars=%d",
-                    file.get_basename (),
-                    (int) saved_text.char_count (),
-                    (int) buffer.text.char_count ()
+                       "Document changed during file write: name=%s saved-chars=%d current-chars=%d",
+                       file.get_basename (),
+                       (int) saved_text.char_count (),
+                       (int) buffer.text.char_count ()
                 );
             }
 
@@ -902,7 +927,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
         string name = current.display_name ();
         var question = new Gtk.AlertDialog (
-            _("Do you want to save changes to %s?").printf (name)
+                                            _("Do you want to save changes to %s?").printf (name)
         );
         question.modal = true;
         question.buttons = { _("Save"), _("Don't Save"), _("Cancel") };
@@ -921,16 +946,19 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             File? open_file = current.file;
             if (open_file != null) {
                 yield save_to_file_async (open_file);
+
                 return !buffer.get_modified ();
             }
             return yield save_as_async ();
         } else if (response == 1) {
             // Don't Save
             yield apply_recovery_outcome (RecoveryDocumentOutcome.DONT_SAVE);
+
             return true;
         }
 
         yield apply_recovery_outcome (RecoveryDocumentOutcome.CLOSE_CANCELLED);
+
         return false; // Cancel
     }
 
@@ -949,16 +977,17 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     public void restore_snapshot (RecoverySnapshot snapshot) {
         debug (
-            "Restoring recovery snapshot: id=%s chars=%d cursor=%d original-changed=%s",
-            snapshot.id,
-            (int) snapshot.text.char_count (),
-            snapshot.cursor_offset,
-            snapshot.original_changed.to_string ()
+               "Restoring recovery snapshot: id=%s chars=%d cursor=%d original-changed=%s",
+               snapshot.id,
+               (int) snapshot.text.char_count (),
+               snapshot.cursor_offset,
+               snapshot.original_changed.to_string ()
         );
         autosave_controller.adopt_recovery (snapshot.id);
         File? snapshot_file = snapshot.original_uri != null
             ? File.new_for_uri (snapshot.original_uri)
             : null;
+
         var recovered = new Document () {
             file = snapshot_file,
             etag = snapshot.original_etag,
@@ -975,8 +1004,8 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         autosave_controller.schedule_now ();
         update_status ();
         string? conflict = RecoveryWorkflow.conflict_warning (
-            snapshot,
-            _("The original file changed after this backup was created. Use Save As to avoid replacing newer changes.")
+                                                              snapshot,
+                                                              _("The original file changed after this backup was created. Use Save As to avoid replacing newer changes.")
         );
         if (conflict != null) {
             show_warning (conflict);
@@ -985,11 +1014,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     private void show_error (string title, string message) {
         var dialog = new Granite.MessageDialog.with_image_from_icon_name (
-            title,
-            message,
-            "dialog-error",
-            Gtk.ButtonsType.CLOSE
-        ) {
+                                                                          title,
+                                                                          message,
+                                                                          "dialog-error",
+                                                                          Gtk.ButtonsType.CLOSE
+            ) {
             transient_for = this,
             modal = true
         };

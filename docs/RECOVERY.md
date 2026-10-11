@@ -55,10 +55,9 @@ For an Untitled document, `original-uri` and `original-etag` are omitted.
 Autosaves are happening after 2 seconds of inactivity and every 15 seconds even
 if user is currently writing something.
 
-On every autosave ValaPad does the following:
-
-1. Writes the complete snapshot to `<UUID>.tmp`.
-2. Publishes it by renaming `<UUID>.tmp` over `<UUID>`.
+On every autosave ValaPad writes the complete snapshot to `<UUID>` with
+`g_file_set_contents_full()`, which fsyncs the file, renames it into place, and
+fsyncs the directory.
 
 So for the following events at least the contents should be recoverable (with the 2-15 seconds window):
 
@@ -81,9 +80,9 @@ Format version 1 stored each snapshot as a directory with separate
 `content.txt` and `metadata.ini` files. Those directories are still read: when a
 legacy directory is loaded it is rewritten in place as a single version 2 file,
 so the next start already uses the new layout. A legacy directory that is
-overwritten by a save is removed before the rename.
+overwritten by a save is removed first.
 
-Migration from v1 to v2 is one-way. 
+Migration from v1 to v2 is one-way.
 
 Version 1 only scanned recovery dirs and ignored regular files, so once a
 snapshot has been rewritten as a version 2 file an older build no longer sees it.

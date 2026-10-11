@@ -10,7 +10,6 @@
 public class ValaPad.RecoveryStore : Object {
     private const string GROUP = "Recovery";
     private const int64 MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
-    private const string STAGING_SUFFIX = ".tmp";
 
     // Container layout:
     //
@@ -60,10 +59,10 @@ public class ValaPad.RecoveryStore : Object {
             return snapshots;
         }
 
-        yield publish_interrupted_saves (cancellable);
-
         foreach (string name in yield list_entries (cancellable)) {
-            if (name.has_suffix (STAGING_SUFFIX)) {
+            if (name.has_suffix (".tmp")) {
+                // Staging files from before the single-write change. Remove.
+                yield delete_entry (root.get_child (name), cancellable);
                 continue;
             }
 
@@ -87,14 +86,6 @@ public class ValaPad.RecoveryStore : Object {
     }
 
     public async void delete (string id, Cancellable? cancellable = null) throws Error {
-        // A staging file can hold a copy that is newer than the published
-        // snapshot, so it is discarded as well. Otherwise the next start would
-        // publish the very snapshot that was just dropped.
-        File staging = root.get_child (id + STAGING_SUFFIX);
-        if (staging.query_exists (cancellable)) {
-            yield delete_entry (staging, cancellable);
-        }
-
         File entry = root.get_child (id);
         if (entry.query_exists (cancellable)) {
             yield delete_entry (entry, cancellable);
@@ -105,41 +96,22 @@ public class ValaPad.RecoveryStore : Object {
         }
     }
 
-    // Writes the snapshot next to its final name and then publishes it with
-    // rename(2), which atomically replaces the previous snapshot file. A format
-    // version 1 directory cannot be replaced by rename(2), so it is removed
-    // first. If interrupted, the complete staging file holds the new
-    // snapshot and is published on the next start instead.
-    //
-    // See RECOVERY.md for details upon why.
     private async void publish (RecoverySnapshot snapshot, Cancellable? cancellable) throws Error {
         File target = root.get_child (snapshot.id);
-        File staging = root.get_child (snapshot.id + STAGING_SUFFIX);
-        string? ignored_etag;
-
-        // A leftover format version 1 staging directory cannot be replaced by a
-        // file write, so remove it first.
-        if (is_directory (staging, cancellable)) {
-            yield delete_directory (staging, cancellable);
-        }
-
-        uint8[] container = container_for (snapshot);
-        yield staging.replace_contents_async (container,
-            null,
-            false,
-            FileCreateFlags.REPLACE_DESTINATION | FileCreateFlags.PRIVATE,
-            cancellable,
-            out ignored_etag);
-
-        debug ("Recovery snapshot staged: id=%s", snapshot.id);
 
         if (is_directory (target, cancellable)) {
             debug ("Replacing legacy recovery snapshot directory: id=%s", snapshot.id);
             yield delete_directory (target, cancellable);
         }
-        if (GLib.FileUtils.rename (staging.get_path (), target.get_path ()) != 0) {
-            throw new FileError.FAILED ("unable to rename recovery snapshot into place");
-        }
+
+        uint8[] container = container_for (snapshot);
+        FileUtils.set_contents_full (
+            target.get_path (),
+            (string) container,
+            container.length,
+            FileSetContentsFlags.CONSISTENT | FileSetContentsFlags.DURABLE,
+            0600
+        );
     }
 
     // Loads one store entry and returns the snapshot it holds, or null when the
@@ -276,55 +248,6 @@ public class ValaPad.RecoveryStore : Object {
             throw new IOError.INVALID_DATA ("Recovery content is not UTF-8");
         }
         return snapshot_from_metadata (metadata, text, id);
-    }
-
-    // A staging entry only survives a crash between writing a snapshot and
-    // publishing it with rename(2).
-    //
-    // A staging file that parses is complete and is newer than
-    // the published snapshot, so it is published rather than thrown away.
-    private async void publish_interrupted_saves (Cancellable? cancellable) throws Error {
-        string[] names = yield list_entries (cancellable);
-
-        foreach (string name in names) {
-            if (!name.has_suffix (STAGING_SUFFIX)) {
-                continue;
-            }
-
-            File staging = root.get_child (name);
-            string id = name.substring (0, name.length - STAGING_SUFFIX.length);
-            bool complete = false;
-            if (query_type (staging, cancellable) == FileType.REGULAR) {
-                complete = yield is_complete_container (staging, id, cancellable);
-            }
-
-            if (complete) {
-                File target = root.get_child (id);
-                if (is_directory (target, cancellable)) {
-                    yield delete_directory (target, cancellable);
-                }
-                if (GLib.FileUtils.rename (staging.get_path (), target.get_path ()) == 0) {
-                    debug ("Published interrupted recovery snapshot: id=%s", id);
-                    continue;
-                }
-            }
-
-            debug ("Removing stale recovery staging entry: name=%s", name);
-            yield delete_entry (staging, cancellable);
-        }
-    }
-
-    private async bool is_complete_container (File file, string id, Cancellable? cancellable) {
-        try {
-            uint8[] contents;
-            string? ignored_etag;
-            yield file.load_contents_async (cancellable, out contents, out ignored_etag);
-
-            parse_container (contents, id);
-            return true;
-        } catch (Error error) {
-            return false;
-        }
     }
 
     // Lists the store entries up front. Loading mutates the directory, which
