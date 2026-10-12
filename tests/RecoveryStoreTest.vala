@@ -250,6 +250,48 @@ private void test_expired_legacy_is_removed () {
     loop.run ();
 }
 
+private async void run_unreadable_entry_is_kept (string temp_dir) {
+    var store = new ValaPad.RecoveryStore (temp_dir);
+    yield save (store, snapshot_for ("unreadable", "unsaved edit"));
+
+    string path = entry_path (temp_dir, "unreadable");
+    FileUtils.chmod (path, 0);
+
+    try {
+        string contents;
+        FileUtils.get_contents (path, out contents);
+        Test.skip ("file permissions are not enforced for this user");
+        return;
+    } catch (FileError error) {
+    }
+
+    assert ((yield load_all (store)).length == 0);
+    assert (File.new_for_path (path).query_exists ());
+
+    FileUtils.chmod (path, 0600);
+    ValaPad.RecoverySnapshot[] snapshots = yield load_all (store);
+
+    assert (snapshots.length == 1);
+    assert (snapshots[0].text == "unsaved edit");
+}
+
+private void test_unreadable_entry_is_kept () {
+    string temp_dir;
+    try {
+        temp_dir = DirUtils.make_tmp ("valapad-recovery-store-test-XXXXXX");
+    } catch (FileError error) {
+        assert_not_reached ();
+    }
+
+    MainLoop loop = new MainLoop ();
+    run_unreadable_entry_is_kept.begin (temp_dir, (obj, res) => {
+        run_unreadable_entry_is_kept.end (res);
+        delete_recursively (File.new_for_path (temp_dir));
+        loop.quit ();
+    });
+    loop.run ();
+}
+
 private void delete_recursively (File file) {
     try {
         FileInfo info = file.query_info (
@@ -278,5 +320,6 @@ public int main (string[] args) {
     Test.add_func ("/recovery-store/save-replaces-legacy-directory", test_save_replaces_legacy_directory);
     Test.add_func ("/recovery-store/delete-removes-legacy-directory", test_delete_removes_legacy_directory);
     Test.add_func ("/recovery-store/expired-legacy-is-removed", test_expired_legacy_is_removed);
+    Test.add_func ("/recovery-store/unreadable-entry-is-kept", test_unreadable_entry_is_kept);
     return Test.run ();
 }

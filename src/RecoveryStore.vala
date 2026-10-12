@@ -135,6 +135,12 @@ public class ValaPad.RecoveryStore : Object {
                 return null;
             }
         } catch (Error error) {
+            if (!is_invalid_content (error)) {
+                // Read errors say nothing about the content,
+                // so keep the entry and retry next restart
+                debug ("Keeping recovery entry after read error: id=%s error=%s", id, error.message);
+                return null;
+            }
             debug ("Removing invalid recovery entry: id=%s error=%s", id, error.message);
             yield delete_entry (entry, cancellable);
 
@@ -318,6 +324,12 @@ public class ValaPad.RecoveryStore : Object {
         output.write (new uint8[] { 0 });
         output.close (null);
         return Bytes.unref_to_data (stream.steal_as_bytes ());
+    }
+
+    // Only errors that mean the stored bytes are unusable count as invalid content.
+    private static bool is_invalid_content (Error error) {
+        return (error.domain == IOError.quark () && error.code == IOError.INVALID_DATA)
+            || error.domain == KeyFileError.quark ();
     }
 
     private bool original_has_changed (RecoverySnapshot snapshot, Cancellable? cancellable) {
