@@ -66,26 +66,19 @@ public class ValaPad.AutosaveController : Object {
     }
 
     public async void reset () {
-        string old_id = recovery_id;
-        invalidate_pending ();
-
-        recovery_id = Uuid.string_random ();
-        debug ("Recovery controller reset: old-id=%s new-id=%s", old_id, recovery_id);
-        try {
-            yield store.delete (old_id);
-        } catch (Error error) {
-            save_failed (error.message);
-        }
+        yield rotate_recovery_id ("Recovery controller reset");
     }
 
     public async void clear () {
+        yield rotate_recovery_id ("Clearing recovery snapshot");
+    }
+
+    private async void rotate_recovery_id (string log_label) {
         string old_id = recovery_id;
         invalidate_pending ();
 
-        // Rotate the id so a save that is still finishing for the old id can
-        // never delete a snapshot that a later save writes under this controller.
         recovery_id = Uuid.string_random ();
-        debug ("Clearing recovery snapshot: old-id=%s new-id=%s", old_id, recovery_id);
+        debug ("%s: old-id=%s new-id=%s", log_label, old_id, recovery_id);
         try {
             yield store.delete (old_id);
         } catch (Error error) {
