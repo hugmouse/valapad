@@ -52,7 +52,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         restore_window_state ();
         autosave_controller = new AutosaveController (buffer, recovery_store);
         autosave_controller.save_failed.connect (show_recovery_warning);
-        update_autosave_document ();
+        autosave_controller.update_document (current);
         add_window_actions ();
         connect_signals ();
         load_zoom ();
@@ -330,7 +330,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
     private void add_action_with_callback (string name, SimpleActionActivateCallback handler) {
         var action = new SimpleAction (name, null);
-        action.activate.connect ((action, parameter) => handler (action, parameter));
+        action.activate.connect (handler);
         add_action (action);
     }
 
@@ -407,7 +407,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
         current = document;
         buffer.set_modified (modified);
         autosave_controller.resume ();
-        update_autosave_document ();
+        autosave_controller.update_document (current);
         update_title ();
         update_status ();
     }
@@ -581,7 +581,8 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             return;
         }
         saving = true;
-        debug ("Document save started: name=%s", file.get_basename ());
+        string basename = file.get_basename ();
+        debug ("Document save started: name=%s", basename);
 
         if (!save_spinner.visible) {
             save_spinner.visible = true;
@@ -591,9 +592,9 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             bool recovery_flushed = yield autosave_controller.flush ();
 
             if (!recovery_flushed) {
-                debug ("Document save continuing without a flushed recovery snapshot: name=%s", file.get_basename ());
+                debug ("Document save continuing without a flushed recovery snapshot: name=%s", basename);
             } else {
-                debug ("Recovery snapshot flushed before document save: name=%s", file.get_basename ());
+                debug ("Recovery snapshot flushed before document save: name=%s", basename);
             }
 
             string saved_text = buffer.text;
@@ -601,7 +602,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
 
             debug (
                    "Writing document file durably: name=%s chars=%d bytes=%zu",
-                   file.get_basename (),
+                   basename,
                    (int) saved_text.char_count (),
                    text.data.length
             );
@@ -634,8 +635,8 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             }
 
             current = current.saved_as (file, new_etag, saved_text);
-            debug ("Document file write completed: name=%s", file.get_basename ());
-            update_autosave_document ();
+            debug ("Document file write completed: name=%s", basename);
+            autosave_controller.update_document (current);
 
             // The buffer can keep changing while the write is in flight.
             // Only clear the dirty flag when the buffer still matches what we wrote
@@ -645,11 +646,11 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 yield autosave_controller.clear ();
 
                 recovery_warning.reveal_child = false;
-                debug ("Document save completed cleanly: name=%s", file.get_basename ());
+                debug ("Document save completed cleanly: name=%s", basename);
             } else {
                 debug (
                        "Document changed during file write: name=%s saved-chars=%d current-chars=%d",
-                       file.get_basename (),
+                       basename,
                        (int) saved_text.char_count (),
                        (int) buffer.text.char_count ()
                 );
@@ -658,8 +659,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             update_title ();
             update_status ();
         } catch (Error e) {
-            debug ("Document save failed: name=%s error=%s", file.get_basename (), e.message);
-            apply_recovery_outcome.begin (RecoveryDocumentOutcome.SAVE_FAILED);
+            debug ("Document save failed: name=%s error=%s", basename, e.message);
             show_error (_("Save failed"), e.message);
         } finally {
             if (buffer.get_modified ()) {
@@ -668,12 +668,6 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             save_spinner.stop ();
             save_spinner.visible = false;
             saving = false;
-        }
-    }
-
-    private async void apply_recovery_outcome (RecoveryDocumentOutcome outcome) {
-        if (RecoveryWorkflow.should_delete_snapshot (outcome)) {
-            yield autosave_controller.clear ();
         }
     }
 
@@ -727,11 +721,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                 heights[i] = int.max (h, 1);
             }
 
-            page_starts.remove_range (0, page_starts.length);
-            var starts = PrintLayout.paginate_by_heights (heights, (int) content_height);
-            for (int i = 0; i < starts.length; i++) {
-                page_starts.add (starts[i]);
-            }
+            page_starts = PrintLayout.paginate_by_heights (heights, (int) content_height);
 
             op.set_n_pages (page_starts.length);
         });
@@ -952,18 +942,12 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             return yield save_as_async ();
         } else if (response == 1) {
             // Don't Save
-            yield apply_recovery_outcome (RecoveryDocumentOutcome.DONT_SAVE);
+            yield autosave_controller.clear ();
 
             return true;
         }
 
-        yield apply_recovery_outcome (RecoveryDocumentOutcome.CLOSE_CANCELLED);
-
         return false; // Cancel
-    }
-
-    private void update_autosave_document () {
-        autosave_controller.update_document (current);
     }
 
     private void show_recovery_warning (string message) {
