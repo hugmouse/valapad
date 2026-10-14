@@ -99,7 +99,7 @@ public class ValaPad.RecoveryStore : Object {
     private async void publish (RecoverySnapshot snapshot, Cancellable? cancellable) throws Error {
         File target = root.get_child (snapshot.id);
 
-        if (is_directory (target, cancellable)) {
+        if (query_type (target, cancellable) == FileType.DIRECTORY) {
             debug ("Replacing legacy recovery snapshot directory: id=%s", snapshot.id);
             yield delete_directory (target, cancellable);
         }
@@ -122,17 +122,10 @@ public class ValaPad.RecoveryStore : Object {
                                                  Cancellable? cancellable) throws Error {
         RecoverySnapshot snapshot;
         try {
-            switch (type) {
-            case FileType.DIRECTORY :
+            if (type == FileType.DIRECTORY) {
                 snapshot = yield load_legacy (entry, id, cancellable);
-
-                break;
-            case FileType.REGULAR :
+            } else {
                 snapshot = yield load_container (entry, id, cancellable);
-
-                break;
-                default :
-                return null;
             }
         } catch (Error error) {
             if (!is_invalid_content (error)) {
@@ -373,12 +366,8 @@ public class ValaPad.RecoveryStore : Object {
         }
     }
 
-    private static bool is_directory (File file, Cancellable? cancellable) {
-        return query_type (file, cancellable) == FileType.DIRECTORY;
-    }
-
     private async void delete_entry (File entry, Cancellable? cancellable) throws Error {
-        if (is_directory (entry, cancellable)) {
+        if (query_type (entry, cancellable) == FileType.DIRECTORY) {
             yield delete_directory (entry, cancellable);
         } else {
             yield entry.delete_async (Priority.DEFAULT, cancellable);
