@@ -481,11 +481,12 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                     return false;
                 }
             }
-            if (info.get_size () >= LARGE_FILE_BYTES) {
+            int64 size = info.get_size ();
+            if (size >= LARGE_FILE_BYTES) {
                 string large_message = _(
                                          "“%s” is %s. Opening it may make ValaPad unresponsive and requires substantially more memory "
                                          + "than the file size."
-                ).printf (file.get_basename (), GLib.format_size ((uint64) info.get_size ()));
+                ).printf (file.get_basename (), GLib.format_size ((uint64) size));
                 bool open_large = yield confirm_open_anyway (large_message);
 
                 if (!open_large) {
@@ -608,7 +609,8 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
             );
 
             string? new_etag = null;
-            if (file.get_path () == null) {
+            string? file_path = file.get_path ();
+            if (file_path == null) {
                 // Remote file has no local path, so set_contents_full()
                 // cannot open/fsync/rename it.
                 yield file.replace_contents_async (text.data,
@@ -618,7 +620,7 @@ public class ValaPad.MainWindow : Gtk.ApplicationWindow {
                     null,
                     out new_etag);
             } else {
-                FileUtils.set_contents_full (file.get_path (),
+                FileUtils.set_contents_full (file_path,
                     text,
                     text.data.length,
                     FileSetContentsFlags.CONSISTENT | FileSetContentsFlags.DURABLE,
