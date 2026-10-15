@@ -1,0 +1,1318 @@
+<!--
+     SPDX-License-Identifier: GPL-3.0-or-later
+     SPDX-FileCopyrightText: 2026 Iaroslav Angliuster
+     SPDX-FileCopyrightText: 2015-2026 elementary, Inc. (https://elementary.io)
+
+     Window control icons and widget styling are adapted from elementary OS.
+    - icons:
+        actions/symbolic/window-close-symbolic.svg,
+        actions/symbolic/window-maximize-symbolic.svg
+        (elementary/icons, GPL-3.0-or-later)
+    - styling:
+        lib/Styles/** (elementary/granite, LGPL-2.1-or-later),
+        src/gtk-4.0/** (elementary/stylesheet, GPL-3.0-or-later)
+-->
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="color-scheme" content="light dark" />
+        <link rel="preconnect" href="https://raw.githubusercontent.com">
+        <link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/hugmouse/valapad/master/data/icons/valapad.svg">
+        <title>
+            ValaPad | Edit plain-text files with a familiar set of tools
+        </title>
+        <style>
+            /* Processed via PostCSS with prefix fyi */
+            /* elementary OS Palette (lib/Styles/Common/_palette.scss) */
+            :root {
+                --BLUEBERRY-100: #8cd5ff;
+                --BLUEBERRY-300: #64baff;
+                --BLUEBERRY-500: #3689e6;
+                --BLUEBERRY-700: #0d52bf;
+                --BLUEBERRY-900: #002e99;
+
+                --SILVER-100: #fafafa;
+                --SILVER-300: #d4d4d4;
+                --SILVER-500: #abacae;
+                --SILVER-700: #7e8087;
+                --SILVER-900: #555761;
+
+                --SLATE-100: #95a3ab;
+                --SLATE-300: #667885;
+                --SLATE-500: #485a6c;
+                --SLATE-700: #273445;
+                --SLATE-900: #0e141f;
+
+                --BLACK-100: #666666;
+                --BLACK-300: #4d4d4d;
+                --BLACK-500: #333333;
+                --BLACK-600: #262626;
+                --BLACK-700: #1a1a1a;
+                --BLACK-900: #000000;
+
+                --accent-color: var(--BLUEBERRY-500);
+                --window-radius: 9px;
+
+                --font-sans:
+                    "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+                    Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont,
+                    "Segoe UI", Roboto, "Noto Sans", Ubuntu, Cantarell, Oxygen,
+                    sans-serif;
+                --font-mono:
+                    "Roboto Mono", ui-monospace, "Source Code Pro",
+                    "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", Menlo,
+                    Consolas, monospace;
+            }
+
+            html {
+                color-scheme: light dark;
+
+                --bg-level-0: light-dark(var(--SILVER-100), var(--BLACK-500));
+                --bg-level-1: light-dark(
+                    #ffffff,
+                    color-mix(in srgb, var(--BLACK-500) 50%, var(--BLACK-600))
+                );
+                --bg-level-2: light-dark(var(--SILVER-100), var(--BLACK-600));
+                --bg-level-3: light-dark(
+                    color-mix(in srgb, var(--SILVER-100) 75%, var(--SILVER-300)),
+                    color-mix(in srgb, var(--BLACK-600) 50%, var(--BLACK-700))
+                );
+                --bg-level-4: light-dark(
+                    color-mix(in srgb, var(--SILVER-100) 30%, var(--SILVER-300)),
+                    var(--BLACK-700)
+                );
+
+                --fg-color: light-dark(var(--BLACK-500), #ffffff);
+                --base-color: var(--bg-level-1);
+                --bg-color: var(--bg-level-2);
+                --color-primary: light-dark(
+                    var(--bg-level-4),
+                    color-mix(in srgb, var(--BLACK-500) 65%, var(--BLACK-700))
+                );
+
+                --highlight-color: light-dark(#ffffff, rgba(255, 255, 255, 0.2));
+                --border-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
+                --toplevel-border-color: light-dark(
+                    rgba(0, 0, 0, 0.2),
+                    rgba(0, 0, 0, 0.75)
+                );
+
+                --theme_bg_color: var(--bg-color);
+                --theme_base_color: var(--base-color);
+                --theme_fg_color: var(--fg-color);
+                --theme_text_color: var(--fg-color);
+                --borders: var(--toplevel-border-color);
+
+                /* @define-color selected_bg_color */
+                --selected-bg-color: light-dark(
+                    color-mix(in srgb, var(--accent-color) 25%, transparent),
+                    color-mix(
+                        in srgb,
+                        color-mix(in srgb, var(--accent-color) 85%, black) 50%,
+                        transparent
+                    )
+                );
+                /* @define-color selected_fg_color */
+                --selected-fg-color: light-dark(
+                    color-mix(in srgb, var(--accent-color) 50%, black),
+                    color-mix(
+                        in srgb,
+                        color-mix(in srgb, var(--accent-color) 90%, white) 25%,
+                        white
+                    )
+                );
+
+                --headerbar-text-shadow: 0 1px
+                    light-dark(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.67));
+
+                /* Common/_lighting.scss */
+                --shadow-1:
+                    0 1px 3px
+                        light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.42)),
+                    0 1px 2px
+                        light-dark(rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.44));
+                --shadow-2:
+                    0 3px 4px
+                        light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.25)),
+                    0 3px 3px -3px
+                        light-dark(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.45));
+                --shadow-3:
+                    0 3px 8px 2px
+                        light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)),
+                    0 5px 5px -3px
+                        light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
+                    0 8px 5px 1px
+                        light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
+                --shadow-4:
+                    0 2px 4px 2px
+                        light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)),
+                    0 15px 12px -10px
+                        light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
+                    0 8px 14px 4px
+                        light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.25));
+
+                --button-active-bg: light-dark(
+                    rgba(0, 0, 0, 0.05),
+                    rgba(0, 0, 0, 0.15)
+                );
+                --button-active-border: light-dark(
+                    color-mix(
+                        in srgb,
+                        color-mix(in srgb, black 30%, var(--accent-color)) 40%,
+                        transparent
+                    ),
+                    rgba(0, 0, 0, 0.5)
+                );
+                --separator-color: light-dark(
+                    rgba(0, 0, 0, 0.15),
+                    rgba(0, 0, 0, 0.35)
+                );
+
+                --headerbar-stroke: 0 0 0 1px rgba(17, 17, 17, 0.5);
+            }
+
+            @media (prefers-color-scheme: light) {
+                html {
+                    --headerbar-stroke: 0 1px 0 0 rgba(161, 161, 161, 0.4);
+                }
+            }
+
+            /* Common/_lighting.scss, src/gtk-4.0/_index.scss */
+            html {
+                /* highlight("full"),  outset-highlight("full") */
+                --outset-highlight-full:
+                    inset 0 1px 0 0
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 30%,
+                            transparent
+                        ),
+                    inset 0 -1px 0 0
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 20%,
+                            transparent
+                        ),
+                    inset 1px 0 0 0
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 7%,
+                            transparent
+                        ),
+                    inset -1px 0 0 0
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 7%,
+                            transparent
+                        );
+
+                /* highlight("bottom") */
+                --outset-highlight-bottom:
+                    inset 0 -1px 0 0
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 20%,
+                            transparent
+                        ),
+                    inset 1px 0 0 0
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 7%,
+                            transparent
+                        ),
+                    inset -1px 0 0 0
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 7%,
+                            transparent
+                        );
+
+                /* outset-shadow(1), outset-shadow(2) */
+                --outset-shadow-1: 0 1px 1px rgba(0, 0, 0, 0.05);
+                --outset-shadow-2:
+                    0 1px 1px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.08);
+
+                /* inset-shadow() */
+                --inset-shadow:
+                    0 1px 0 0
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 30%,
+                            transparent
+                        ),
+                    inset 0 1px 1px rgba(0, 0, 0, 0.05),
+                    inset 0 0 1px 1px rgba(0, 0, 0, 0.05);
+
+                /* %outset-background */
+                --outset-background: linear-gradient(
+                    to bottom,
+                    color-mix(in srgb, var(--highlight-color) 20%, transparent),
+                    rgba(255, 255, 255, 0)
+                );
+            }
+
+            * {
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            /* .background - src/gtk-4.0/widgets/_windows.scss */
+            body {
+                background-color: var(--theme_bg_color);
+                color: var(--theme_fg_color);
+                font-family:
+                    "Inter",
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Ubuntu,
+                    Cantarell,
+                    Noto Sans,
+                    sans-serif,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    Roboto,
+                    "Noto Sans",
+                    Ubuntu,
+                    Cantarell,
+                    Oxygen,
+                    sans-serif;
+                font-family: var(--font-sans);
+                font-size: 15px;
+                line-height: 1.55;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            a {
+                color: inherit;
+                -webkit-text-decoration: none;
+                text-decoration: none;
+            }
+
+            /* lib/Styles/_label.scss */
+            .title-1 {
+                font-size: 24pt;
+                font-weight: 700;
+                letter-spacing: -0.04em;
+                line-height: 1.2;
+            }
+
+            .title-2 {
+                font-weight: 300;
+                font-size: 18pt;
+                letter-spacing: -0.05em;
+                line-height: 1.3;
+            }
+
+            .title-3 {
+                font-size: 11pt;
+            }
+
+            .title-4 {
+                font-weight: 700;
+                opacity: 0.8;
+                padding-bottom: 0.5em;
+                padding-top: 0.5em;
+            }
+
+            .dim-label {
+                opacity: 0.75;
+            }
+
+            .small-label {
+                font-size: 0.85rem;
+            }
+
+            .monospace {
+                font-family:
+                    "Roboto Mono", ui-monospace, "Source Code Pro",
+                    "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", Menlo,
+                    Consolas, monospace;
+                font-family: var(--font-mono);
+            }
+
+            .numeric {
+                -webkit-font-feature-settings: "tnum";
+                -moz-font-feature-settings: "tnum";
+                font-feature-settings: "tnum";
+            }
+
+            .accent {
+                color: color-mix(in srgb, #3689e6 73%, var(--fg-color));
+            }
+
+            @supports (color: color-mix(in lch, red, blue)) {
+                .accent {
+                    color: color-mix(
+                        in srgb,
+                        var(--accent-color) 73%,
+                        var(--fg-color)
+                    );
+                }
+            }
+
+            /* lib/Styles/Granite/_classes.scss */
+            .card {
+                background-color: var(--bg-level-1);
+                border-radius: -moz-calc(9px / 2);
+                border-radius: calc(9px / 2);
+                border-radius: -moz-calc(var(--window-radius) / 2);
+                border-radius: calc(var(--window-radius) / 2);
+                box-shadow:
+                    var(--outset-highlight-full),
+                    0 0 0 1px
+                        color-mix(in srgb, var(--border-color) 64%, transparent),
+                    var(--shadow-1);
+            }
+
+            /* GTK4 / Granite Button - src/gtk-4.0/widgets/_buttons.scss, Common/_controls.scss */
+            .button {
+                display: -moz-inline-box;
+                display: inline-flex;
+                -moz-box-align: center;
+                align-items: center;
+                -moz-box-pack: center;
+                justify-content: center;
+                gap: 6px;
+                padding: 5px 10px;
+                font:
+                    500 0.9rem "Inter",
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Ubuntu,
+                    Cantarell,
+                    Noto Sans,
+                    sans-serif,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    Roboto,
+                    "Noto Sans",
+                    Ubuntu,
+                    Cantarell,
+                    Oxygen,
+                    sans-serif;
+                font: 500 0.9rem var(--font-sans);
+                color: var(--fg-color);
+                background-clip: padding-box;
+                background-color: var(--bg-level-0);
+                background-image: var(--outset-background);
+                border: 1px solid var(--border-color);
+                border-radius: -moz-calc(9px / 3);
+                border-radius: calc(9px / 3);
+                border-radius: -moz-calc(var(--window-radius) / 3);
+                border-radius: calc(var(--window-radius) / 3);
+                box-shadow:
+                    var(--outset-highlight-full), var(--outset-shadow-2);
+                cursor: pointer;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                -moz-transition: background 100ms cubic-bezier(0.4, 0, 0.2, 1);
+                transition: background 100ms cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .button:active,
+            .button.active {
+                background: var(--button-active-bg);
+                box-shadow: var(--inset-shadow);
+            }
+
+            /* .suggested-action / .suggested - src/gtk-4.0/widgets/_buttons.scss, Gtk/Button.scss */
+            .button.suggested-action,
+            .button.suggested {
+                background-color: var(--selected-bg-color);
+                color: var(--selected-fg-color);
+                text-shadow: none;
+                border-color: light-dark(
+                    color-mix(
+                        in srgb,
+                        color-mix(in srgb, black 10%, var(--accent-color)) 50%,
+                        transparent
+                    ),
+                    var(--border-color)
+                );
+            }
+
+            .button.suggested-action:active,
+            .button.suggested:active {
+                border-color: var(--button-active-border);
+            }
+
+            /* .src/gtk-4.0/widgets/_shortcuts.scss, Gtk/ShortcutsWindow.scss */
+            .keycap {
+                display: inline-block;
+                background-color: var(--bg-level-2);
+                background-image: -moz-linear-gradient(
+                    top,
+                    rgba(255, 255, 255, 0),
+                    color-mix(in srgb, var(--highlight-color) 20%, transparent)
+                );
+                border: 1px solid var(--toplevel-border-color);
+                border-radius: -moz-calc(9px / 3);
+                border-radius: calc(9px / 3);
+                border-radius: -moz-calc(var(--window-radius) / 3);
+                border-radius: calc(var(--window-radius) / 3);
+                box-shadow:
+                    var(--outset-highlight-full),
+                    inset 0 -1px 0 0 var(--bg-level-4),
+                    0 1px 2px rgba(0, 0, 0, 0.05);
+                color: color-mix(in srgb, var(--fg-color) 90%, transparent);
+                font-family:
+                    "Inter",
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Ubuntu,
+                    Cantarell,
+                    Noto Sans,
+                    sans-serif,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    Roboto,
+                    "Noto Sans",
+                    Ubuntu,
+                    Cantarell,
+                    Oxygen,
+                    sans-serif;
+                font-family: var(--font-sans);
+                font-size: 85%;
+                line-height: 1.3;
+                min-width: 16px;
+                text-align: center;
+                padding: 3px 6px 4px;
+            }
+            @supports (color: color-mix(in lch, red, blue)) {
+                .keycap {
+                    background-image: -moz-linear-gradient(
+                        top,
+                        rgba(255, 255, 255, 0),
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 20%,
+                            transparent
+                        )
+                    );
+                    background-image: linear-gradient(
+                        to bottom,
+                        rgba(255, 255, 255, 0),
+                        color-mix(
+                            in srgb,
+                            var(--highlight-color) 20%,
+                            transparent
+                        )
+                    );
+                }
+            }
+
+            /* Layout ------------------------------------------- */
+            .container {
+                max-width: 920px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .page-footer__inner {
+                display: -moz-box;
+                display: flex;
+                -moz-box-align: center;
+                align-items: center;
+                -moz-box-pack: justify;
+                justify-content: space-between;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .page-footer__links a:hover {
+                opacity: 1;
+            }
+
+            .hero {
+                padding: 44px 0 28px;
+                text-align: center;
+            }
+
+            .hero__brand {
+                display: -moz-inline-box;
+                display: inline-flex;
+                -moz-box-align: center;
+                align-items: center;
+                gap: 14px;
+                margin-bottom: 10px;
+            }
+
+            .hero__logo {
+                width: 48px;
+                height: 48px;
+            }
+
+            .hero__subtitle {
+                max-width: 540px;
+                margin: 0 auto 22px;
+                font-size: 1.05rem;
+            }
+
+            .hero__actions {
+                display: -moz-box;
+                display: flex;
+                -moz-box-pack: center;
+                justify-content: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .hero__note {
+                margin-top: 14px;
+                font-size: 0.85rem;
+            }
+
+            .window-preview {
+                padding: 8px 0 44px;
+            }
+
+            /* window.csd (src/gtk-4.0/widgets/_windows.scss) */
+            .gtk-window {
+                background-color: var(--bg-level-2);
+                color: var(--fg-color);
+                border-radius: 8px;
+                box-shadow:
+                    0 0 0 1px var(--toplevel-border-color),
+                    0 13px 16px 4px transparent,
+                    var(--shadow-4);
+                overflow: hidden;
+                max-width: 820px;
+                margin: 0 auto;
+            }
+
+            /* src/gtk-4.0/widgets/_headerbars.scss */
+            .gtk-window__headerbar {
+                background-color: var(--color-primary);
+                background-image: var(--outset-background);
+                border-radius: 8px 8px 0 0;
+                box-shadow:
+                    var(--outset-highlight-full),
+                    var(--headerbar-stroke),
+                    0 1px 2px rgba(0, 0, 0, 0.2);
+                padding: 8px 10px;
+                display: -moz-box;
+                display: flex;
+                -moz-box-align: center;
+                align-items: center;
+                -moz-box-pack: justify;
+                justify-content: space-between;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            .gtk-window__controls {
+                display: -moz-box;
+                display: flex;
+                -moz-box-align: center;
+                align-items: center;
+                min-width: 48px;
+            }
+
+            .gtk-window__controls--end {
+                -moz-box-pack: end;
+                justify-content: flex-end;
+            }
+
+            .gtk-window__control-btn {
+                display: block;
+                width: 18px;
+                height: 18px;
+                color: var(--fg-color);
+                -webkit-filter: drop-shadow(var(--headerbar-text-shadow));
+                filter: drop-shadow(var(--headerbar-text-shadow));
+            }
+
+            .gtk-window__title {
+                font-size: 0.88rem;
+                font-weight: bold;
+                text-shadow: var(--headerbar-text-shadow);
+            }
+
+            /* src/gtk-4.0/widgets/_menubars.scss */
+            .gtk-window__menubar {
+                display: -moz-box;
+                display: flex;
+                gap: 2px;
+                padding: 2px 6px;
+                box-shadow: inset 0 -1px 0 0 var(--toplevel-border-color);
+                font-size: 0.86rem;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            .gtk-window__menuitem {
+                padding: 3px 8px;
+            }
+
+            /* src/gtk-4.0/widgets/_views.scss */
+            .gtk-window__scrolled {
+                background-color: var(--theme_base_color);
+                color: var(--fg-color);
+                min-height: 290px;
+                display: -moz-box;
+                display: flex;
+            }
+
+            .valapad-text {
+                padding: 8px 12px;
+                font-size: 14px;
+                color: var(--theme_text_color);
+                width: 100%;
+                white-space: pre-wrap;
+            }
+
+            /* .valapad-statusbar (data/style.css) */
+            .valapad-statusbar {
+                border-top: 1px solid var(--borders);
+                padding: 4px 12px;
+                font-size: 0.85em;
+                color: var(--theme_text_color);
+                display: -moz-box;
+                display: flex;
+                -moz-box-align: center;
+                align-items: center;
+                -moz-box-pack: end;
+                justify-content: flex-end;
+                gap: 10px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            .valapad-statusbar__label {
+                opacity: 0.8;
+            }
+
+            /* lib/Styles/Gtk/Separator.scss */
+            .valapad-statusbar__separator {
+                width: 1px;
+                height: 12px;
+                background-color: var(--separator-color);
+            }
+
+            .shortcuts {
+                padding: 16px 0 36px;
+            }
+
+            .shortcuts__header,
+            .build__header {
+                margin-bottom: 14px;
+            }
+
+            .shortcuts__grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                grid-gap: 10px;
+                gap: 10px;
+            }
+
+            .shortcuts__item {
+                padding: 10px 14px;
+                display: -moz-box;
+                display: flex;
+                -moz-box-align: center;
+                align-items: center;
+                -moz-box-pack: justify;
+                justify-content: space-between;
+                gap: 12px;
+                font-size: 0.9rem;
+            }
+
+            .shortcuts__item--extra {
+                display: none;
+            }
+
+            @media (min-width: 780px) {
+                .shortcuts__item--extra {
+                    display: -moz-box;
+                    display: flex;
+                }
+            }
+
+            .build {
+                padding: 16px 0 48px;
+            }
+
+            .build__panel {
+                padding: 16px 18px;
+            }
+
+            .build__panel-top {
+                display: -moz-box;
+                display: flex;
+                -moz-box-align: center;
+                align-items: center;
+                -moz-box-pack: justify;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .build__requirements {
+                margin-bottom: 10px;
+                font-size: 0.85rem;
+            }
+
+            .build__distros {
+                display: grid;
+                grid-gap: 12px;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+
+            .build__distro-name {
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+
+            .build__code--wrapped {
+                white-space: pre-wrap;
+                word-wrap: anywhere;
+            }
+
+            .build__section {
+                margin-top: 14px;
+                padding-top: 14px;
+                border-top: 1px solid var(--toplevel-border-color);
+            }
+
+            .build__note {
+                margin: 8px 0 10px;
+                font-size: 0.85rem;
+            }
+
+            .build__list {
+                margin: 6px 0 10px;
+                padding-left: 1.5em;
+                font-size: 0.85rem;
+            }
+
+            .build__list > li {
+                padding: 0.5rem 0;
+                min-height: 2rem;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            .build__list > li + li {
+                border-top: 1px solid var(--border-color);
+                box-shadow: inset 0 1px 0 0
+                    color-mix(in srgb, var(--highlight-color) 7%, transparent);
+            }
+
+            .build__code {
+                background-color: var(--bg-level-4);
+                border: 1px solid var(--toplevel-border-color);
+                border-radius: -moz-calc(9px / 3);
+                border-radius: calc(9px / 3);
+                border-radius: -moz-calc(var(--window-radius) / 3);
+                border-radius: calc(var(--window-radius) / 3);
+                padding: 12px 14px;
+                font:
+                    0.84rem/1.6 "Roboto Mono",
+                    ui-monospace,
+                    "Source Code Pro",
+                    "JetBrains Mono",
+                    "Fira Code",
+                    "DejaVu Sans Mono",
+                    Menlo,
+                    Consolas,
+                    monospace;
+                font: 0.84rem/1.6 var(--font-mono);
+                color: var(--theme_text_color);
+                overflow-x: auto;
+            }
+
+            .page-footer {
+                border-top: 1px solid var(--toplevel-border-color);
+                padding: 20px 0 32px;
+                font-size: 0.85rem;
+            }
+
+            .page-footer__links {
+                display: -moz-box;
+                display: flex;
+                gap: 16px;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="container">
+            <section class="hero">
+                <div class="hero__brand">
+                    <img
+                        class="hero__logo"
+                        src="https://raw.githubusercontent.com/hugmouse/valapad/master/data/icons/valapad.svg"
+                        alt="ValaPad icon"
+                        fetchpriority="high"
+                        height="48px"
+                        width="48px"
+                    />
+                    <h1 class="title-1">ValaPad</h1>
+                </div>
+                <p class="hero__subtitle dim-label">
+                    Edit plain-text files with a familiar set of tools.
+                </p>
+                <div class="hero__actions">
+                    <a
+                        href="https://appcenter.elementary.io/dev.mysh.valapad"
+                        class="button suggested-action"
+                    >
+                        Install from AppCenter
+                    </a>
+                    <a href="#build" class="button"> Build from Source </a>
+                </div>
+            </section>
+
+            <!-- MainView -->
+            <section class="window-preview" aria-label="Application preview">
+                <div class="gtk-window">
+                    <!-- Titlebar -->
+                    <div class="gtk-window__headerbar">
+                        <div class="gtk-window__controls">
+                            <svg
+                                class="gtk-window__control-btn"
+                                viewBox="0 0 16 16"
+                                aria-hidden="true"
+                                focusable="false"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M 0.78168445 6.4081552 C 0.64612209 6.2725928 0.45772309 6.1885654 0.2499733 6.1885654 L -0.2499733 6.1885654 C -0.66547288 6.1885654 -0.99989318 6.5229857 -0.99989318 6.9384853 L -0.99989318 10.313815 L -4.3752232 10.313815 C -4.7907228 10.313815 -5.1251431 10.648236 -5.1251431 11.063735 L -5.1251431 11.563682 C -5.1251431 11.979181 -4.7907228 12.313602 -4.3752232 12.313602 L -0.99989318 12.313602 L -0.99989318 15.688932 C -0.99989318 16.104431 -0.66547288 16.438852 -0.2499733 16.438852 L 0.2499733 16.438852 C 0.66547288 16.438852 0.99989318 16.104431 0.99989318 15.688932 L 0.99989318 12.313602 L 4.3752232 12.313602 C 4.7907228 12.313602 5.1251431 11.979181 5.1251431 11.563682 L 5.1251431 11.063735 C 5.1251431 10.648236 4.7907228 10.313815 4.3752232 10.313815 L 0.99989318 10.313815 L 0.99989318 6.9384853 C 0.99989318 6.7307355 0.91724681 6.5437176 0.78168445 6.4081552 z"
+                                    transform="rotate(-45)"
+                                />
+                            </svg>
+                        </div>
+                        <div class="gtk-window__title">*Untitled - ValaPad</div>
+                        <div
+                            class="gtk-window__controls gtk-window__controls--end"
+                        >
+                            <svg
+                                class="gtk-window__control-btn"
+                                viewBox="0 0 16 16"
+                                aria-hidden="true"
+                                focusable="false"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M 9.5625 2 C 8.9219462 1.9980564 8.6014518 2.7739255 9.0566406 3.2246094 L 10.216797 4.3730469 L 8.2246094 6.3652344 C 7.9308343 6.6590638 7.9308077 7.1319795 8.2246094 7.4257812 L 8.578125 7.7792969 C 8.8719266 8.0730986 9.3448695 8.0730994 9.6386719 7.7792969 L 11.638672 5.7792969 L 12.755859 6.8847656 C 13.216533 7.3406302 13.998589 7.0152847 14 6.3671875 L 14 2.7519531 C 13.999671 2.33756 13.664392 2.0014067 13.25 2 L 9.5625 2 z M 6.8964844 8 C 6.7047983 7.9999999 6.5121352 8.0738019 6.3652344 8.2207031 L 4.3652344 10.220703 L 3.2480469 9.1152344 C 2.7873733 8.6593698 2.0053172 8.9847153 2.0039062 9.6328125 L 2.0039062 13.248047 C 2.0042352 13.66244 2.3395147 13.998594 2.7539062 14 L 6.4414062 14 C 7.0819596 14.0019 7.4024542 13.226074 6.9472656 12.775391 L 5.7871094 11.626953 L 7.7792969 9.6347656 C 8.0730726 9.3409362 8.0730986 8.8680205 7.7792969 8.5742188 L 7.4257812 8.2207031 C 7.2788804 8.0738023 7.0881704 8.0000001 6.8964844 8 z"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Gtk.PopoverMenuBar -->
+                    <div class="gtk-window__menubar">
+                        <span class="gtk-window__menuitem">File</span>
+                        <span class="gtk-window__menuitem">Edit</span>
+                        <span class="gtk-window__menuitem">Format</span>
+                        <span class="gtk-window__menuitem">View</span>
+                        <span class="gtk-window__menuitem">Help</span>
+                    </div>
+
+                    <!-- Gtk.ScrolledWindow > Gtk.TextView.valapad-text -->
+                    <div class="gtk-window__scrolled">
+                        <div class="valapad-text">ValaPad is a plain-text editor written in Vala and GTK4.
+
+Features:
+- Open, edit, and save plain-text documents
+- Undo and redo
+- Autosave with crash recovery
+- Find, replace, go to line
+- Word wrap and font selection
+- Zoom in, zoom out, and reset zoom
+- Incredible features, right?</div>
+                    </div>
+
+                    <!-- .valapad-statusbar -->
+                    <div class="valapad-statusbar">
+                        <span class="valapad-statusbar__label">Ln 11</span>
+                        <span class="valapad-statusbar__label">Col 15</span>
+                        <span class="valapad-statusbar__separator"></span>
+                        <span class="valapad-statusbar__label">100%</span>
+                        <span class="valapad-statusbar__separator"></span>
+                        <span class="valapad-statusbar__label">LF</span>
+                        <span class="valapad-statusbar__separator"></span>
+                        <span class="valapad-statusbar__label">UTF-8</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="shortcuts" class="shortcuts">
+                <div class="shortcuts__header">
+                    <h2 class="title-2">Keyboard Shortcuts</h2>
+                </div>
+                <div class="shortcuts__grid">
+                    <div class="card shortcuts__item">
+                        <span>New</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">N</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Open</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">O</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Save</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">S</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Save As</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">Shift</kbd> +
+                            <kbd class="keycap">S</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Print</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">P</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Undo</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">Z</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Redo</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">Y</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Cut</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">X</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Copy</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">C</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Paste</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">V</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Delete</span>
+                        <span><kbd class="keycap">Del</kbd></span>
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Select All</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">A</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Find</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">F</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Find Next</span>
+                        <span><kbd class="keycap">F3</kbd></span>
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Find Previous</span>
+                        <span
+                            ><kbd class="keycap">Shift</kbd> +
+                            <kbd class="keycap">F3</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Replace</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">H</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Go To</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">G</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Time / Date</span>
+                        <span><kbd class="keycap">F5</kbd></span>
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Zoom In / Out</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">+</kbd> /
+                            <kbd class="keycap">-</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item">
+                        <span>Reset Zoom</span>
+                        <span
+                            ><kbd class="keycap">Ctrl</kbd> +
+                            <kbd class="keycap">0</kbd></span
+                        >
+                    </div>
+                    <div class="card shortcuts__item shortcuts__item--extra" style="cursor: help;" title="This is a joke. In 3 column layout this row had only 2 shortcuts and I needed 3.">
+                        <span>Make gay</span>
+                        <span
+                            ><kbd class="keycap">Super</kbd> +
+                            <kbd class="keycap">G</kbd></span
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <section id="build" class="build">
+                <div class="build__header">
+                    <h2 class="title-2">Build from Source</h2>
+                </div>
+                <div class="card build__panel">
+                    <div class="build__panel-top">
+                        <span class="title-3">Dependencies</span>
+                    </div>
+                    <p class="build__requirements dim-label">
+                        ValaPad needs a C compiler, valac, meson (0.64+), ninja,
+                        gettext, pkg-config, gtk4 (4.14+), granite-7 (7.0+),
+                        pango, and pangocairo.
+                    </p>
+                    <p class="build__requirements dim-label">
+                        As an alternative, you can install Flatpak, add
+                        elementary os repos and install Valapad that way.
+                    </p>
+                    <div class="build__distros">
+                        <div class="build__distro">
+                            <div class="build__panel-top">
+                                <span class="build__distro-name"
+                                    >Ubuntu 24.04 LTS, Debian 13</span
+                                >
+                                <button
+                                    type="button"
+                                    class="button"
+                                    data-copy="#deps-debian"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                            <pre
+                                class="build__code build__code--wrapped"
+                                id="deps-debian"
+                            >
+sudo apt install appstream desktop-file-utils gettext libglib2.0-bin libgranite-7-dev libgtk-4-dev libpango1.0-dev meson ninja-build pkg-config shared-mime-info valac</pre>
+                        </div>
+
+                        <div class="build__distro">
+                            <div class="build__panel-top">
+                                <span class="build__distro-name"
+                                    >Fedora 42+</span
+                                >
+                                <button
+                                    type="button"
+                                    class="button"
+                                    data-copy="#deps-fedora"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                            <pre
+                                class="build__code build__code--wrapped"
+                                id="deps-fedora"
+                            >
+sudo dnf install appstream desktop-file-utils gettext glib2-devel gtk4-devel granite-7-devel meson ninja-build pango-devel pkgconf-pkg-config shared-mime-info vala</pre>
+                        </div>
+
+                        <div class="build__distro">
+                            <div class="build__panel-top">
+                                <span class="build__distro-name"
+                                    >Arch Linux 2026.10.01</span
+                                >
+                                <button
+                                    type="button"
+                                    class="button"
+                                    data-copy="#deps-arch"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                            <pre
+                                class="build__code build__code--wrapped"
+                                id="deps-arch"
+                            >
+sudo pacman -S appstream desktop-file-utils gettext glib2 gtk4 granite7 meson ninja pango pkgconf shared-mime-info vala</pre>
+                        </div>
+
+                        <div class="build__distro">
+                            <div class="build__panel-top">
+                                <span class="build__distro-name"
+                                    >openSUSE Tumbleweed</span
+                                >
+                                <button
+                                    type="button"
+                                    class="button"
+                                    data-copy="#deps-opensuse"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                            <pre
+                                class="build__code build__code--wrapped"
+                                id="deps-opensuse"
+                            >
+sudo zypper install AppStream desktop-file-utils gcc gettext-tools glib2-devel gtk4-devel granite-devel meson ninja pango-devel pkg-config shared-mime-info vala</pre>
+                        </div>
+                    </div>
+
+                    <div class="build__section">
+                        <div class="build__panel-top">
+                            <span class="title-3">Granite 7</span>
+                        </div>
+                        <p class="build__note dim-label">
+                            All distributions above ship Granite 7, but if yours
+                            does not, build it from source first so that
+                            <code>granite-7.vapi</code> and
+                            <code>granite-7.pc</code> exist, then continue
+                            below. <br /><br />
+                            Granite needs
+                            <code>git</code>, <code>sassc</code> and the Gee
+                            development headers:
+                        </p>
+                        <ul class="build__list dim-label">
+                            <li>
+                                <code>libgee-0.8-dev</code> on Ubuntu and
+                                Debian,
+                            </li>
+                            <li>
+                                <code>libgee-devel</code> on Fedora and
+                                openSUSE,
+                            </li>
+                            <li><code>libgee</code> on Arch.</li>
+                        </ul>
+                        <pre class="build__code" id="granite-commands">
+git clone --depth 1 --branch 7.8.1 https://github.com/elementary/granite.git
+cd granite
+meson setup build --prefix=/usr -Ddocumentation=false -Ddemo=false -Dintrospection=false
+sudo ninja -C build install
+cd ..</pre>
+                    </div>
+
+                    <div class="build__section">
+                        <div class="build__panel-top">
+                            <span class="title-3">Meson &amp; Ninja</span>
+                            <button
+                                type="button"
+                                class="button"
+                                id="copy-build-btn"
+                            >
+                                Copy
+                            </button>
+                        </div>
+                        <pre class="build__code" id="build-commands">
+git clone https://github.com/hugmouse/valapad.git
+cd valapad
+meson setup build
+ninja -C build
+./build/src/dev.mysh.valapad
+
+# install system-wide
+sudo ninja -C build install</pre>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="page-footer dim-label">
+            <div class="container page-footer__inner">
+                <span>GPL-3.0-or-later</span>
+                <div class="page-footer__links">
+                    <a href="https://appcenter.elementary.io/dev.mysh.valapad"
+                        >AppCenter</a
+                    >
+                    <a href="https://github.com/hugmouse/valapad"
+                        >Source Code</a
+                    >
+                    <a href="https://github.com/hugmouse/valapad/issues"
+                        >Issues</a
+                    >
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            (function () {
+                function wireCopyButton(btn, source) {
+                    if (!btn || !source) {
+                        return;
+                    }
+
+                    btn.addEventListener("click", function () {
+                        navigator.clipboard
+                            .writeText(source.textContent)
+                            .then(function () {
+                                btn.textContent = "Copied";
+                                setTimeout(function () {
+                                    btn.textContent = "Copy";
+                                }, 1500);
+                            });
+                    });
+                }
+
+                wireCopyButton(
+                    document.getElementById("copy-build-btn"),
+                    document.getElementById("build-commands"),
+                );
+
+                Array.prototype.forEach.call(
+                    document.querySelectorAll("[data-copy]"),
+                    function (btn) {
+                        wireCopyButton(
+                            btn,
+                            document.querySelector(
+                                btn.getAttribute("data-copy"),
+                            ),
+                        );
+                    },
+                );
+            })();
+        </script>
+    </body>
+</html>
