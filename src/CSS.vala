@@ -6,7 +6,7 @@
 // Stupid hack to avoid deprecation warning
 public class ValaPad.Css : Object {
     [CCode (cname = "gtk_style_context_add_provider_for_display")]
-    private static extern void add_provider_for_display (
+    public static extern void add_provider_for_display (
         Gdk.Display display,
         Gtk.StyleProvider provider,
         uint priority

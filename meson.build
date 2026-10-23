@@ -12,6 +12,14 @@ i18n = import('i18n')
 
 app_id = 'dev.mysh.valapad'
 
+dependencies = [
+    dependency('gtk4', version: '>= 4.14'),
+    dependency('granite-7', version: '>= 7.0.0'),
+    dependency('glib-2.0'),
+    dependency('pango'),
+    dependency('pangocairo'),
+]
+
 add_project_arguments(
     [
         '--target-glib=2.72',
@@ -24,7 +32,10 @@ add_project_arguments(
 if host_machine.system() == 'linux'
     add_project_arguments('--define=LINUX', language: 'vala')
 elif host_machine.system() == 'darwin'
+    add_languages('objc', native: false)
     add_project_arguments('--define=MACOS', language: 'vala')
+    add_project_arguments('-fobjc-arc', language: 'objc')
+    dependencies += dependency('appleframeworks', modules: 'AppKit')
 endif
 
 add_project_arguments(
@@ -41,14 +52,6 @@ conf_data.set('LOCALEDIR', get_option('prefix') / get_option('localedir'))
 conf_data.set('GSETTINGS_SCHEMA_DIR', meson.project_build_root() / 'data')
 conf_data.set('PROJECT_NAME', app_id)
 conf_data.set('VERSION', meson.project_version())
-
-dependencies = [
-    dependency('gtk4', version: '>= 4.14'),
-    dependency('granite-7', version: '>= 7.0.0'),
-    dependency('glib-2.0'),
-    dependency('pango'),
-    dependency('pangocairo'),
-]
 
 subdir('data')
 subdir('src')

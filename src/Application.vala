@@ -53,8 +53,13 @@ public class ValaPad.Application : Gtk.Application {
     protected override void startup () {
         base.startup ();
 
+#if MACOS
+        Granite.init ();
+        MacosAccent.apply (sync_dark_theme);
+#else
         sync_dark_theme ();
         Granite.Settings.get_default ().notify["prefers-color-scheme"].connect (sync_dark_theme);
+#endif
 
         add_app_actions ();
         set_accels_for_action ("app." + ACTION_QUIT, { "<Control>q" });
@@ -66,9 +71,14 @@ public class ValaPad.Application : Gtk.Application {
             return;
         }
 
+#if MACOS
+        // TODO: `Gtk.Settings.gtk_application_prefer_dark_theme' has been deprecated since 4.20
+        gtk_settings.gtk_application_prefer_dark_theme = MacosAccent.prefers_dark ();
+#else
         var granite_settings = Granite.Settings.get_default ();
         gtk_settings.gtk_application_prefer_dark_theme =
             granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+#endif
     }
 
     private void add_app_actions () {

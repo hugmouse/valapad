@@ -11,6 +11,10 @@ autosave_controller_source = files('AutosaveController.vala')
 recovery_workflow_source = files('RecoveryWorkflow.vala')
 print_layout_source = files('PrintLayout.vala')
 css_source = files('CSS.vala')
+macos_sources = []
+if host_machine.system() == 'darwin'
+    macos_sources = files('MacosAccent.vala', 'MacosAccent.m')
+endif
 style_resources = gnome.compile_resources(
     'valapad-resources',
     '../data/dev.mysh.valapad.gresource.xml',
@@ -50,6 +54,7 @@ valapad_executable = executable(
     autosave_controller_source,
     recovery_workflow_source,
     print_layout_source,
+    macos_sources,
     config_file,
     dependencies: dependencies,
     install: true,
